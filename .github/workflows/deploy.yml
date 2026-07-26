@@ -1,0 +1,50 @@
+name: deploy
+
+# main 에 올라가면 오라클 서버에 반영한다.
+# 수동 실행(workflow_dispatch)도 열어둔다 — 서버만 재기동하고 싶을 때가 있다.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - '.env.example'
+  workflow_dispatch:
+
+# 배포가 겹치면 서버에서 git pull 과 빌드가 뒤엉킨다. 뒤에 온 것만 남긴다.
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH 키 준비
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          # 호스트 키를 고정해야 중간자 공격 때 조용히 붙지 않는다
+          ssh-keyscan -H "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: 배포
+        run: |
+          ssh -i ~/.ssh/id_ed25519 ubuntu@"${{ secrets.SERVER_HOST }}" bash -euo pipefail <<'REMOTE'
+            cd ~/loa-bot
+            git fetch --quiet origin main
+            git reset --hard --quiet origin/main
+            docker compose up -d --build
+            # 기동 직후 죽는 경우가 있어 잠깐 지켜본 뒤 상태를 확인한다
+            sleep 15
+            if [ "$(docker inspect -f '{{.State.Running}}' loa-bot 2>/dev/null)" != "true" ]; then
+              echo "컨테이너가 떠 있지 않다"
+              docker compose logs --tail 40
+              exit 1
+            fi
+            docker compose logs --tail 15 | grep -v "PyNaCl\|davey\|Privileged" || true
+            docker image prune -f >/dev/null
+          REMOTE
+
+      - name: 배포 실패 시 로그
+        if: failure()
+        run: echo "서버 로그는 ssh loa 'cd loa-bot && docker compose logs --tail 100' 으로 확인하세요"
