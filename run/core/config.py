@@ -13,8 +13,15 @@ DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 DISCORD_APPLICATION_ID = os.getenv("DISCORD_APPLICATION_ID")
 LOG_WEBHOOK_URL = os.getenv("LOG_WEBHOOK_URL")
 
-_owner = os.getenv("OWNER_ID", "").strip()
-OWNER_ID = int(_owner) if _owner.isdigit() else None
+# 관리자는 여러 명일 수 있다. 예전 단일 OWNER_ID 도 계속 읽어준다.
+_owners = os.getenv("OWNER_IDS") or os.getenv("OWNER_ID", "")
+OWNER_IDS = frozenset(
+    int(x) for x in _owners.replace(" ", "").split(",") if x.isdigit()
+)
+
+
+def is_owner(user_id: int | str) -> bool:
+    return int(user_id) in OWNER_IDS
 
 DEV_GUILD_ID = os.getenv("DISCORD_DEV_GUILD_ID", "").strip() or None
 
