@@ -47,6 +47,20 @@ Discord 세션이 충돌해서 무한 재연결에 빠집니다.
 
 키가 없어도 봇은 실행됩니다. 로아 API가 필요한 커맨드만 자동으로 비활성화됩니다.
 
+### 봇 초대 (주의)
+
+초대 URL에 **`integration_type=0` 을 반드시 넣으세요.**
+
+```
+https://discord.com/oauth2/authorize?client_id=<APP_ID>&permissions=84992&integration_type=0&scope=bot+applications.commands
+```
+
+이게 없으면 Discord가 "사용자 앱에 추가" 선택지를 함께 띄웁니다. 그쪽으로 진행하면
+**설치 성공 메시지가 뜨는데도 봇이 서버 멤버가 되지 않습니다.** 서버에는 안 보이고
+`GET /users/@me/guilds` 로 조회하면 0개가 나오는 상태가 됩니다.
+
+`permissions=84992` = 채널 보기 + 메시지 보내기 + 링크 임베드 + 메시지 기록 읽기.
+
 ### 키가 유출됐다면
 
 1. **먼저 무효화하세요.** 로아 키는 개발자 포털에서 클라이언트 삭제 후 재발급,
