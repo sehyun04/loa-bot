@@ -1,0 +1,1670 @@
+{
+  "source": "kloa.gg /merchant __NEXT_DATA__ (2026-07-26 수집)",
+  "note": "떠상 등장 스케줄과 지역/판매품목. 게임 패치 시 갱신 필요.",
+  "duration_minutes": 330,
+  "schedules": [
+    {
+      "weekday": 0,
+      "start": "10:00",
+      "groups": [
+        2
+      ]
+    },
+    {
+      "weekday": 0,
+      "start": "22:00",
+      "groups": [
+        2
+      ]
+    },
+    {
+      "weekday": 0,
+      "start": "16:00",
+      "groups": [
+        1,
+        3
+      ]
+    },
+    {
+      "weekday": 0,
+      "start": "04:00",
+      "groups": [
+        1,
+        3
+      ]
+    },
+    {
+      "weekday": 1,
+      "start": "04:00",
+      "groups": [
+        1,
+        2
+      ]
+    },
+    {
+      "weekday": 1,
+      "start": "10:00",
+      "groups": [
+        3
+      ]
+    },
+    {
+      "weekday": 1,
+      "start": "16:00",
+      "groups": [
+        1,
+        2
+      ]
+    },
+    {
+      "weekday": 1,
+      "start": "22:00",
+      "groups": [
+        3
+      ]
+    },
+    {
+      "weekday": 2,
+      "start": "04:00",
+      "groups": [
+        2,
+        3
+      ]
+    },
+    {
+      "weekday": 2,
+      "start": "10:00",
+      "groups": [
+        1
+      ]
+    },
+    {
+      "weekday": 2,
+      "start": "22:00",
+      "groups": [
+        1
+      ]
+    },
+    {
+      "weekday": 3,
+      "start": "04:00",
+      "groups": [
+        1,
+        2
+      ]
+    },
+    {
+      "weekday": 3,
+      "start": "10:00",
+      "groups": [
+        3
+      ]
+    },
+    {
+      "weekday": 3,
+      "start": "22:00",
+      "groups": [
+        3
+      ]
+    },
+    {
+      "weekday": 4,
+      "start": "04:00",
+      "groups": [
+        2
+      ]
+    },
+    {
+      "weekday": 4,
+      "start": "10:00",
+      "groups": [
+        1,
+        3
+      ]
+    },
+    {
+      "weekday": 4,
+      "start": "22:00",
+      "groups": [
+        1,
+        3
+      ]
+    },
+    {
+      "weekday": 5,
+      "start": "04:00",
+      "groups": [
+        1
+      ]
+    },
+    {
+      "weekday": 5,
+      "start": "10:00",
+      "groups": [
+        2,
+        3
+      ]
+    },
+    {
+      "weekday": 5,
+      "start": "22:00",
+      "groups": [
+        2,
+        3
+      ]
+    },
+    {
+      "weekday": 6,
+      "start": "04:00",
+      "groups": [
+        3
+      ]
+    },
+    {
+      "weekday": 6,
+      "start": "10:00",
+      "groups": [
+        1,
+        2
+      ]
+    },
+    {
+      "weekday": 6,
+      "start": "22:00",
+      "groups": [
+        1,
+        2
+      ]
+    },
+    {
+      "weekday": 3,
+      "start": "16:00",
+      "groups": [
+        1,
+        2
+      ]
+    },
+    {
+      "weekday": 5,
+      "start": "16:00",
+      "groups": [
+        1
+      ]
+    },
+    {
+      "weekday": 6,
+      "start": "16:00",
+      "groups": [
+        3
+      ]
+    },
+    {
+      "weekday": 4,
+      "start": "16:00",
+      "groups": [
+        2
+      ]
+    },
+    {
+      "weekday": 2,
+      "start": "16:00",
+      "groups": [
+        2,
+        3
+      ]
+    }
+  ],
+  "regions": [
+    {
+      "id": "1",
+      "name": "아르테미스",
+      "npc": "벤",
+      "group": 1,
+      "items": [
+        {
+          "name": "시이라",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "두근두근 상자",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "아르테미스 성수",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "레온하트 감자",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "더욱 화려한 꽃다발",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "카마인",
+          "type": "card",
+          "grade": 4
+        },
+        {
+          "name": "레온하트 네리아",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "바루투",
+          "type": "card",
+          "grade": 2
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "유디아",
+      "npc": "루카스",
+      "group": 2,
+      "items": [
+        {
+          "name": "천둥",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "자이언트 웜",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "모리나",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "하늘을 비추는 기름",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "유디아 주술서",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "유디아 천연소금",
+          "type": "favor",
+          "grade": 3
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "name": "루테란 서부",
+      "npc": "말론",
+      "group": 3,
+      "items": [
+        {
+          "name": "사슬전쟁 실록",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "카도건",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "하셀링크",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "흑장미",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "견고한 새장",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "베르하트",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "레이크바 토마토 주스",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "머리초",
+          "type": "etc",
+          "grade": 3
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "루테란 동부",
+      "npc": "모리스",
+      "group": 2,
+      "items": [
+        {
+          "name": "사슬전쟁 실록",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "모르페오",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "푸름 전사 브리뉴",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "미한",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "데런 아만",
+          "type": "card",
+          "grade": 4
+        },
+        {
+          "name": "디오리카 밀짚모자",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "루테란의 검 모형",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "아제나포리움 브로치",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "드라이에이징 된 고기",
+          "type": "etc",
+          "grade": 2
+        },
+        {
+          "name": "진저웨일",
+          "type": "card",
+          "grade": 4
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "name": "루테란 동부",
+      "npc": "버트",
+      "group": 3,
+      "items": [
+        {
+          "name": "뜨거운 초코 커피",
+          "type": "etc",
+          "grade": 2
+        },
+        {
+          "name": "발탄",
+          "type": "card",
+          "grade": 4
+        },
+        {
+          "name": "집행관 솔라스",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "녹스",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "세리아",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "디오리카 밀짚모자",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "루테란의 검 모형",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "아제나포리움 브로치",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "사슬전쟁 실록",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "에스더 루테란",
+          "type": "card",
+          "grade": 4
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "name": "토토이크",
+      "npc": "올리버",
+      "group": 3,
+      "items": [
+        {
+          "name": "모코코 당근",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "수호자 에오로",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "모카모카",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "동글동글한 유리조각",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "창조의 알",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "하이비 집행관",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "수줍은 바람꽃가루",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "특대 무당벌레 인형",
+          "type": "favor",
+          "grade": 3
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "name": "애니츠",
+      "npc": "맥",
+      "group": 2,
+      "items": [
+        {
+          "name": "비아키스",
+          "type": "card",
+          "grade": 4
+        },
+        {
+          "name": "비무제 참가 인장",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "수령도사",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "객주도사",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "월향도사",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "웨이",
+          "type": "card",
+          "grade": 4
+        },
+        {
+          "name": "태초의 주머니",
+          "type": "etc",
+          "grade": 4
+        },
+        {
+          "name": "에스더 시엔",
+          "type": "card",
+          "grade": 4
+        },
+        {
+          "name": "가디언 루",
+          "type": "card",
+          "grade": 4
+        },
+        {
+          "name": "강태공의 낚싯대",
+          "type": "favor",
+          "grade": 4
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "name": "아르데타인",
+      "npc": "녹스",
+      "group": 3,
+      "items": [
+        {
+          "name": "카인",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "에너지 X7 캡슐",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "고급 축음기",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "아이히만 박사",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "아드레날린 강화 수액",
+          "type": "etc",
+          "grade": 2
+        },
+        {
+          "name": "일리아칸",
+          "type": "card",
+          "grade": 4
+        },
+        {
+          "name": "슈테른 네리아",
+          "type": "card",
+          "grade": 2
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "name": "베른 북부",
+      "npc": "피터",
+      "group": 1,
+      "items": [
+        {
+          "name": "마력 결정",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "화려한 오르골",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "베른 건국 기념주화",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "위대한 미술품 #2",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "페일린",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "기드온",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "라하르트",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "기사단 가입 신청서",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "고블린 고구마",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "마법 옷감",
+          "type": "favor",
+          "grade": 3
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "name": "슈샤이어",
+      "npc": "제프리",
+      "group": 2,
+      "items": [
+        {
+          "name": "시안",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "진 매드닉",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "빛나는 정수",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "시리우스의 성서",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "사파이어 정어리",
+          "type": "etc",
+          "grade": 2
+        },
+        {
+          "name": "자베른",
+          "type": "card",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "name": "로헨델",
+      "npc": "아리세르",
+      "group": 3,
+      "items": [
+        {
+          "name": "알리페르",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "실린여왕의 축복",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "두근두근 마카롱",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "다뉴브의 귀걸이",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "정령의 깃털",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "새벽의 마력석",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "아제나&이난나",
+          "type": "card",
+          "grade": 4
+        },
+        {
+          "name": "그노시스",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "엘레노아",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "몽환의 나이트",
+          "type": "card",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "name": "욘",
+      "npc": "라이티르",
+      "group": 1,
+      "items": [
+        {
+          "name": "피에르",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "케이사르",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "위대한 성 네리아",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "피에르의 비법서",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "바훈투르",
+          "type": "card",
+          "grade": 4
+        },
+        {
+          "name": "파후투르 맥주",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "뒷골목 럼주",
+          "type": "etc",
+          "grade": 1
+        },
+        {
+          "name": "에스더 갈라투르",
+          "type": "card",
+          "grade": 4
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "name": "페이튼",
+      "npc": "도렐라",
+      "group": 2,
+      "items": [
+        {
+          "name": "비올레",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "굴딩",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "칼도르",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "페데리코",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "선지 덩어리",
+          "type": "etc",
+          "grade": 2
+        },
+        {
+          "name": "생존의 서",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "붉은 달의 눈물",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "바싹 마른 목상",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "부러진 단검",
+          "type": "favor",
+          "grade": 3
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "name": "파푸니카",
+      "npc": "레이니",
+      "group": 3,
+      "items": [
+        {
+          "name": "세토",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "스텔라",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "키케라",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "알비온",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "포튼쿨 열매",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "피냐타 제작 세트",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "무지개 티카티카 꽃",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "오레하의 수석",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "부드러운 주머니",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "빛나는 백금 주머니",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "쿠크세이튼",
+          "type": "card",
+          "grade": 4
+        },
+        {
+          "name": "신비한 녹색 주머니",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "멧돼지 생고기",
+          "type": "etc",
+          "grade": 2
+        },
+        {
+          "name": "광기를 잃은 쿠크세이튼",
+          "type": "card",
+          "grade": 4
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "name": "베른 남부",
+      "npc": "에반",
+      "group": 1,
+      "items": [
+        {
+          "name": "아브렐슈드",
+          "type": "card",
+          "grade": 4
+        },
+        {
+          "name": "킬리언",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "집중 룬",
+          "type": "etc",
+          "grade": 4
+        },
+        {
+          "name": "보석 장식 주머니",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "신기한 마법 주머니",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "질긴 가죽 주머니",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "사령술사의 기록",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "모형 반딧불이",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "깃털 부채",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "페브리 포션",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "천둥날개",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "베른 젠로드",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "루기네",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "사트라",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "제레온",
+          "type": "card",
+          "grade": 2
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "name": "로웬",
+      "npc": "세라한",
+      "group": 1,
+      "items": [
+        {
+          "name": "엔야카 향유",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "늑대 이빨 목걸이",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "아르노",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "오스피어",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "뮨 히다카",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "마리나",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "하눈",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "빌헬름",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "피엘라",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "앙케",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "사일러스",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "바스키아",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "다르시",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "레퓌스",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "로웬 젠로드",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "보온용 귀도리",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "최상급 육포",
+          "type": "favor",
+          "grade": 3
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "name": "엘가시아",
+      "npc": "플라노스",
+      "group": 1,
+      "items": [
+        {
+          "name": "베아트리스",
+          "type": "card",
+          "grade": 4
+        },
+        {
+          "name": "아르카디아",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "코니",
+          "type": "card",
+          "grade": 0
+        },
+        {
+          "name": "티엔",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "키르케",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "유클리드",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "프리우나",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "하늘 고래",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "별자리 큰뱀",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "아자키엘",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "벨루마테",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "다이나웨일",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "디오게네스",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "라우리엘",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "영원의 아크 카양겔",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "에버그레이스",
+          "type": "card",
+          "grade": 4
+        },
+        {
+          "name": "빛을 머금은 과실주",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "별자리 큰뱀의 껍질",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "크레도프 유리경",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "행운의 초롱별 꽃",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "향기 나는 주머니",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "반짝이는 주머니",
+          "type": "etc",
+          "grade": 3
+        }
+      ]
+    },
+    {
+      "id": "18",
+      "name": "플레체",
+      "npc": "페드로",
+      "group": 2,
+      "items": [
+        {
+          "name": "미술품 캐리어",
+          "type": "etc",
+          "grade": 4
+        },
+        {
+          "name": "클라우디아",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "자크라",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "교육용 해도",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "정체불명의 입",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "어린 아만",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "컬러풀 집게 장난감",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "불과 얼음의 축제",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "로잘린 베디체",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "알폰스 베디체",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "안토니오 주교",
+          "type": "card",
+          "grade": 2
+        }
+      ]
+    },
+    {
+      "id": "19",
+      "name": "볼다이크",
+      "npc": "구디스",
+      "group": 3,
+      "items": [
+        {
+          "name": "라자람",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "베히모스",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "칼리나리 네리아",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "마레가",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "아이작",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "마리우",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "닐라이",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "베라드",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "무지개 정수",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "무지개 미끼",
+          "type": "etc",
+          "grade": 1
+        },
+        {
+          "name": "마력이 스민 주머니",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "오징어",
+          "type": "etc",
+          "grade": 4
+        },
+        {
+          "name": "볼다이칸 스톤",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "속삭이는 휘스피",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "쿠리구리 물약",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "정체불명의 꼬리",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "바르칸",
+          "type": "card",
+          "grade": 4
+        },
+        {
+          "name": "세헤라데",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "파이어혼",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "칼테이야",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "라카이서스",
+          "type": "card",
+          "grade": 3
+        }
+      ]
+    },
+    {
+      "id": "20",
+      "name": "쿠르잔 남부",
+      "npc": "도니아",
+      "group": 2,
+      "items": [
+        {
+          "name": "까미",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "프타",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "네페르",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "게메트",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "줄기로 엮은 티아라",
+          "type": "etc",
+          "grade": 2
+        },
+        {
+          "name": "구릿빛 반지",
+          "type": "etc",
+          "grade": 2
+        },
+        {
+          "name": "거무스름한 주머니",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "군용 보급 정화제",
+          "type": "etc",
+          "grade": 4
+        },
+        {
+          "name": "고급 정화제",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "간이 정화제",
+          "type": "etc",
+          "grade": 2
+        },
+        {
+          "name": "시들지 않는 불꽃",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "흑요석 거울",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "투케투스 고래 기름",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "유황 버섯 납작구이",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "다르키엘",
+          "type": "card",
+          "grade": 3
+        }
+      ]
+    },
+    {
+      "id": "21",
+      "name": "쿠르잔 북부",
+      "npc": "콜빈",
+      "group": 1,
+      "items": [
+        {
+          "name": "둥근 뿌리 차",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "전투 식량",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "부서진 토우",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "수상한 지도",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "검은 미끼 주머니",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "조각난 금속 파편",
+          "type": "etc",
+          "grade": 2
+        },
+        {
+          "name": "타무트",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "알키오네",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "아그리스",
+          "type": "card",
+          "grade": 1
+        },
+        {
+          "name": "카멘",
+          "type": "card",
+          "grade": 4
+        },
+        {
+          "name": "렌",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "아사르 가면",
+          "type": "favor",
+          "grade": 3
+        }
+      ]
+    },
+    {
+      "id": "22",
+      "name": "림레이크 남섬",
+      "npc": "재마",
+      "group": 1,
+      "items": [
+        {
+          "name": "타라코룸",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "빛바랜 황금 사과",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "밀가루",
+          "type": "etc",
+          "grade": 2
+        },
+        {
+          "name": "유리 나비",
+          "type": "favor",
+          "grade": 4
+        },
+        {
+          "name": "환영 잉크",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "날씨 상자",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "기묘한 주전자",
+          "type": "favor",
+          "grade": 3
+        },
+        {
+          "name": "린",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "긴",
+          "type": "card",
+          "grade": 2
+        },
+        {
+          "name": "헤아누",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "란게",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "파후",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "유즈",
+          "type": "card",
+          "grade": 3
+        },
+        {
+          "name": "불그스럼 주머니",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "비법의 주머니",
+          "type": "etc",
+          "grade": 3
+        },
+        {
+          "name": "왠지 가벼운 빛바랜 황금 사과",
+          "type": "etc",
+          "grade": 3
+        }
+      ]
+    }
+  ],
+  "servers": [
+    "루페온",
+    "실리안",
+    "아만",
+    "아브렐슈드",
+    "카단",
+    "카마인",
+    "카제로스",
+    "니나브"
+  ]
+}
