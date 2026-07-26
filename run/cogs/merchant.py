@@ -4,6 +4,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands, tasks
 
+from run.services.merchant import kloa
 from run.services.merchant import schedule as sch
 from run.services.merchant import sightings
 from run.utils import timez
@@ -45,16 +46,20 @@ class MerchantCog(commands.Cog):
     ) -> None:
         await interaction.response.defer()
         now = timez.now()
-        embed = merchant_view.merchant_embed(now)
+
+        # 등장 시각·지역은 계산되지만 '무엇을 파는지'는 서버마다 달라 제보로만 알 수 있다
+        seen = await kloa.sightings(서버.value, now) if 서버 else ()
+        embed = merchant_view.merchant_embed(now, 서버.value if 서버 else None, seen)
 
         window = sch.active_window(now)
         if 서버 and window:
             reports = await sightings.active(window.id, 서버.value)
-            embed.add_field(
-                name=f"{서버.value} 제보",
-                value=merchant_view.reports_text(reports),
-                inline=False,
-            )
+            if reports:
+                embed.add_field(
+                    name=f"{서버.value} 디스코드 제보",
+                    value=merchant_view.reports_text(reports),
+                    inline=False,
+                )
         await interaction.followup.send(embed=embed)
 
     @app_commands.command(name="떠상제보", description="떠돌이 상인 위치를 공유합니다")

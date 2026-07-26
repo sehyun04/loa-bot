@@ -40,8 +40,10 @@ class LoaBot(commands.Bot):
 
     async def close(self) -> None:
         from run.services.lostark.client import close_client
+        from run.services.merchant import kloa
 
         await close_client()
+        await kloa.close()
         await super().close()
 
     async def on_ready(self) -> None:
@@ -58,6 +60,13 @@ class LoaBot(commands.Bot):
         else:
             log.warning("아직 어떤 서버에도 초대되지 않았어요")
         await self._sync_commands()
+
+    async def on_app_command_completion(
+        self, interaction: discord.Interaction, command: app_commands.Command
+    ) -> None:
+        # 실행 기록이 없으면 "요청이 봇까지 왔는지"조차 알 수 없어 진단이 막힌다
+        options = " ".join(f"{k}={v}" for k, v in interaction.namespace.__dict__.items() if v is not None)
+        log.info("/%s %s (%s)", command.qualified_name, options, interaction.user)
 
     async def on_guild_join(self, guild: discord.Guild) -> None:
         # 글로벌 등록은 반영까지 최대 1시간이 걸린다. 새로 초대된 서버에는
