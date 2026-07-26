@@ -90,6 +90,57 @@ run/
 **게임 컨텐츠는 코드가 아니라 데이터입니다.** 레이드가 추가되면 `resources/homework.json` 만
 고치면 됩니다. 코드는 건드릴 필요가 없습니다.
 
+## 배포 (Oracle Cloud)
+
+봇은 오라클 클라우드 무료 인스턴스에서 24시간 돌아갑니다.
+
+| | |
+|---|---|
+| 위치 | 오사카 (`ap-osaka-1`) |
+| 사양 | VM.Standard.E2.1.Micro — 1 OCPU / 1GB (Always Free) |
+| OS | Ubuntu 24.04 + swap 1GB |
+| 실행 | Docker Compose (`restart: unless-stopped`) |
+
+실사용 메모리는 40MB 정도라 1GB로 충분합니다. 인바운드는 SSH(22)만 열려 있고
+봇은 디스코드로 나가는 연결만 씁니다.
+
+### 접속 설정 (한 번만)
+
+배포 담당자에게 SSH 개인키를 받아 `~/.ssh/oci_loa` 로 두고, `~/.ssh/config` 에 추가합니다.
+
+```
+Host loa
+    HostName <서버 IP>
+    User ubuntu
+    IdentityFile ~/.ssh/oci_loa
+```
+
+### 배포
+
+```bash
+# 코드만 바뀐 경우
+ssh loa 'cd loa-bot && git pull && docker compose up -d --build'
+
+# 로그 보기
+ssh loa 'cd loa-bot && docker compose logs -f'
+
+# 상태 / 재시작 / 중지
+ssh loa 'cd loa-bot && docker compose ps'
+ssh loa 'cd loa-bot && docker compose restart'
+ssh loa 'cd loa-bot && docker compose stop'
+```
+
+시크릿(`.env`)을 바꿨다면 서버에도 올려야 합니다. 복호화한 평문을 직접 보내는 대신
+암호화본을 커밋하고 서버에서 푸는 쪽이 안전합니다.
+
+```bash
+sops -d --input-type dotenv --output-type dotenv .env.prod.enc > /tmp/e && scp /tmp/e loa:~/loa-bot/.env && rm /tmp/e
+ssh loa 'cd loa-bot && docker compose up -d'
+```
+
+**로컬에서 테스트할 때는 서버 봇과 같은 토큰을 쓰지 마세요.** 세션이 충돌해
+양쪽 다 무한 재연결에 빠집니다. 자세한 내용은 [SECRETS.md](SECRETS.md) 를 보세요.
+
 ## 기여
 
 - `main` 직접 푸시 대신 브랜치 + PR을 씁니다. 브랜치 이름은 `feat/`, `fix/`, `chore/` 로 시작합니다.

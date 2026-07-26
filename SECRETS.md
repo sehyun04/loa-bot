@@ -119,6 +119,21 @@ sops -e -i --input-type dotenv --output-type dotenv .env.dev.enc
 | 로아 키 | 각자 발급 | 운영 전용 |
 | 개인키 보유 | 개발자 전원 | 배포 담당자만 |
 
+### 지금 상태 (2026-07-27) — 읽고 시작할 것
+
+**아직 봇이 하나뿐이라 `.env.dev.enc`와 `.env.prod.enc`에 같은 토큰이 들어있다.**
+그리고 그 봇은 지금 오라클에서 24시간 돌고 있다. 즉 `.env.dev.enc`를 그대로 풀어
+로컬에서 실행하면 **서버 봇과 세션이 충돌해서 양쪽 다 무한 재연결에 빠진다.**
+
+로컬에서 돌려보기 전에 반드시 둘 중 하나를 하라.
+
+1. (권장) 자기 테스트 봇을 새로 만들어 `.env`의 `DISCORD_TOKEN`·`DISCORD_APPLICATION_ID`를
+   자기 것으로 바꾼다. 이러면 서버 봇을 건드리지 않고 마음껏 실험할 수 있다.
+2. 서버 봇을 잠시 끈다 — `ssh loa 'cd loa-bot && docker compose stop'`.
+   실서비스가 멈추므로 혼자 쓸 때만.
+
+로아 API 키도 한도(분당 100회)가 키 단위라, 각자 발급해서 `.env`에 넣는 편이 낫다.
+
 봇은 `BOT_ENV_FILE`로 무엇을 읽을지 고른다 (`run/core/config.py`):
 
 ```bash
