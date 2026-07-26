@@ -53,6 +53,32 @@ age-keygen -y ~/.config/sops/age/keys.txt
 > `~/Library/Application Support/sops/age/keys.txt`에서만 찾아 복호화가 실패한다.
 > 위 3번은 건너뛰지 말 것.
 
+### 윈도우(Windows) 사용자
+
+**설치만 PowerShell에서 하고, 나머지는 Git Bash에서** 하면 위 macOS 가이드와
+거의 동일하게 흘러간다. (Git for Windows를 깔면 Git Bash가 함께 설치된다.)
+
+```powershell
+# PowerShell 또는 cmd 에서 설치
+winget install FiloSottile.age getsops.sops
+# winget이 없으면:  scoop install sops age   또는   choco install sops age
+```
+
+```bash
+# 이후는 Git Bash 에서 (macOS 가이드와 동일, 셸 rc만 ~/.bashrc)
+mkdir -p ~/.config/sops/age
+age-keygen -o ~/.config/sops/age/keys.txt
+echo 'export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"' >> ~/.bashrc
+source ~/.bashrc
+age-keygen -y ~/.config/sops/age/keys.txt   # 이 공개키를 관리자에게 전달
+```
+
+> ⚠️ **복호화는 반드시 Git Bash에서 하라.** PowerShell의 `>` 리다이렉션은 파일을
+> UTF-16으로 저장해 `.env`가 깨지고 봇이 읽지 못한다. Git Bash에서
+> `sops -d ... .env.dev.enc > .env` 로 하면 UTF-8로 정상 저장된다.
+> 굳이 PowerShell을 쓴다면(PowerShell 7+):
+> `sops -d --input-type dotenv --output-type dotenv .env.dev.enc | Out-File .env -Encoding utf8NoBOM`
+
 ---
 
 ## 일상 워크플로우
