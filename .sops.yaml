@@ -1,0 +1,17 @@
+# SOPS 암호화 규칙
+# 어떤 파일을 누구의 age 공개키로 잠글지 정의한다.
+# 공개키(age1...)는 유출돼도 무해한 "자물쇠"다. 개인키(keys.txt)만 있으면 연다.
+#
+# 새 팀원이 들어오면: 그 사람 공개키를 아래 age 목록에 콤마로 이어 붙이고
+#   sops updatekeys .env.dev.enc
+# 를 실행하면 재암호화 없이 수신자만 갱신된다.
+
+creation_rules:
+  # 개발용 시크릿 — 개발자 전원의 공개키로 암호화 (각자 개인키로 복호화)
+  - path_regex: \.env\.dev\.enc$
+    age: 'age1d9rxzp6ptq4lyegstle8nsjjphjz23vfzsmu4qla8u5f68vngaaqwe8zwg'
+    # 친구 공개키 받으면 위 값을 'age1거노...,age1친구1...,age1친구2...' 형태로 교체
+
+  # 운영용 시크릿 — 배포 담당자 공개키만 (아무나 못 열게)
+  - path_regex: \.env\.prod\.enc$
+    age: 'age1d9rxzp6ptq4lyegstle8nsjjphjz23vfzsmu4qla8u5f68vngaaqwe8zwg'
