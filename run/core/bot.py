@@ -52,7 +52,23 @@ class LoaBot(commands.Bot):
         self._ready_once = True
 
         log.info("로그인: %s (id=%s)", self.user, self.user.id if self.user else "?")
+        if self.guilds:
+            for guild in self.guilds:
+                log.info("참여 중인 서버: %s (id=%s)", guild.name, guild.id)
+        else:
+            log.warning("아직 어떤 서버에도 초대되지 않았어요")
         await self._sync_commands()
+
+    async def on_guild_join(self, guild: discord.Guild) -> None:
+        # 글로벌 등록은 반영까지 최대 1시간이 걸린다. 새로 초대된 서버에는
+        # 길드 스코프로 즉시 복사해서 바로 쓸 수 있게 한다.
+        log.info("서버에 초대됨: %s (id=%s)", guild.name, guild.id)
+        try:
+            self.tree.copy_global_to(guild=guild)
+            synced = await self.tree.sync(guild=guild)
+            log.info("%s 에 커맨드 %d개 즉시 등록", guild.name, len(synced))
+        except discord.HTTPException:
+            log.exception("길드 커맨드 동기화 실패: %s", guild.id)
 
     async def _sync_commands(self) -> None:
         try:
@@ -61,6 +77,12 @@ class LoaBot(commands.Bot):
                 self.tree.copy_global_to(guild=guild)
                 synced = await self.tree.sync(guild=guild)
                 log.info("길드 커맨드 %d개 동기화 (즉시 반영)", len(synced))
+
+                # 글로벌과 길드는 별개로 취급되어 같은 커맨드가 두 벌로 보인다.
+                # 개발 중에는 즉시 반영되는 길드 쪽만 남긴다.
+                self.tree.clear_commands(guild=None)
+                await self.tree.sync()
+                log.info("글로벌 커맨드 정리 완료 (중복 표시 방지)")
             else:
                 synced = await self.tree.sync()
                 log.info("글로벌 커맨드 %d개 동기화 (반영까지 최대 1시간)", len(synced))
