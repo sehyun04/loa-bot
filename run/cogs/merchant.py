@@ -49,18 +49,18 @@ class MerchantCog(commands.Cog):
 
         # 등장 시각·지역은 계산되지만 '무엇을 파는지'는 서버마다 달라 제보로만 알 수 있다
         seen = await kloa.sightings(서버.value, now) if 서버 else ()
-        embed = merchant_view.merchant_embed(now, 서버.value if 서버 else None, seen)
 
+        reports_block = None
         window = sch.active_window(now)
         if 서버 and window:
             reports = await sightings.active(window.id, 서버.value)
             if reports:
-                embed.add_field(
-                    name=f"{서버.value} 디스코드 제보",
-                    value=merchant_view.reports_text(reports),
-                    inline=False,
-                )
-        await interaction.followup.send(embed=embed)
+                reports_block = merchant_view.reports_text(reports)
+
+        view = merchant_view.build_merchant_view(now, 서버.value if 서버 else None, seen, reports_block)
+        message = await interaction.followup.send(view=view, wait=True)
+        if isinstance(view, merchant_view.MerchantPager):
+            view.message = message
 
     @app_commands.command(name="떠상제보", description="떠돌이 상인 위치를 공유합니다")
     @app_commands.describe(서버="발견한 서버", 지역="상인이 있는 지역", 품목="파는 물건 (쉼표로 구분)")

@@ -1,4 +1,5 @@
 import json
+import re
 from dataclasses import dataclass
 from datetime import date as date_cls
 from datetime import datetime, time, timedelta
@@ -8,6 +9,11 @@ from run.core import config
 from run.utils.timez import KST
 
 
+_ICON_BASE = "https://cdn-lostark.game.onstove.com/"
+_NO_EMOJI = ""
+_EMOJI_ID = re.compile(r":(\d+)>$")
+
+
 @dataclass(frozen=True)
 class Item:
     # id는 kloa 제보 API의 itemIds와 맞물리는 키다. 표시용이 아니라 조인 키라 바꾸면 안 된다.
@@ -15,8 +21,20 @@ class Item:
     name: str
     type: str
     grade: int
+    icon: str  # 로스트아크 공식 CDN 상대경로
     # 게임에 뜨지만 목록에는 감추는 항목(전설·영웅 호감도 같은 등급 표기용 더미)
     hidden: bool = False
+
+    @property
+    def icon_url(self) -> str:
+        return _ICON_BASE + self.icon
+
+    @property
+    def emoji(self) -> str:
+        """인라인용 작은 아이콘. scripts/upload_item_emojis.py로 미리 올려둔 봇 이모지.
+
+        업로드 전이거나 새 아이템이라 매핑이 없으면 조용히 빈 문자열."""
+        return _item_emoji().get(self.icon, _NO_EMOJI)
 
 
 @dataclass(frozen=True)
@@ -52,6 +70,27 @@ def _data() -> dict:
 
 
 @lru_cache(maxsize=1)
+def _item_emoji() -> dict[str, str]:
+    """icon 경로 -> 인라인 이모지 태그.
+
+    item_emoji.json에는 scripts/upload_item_emojis.py가 재실행 시 중복 업로드를
+    피하려고 사람이 읽을 수 있는 풀네임(`<:loa_xxx:id>`)으로 저장돼 있다. 렌더링은
+    ID만 있으면 되므로 여기서 이름을 한 글자로 줄인다 — 제보가 많은 서버는 지역 20곳
+    안팎에 아이템이 아이콘까지 붙어 4000자 한도를 넘기기 쉬운데, 풀네임 하나가 보통
+    20자 이상이라 이것만으로 아이템 개수만큼 곱절로 새 나간다.
+    """
+    path = config.RESOURCE_DIR / "item_emoji.json"
+    if not path.is_file():
+        return {}
+    raw: dict[str, str] = json.loads(path.read_text(encoding="utf-8"))
+    out = {}
+    for icon, tag in raw.items():
+        m = _EMOJI_ID.search(tag)
+        out[icon] = f"<:e:{m.group(1)}>" if m else tag
+    return out
+
+
+@lru_cache(maxsize=1)
 def all_regions() -> tuple[Region, ...]:
     return tuple(
         Region(
@@ -65,6 +104,7 @@ def all_regions() -> tuple[Region, ...]:
                     name=i["name"],
                     type=i["type"],
                     grade=i["grade"],
+                    icon=i["icon"],
                     hidden=bool(i.get("hidden")),
                 )
                 for i in r["items"]

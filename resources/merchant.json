@@ -1,6 +1,6 @@
 {
   "source": "kloa.gg /merchant __NEXT_DATA__ + api.korlark.com/lostark/merchant/reports (2026-07-27 갱신)",
-  "note": "떠상 스케줄·지역·판매품목. item.id 와 region.id 는 kloa 제보 API 의 itemIds/regionId 와 매칭되는 키라 임의로 바꾸면 안 된다. 게임 패치 시 갱신 필요.",
+  "note": "떠상 스케줄·지역·판매품목. item.id 와 region.id 는 kloa 제보 API 의 itemIds/regionId 와 매칭되는 키라 임의로 바꾸면 안 된다. 게임 패치 시 갱신 필요. icon은 공식 CDN(cdn-lostark.game.onstove.com) 상대경로.",
   "duration_minutes": 330,
   "schedules": [
     {
@@ -223,6 +223,7 @@
       "items": [
         {
           "id": "1",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "시이라",
           "grade": 1,
@@ -230,6 +231,7 @@
         },
         {
           "id": "238",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -237,6 +239,7 @@
         },
         {
           "id": "239",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -244,6 +247,7 @@
         },
         {
           "id": "8",
+          "icon": "efui_iconatlas/all_quest/all_quest_02_230.png",
           "type": "favor",
           "name": "두근두근 상자",
           "grade": 4,
@@ -251,6 +255,7 @@
         },
         {
           "id": "7",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_23.png",
           "type": "favor",
           "name": "아르테미스 성수",
           "grade": 3,
@@ -258,6 +263,7 @@
         },
         {
           "id": "6",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_108.png",
           "type": "favor",
           "name": "레온하트 감자",
           "grade": 3,
@@ -265,6 +271,7 @@
         },
         {
           "id": "5",
+          "icon": "efui_iconatlas/all_quest/all_quest_03_133.png",
           "type": "favor",
           "name": "더욱 화려한 꽃다발",
           "grade": 3,
@@ -272,6 +279,7 @@
         },
         {
           "id": "4",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "카마인",
           "grade": 4,
@@ -279,6 +287,7 @@
         },
         {
           "id": "3",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "레온하트 네리아",
           "grade": 2,
@@ -286,6 +295,7 @@
         },
         {
           "id": "2",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "바루투",
           "grade": 2,
@@ -301,6 +311,7 @@
       "items": [
         {
           "id": "11",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "천둥",
           "grade": 2,
@@ -308,6 +319,7 @@
         },
         {
           "id": "10",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "자이언트 웜",
           "grade": 1,
@@ -315,6 +327,7 @@
         },
         {
           "id": "9",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "모리나",
           "grade": 1,
@@ -322,6 +335,7 @@
         },
         {
           "id": "241",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -329,6 +343,7 @@
         },
         {
           "id": "240",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -336,6 +351,7 @@
         },
         {
           "id": "14",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_117.png",
           "type": "favor",
           "name": "하늘을 비추는 기름",
           "grade": 4,
@@ -343,6 +359,7 @@
         },
         {
           "id": "13",
+          "icon": "efui_iconatlas/use/use_8_39.png",
           "type": "favor",
           "name": "유디아 주술서",
           "grade": 3,
@@ -350,6 +367,7 @@
         },
         {
           "id": "12",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_64.png",
           "type": "favor",
           "name": "유디아 천연소금",
           "grade": 3,
@@ -365,6 +383,7 @@
       "items": [
         {
           "id": "243",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -372,6 +391,7 @@
         },
         {
           "id": "242",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -379,6 +399,7 @@
         },
         {
           "id": "21",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_155.png",
           "type": "favor",
           "name": "사슬전쟁 실록",
           "grade": 4,
@@ -386,6 +407,7 @@
         },
         {
           "id": "15",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "카도건",
           "grade": 1,
@@ -393,6 +415,7 @@
         },
         {
           "id": "17",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "하셀링크",
           "grade": 2,
@@ -400,6 +423,7 @@
         },
         {
           "id": "20",
+          "icon": "efui_iconatlas/all_quest/all_quest_02_95.png",
           "type": "favor",
           "name": "흑장미",
           "grade": 3,
@@ -407,6 +431,7 @@
         },
         {
           "id": "19",
+          "icon": "efui_iconatlas/all_quest/all_quest_02_46.png",
           "type": "favor",
           "name": "견고한 새장",
           "grade": 3,
@@ -414,6 +439,7 @@
         },
         {
           "id": "16",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "베르하트",
           "grade": 1,
@@ -421,6 +447,7 @@
         },
         {
           "id": "18",
+          "icon": "efui_iconatlas/use/use_1_224.png",
           "type": "favor",
           "name": "레이크바 토마토 주스",
           "grade": 3,
@@ -428,6 +455,7 @@
         },
         {
           "id": "22",
+          "icon": "efui_iconatlas/use/use_2_139.png",
           "type": "etc",
           "name": "머리초",
           "grade": 3,
@@ -443,6 +471,7 @@
       "items": [
         {
           "id": "245",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -450,6 +479,7 @@
         },
         {
           "id": "244",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -457,6 +487,7 @@
         },
         {
           "id": "30",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_155.png",
           "type": "favor",
           "name": "사슬전쟁 실록",
           "grade": 4,
@@ -464,6 +495,7 @@
         },
         {
           "id": "23",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "모르페오",
           "grade": 1,
@@ -471,6 +503,7 @@
         },
         {
           "id": "24",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "푸름 전사 브리뉴",
           "grade": 1,
@@ -478,6 +511,7 @@
         },
         {
           "id": "25",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "미한",
           "grade": 2,
@@ -485,6 +519,7 @@
         },
         {
           "id": "26",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "데런 아만",
           "grade": 4,
@@ -492,6 +527,7 @@
         },
         {
           "id": "27",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_183.png",
           "type": "favor",
           "name": "디오리카 밀짚모자",
           "grade": 3,
@@ -499,6 +535,7 @@
         },
         {
           "id": "28",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_161.png",
           "type": "favor",
           "name": "루테란의 검 모형",
           "grade": 3,
@@ -506,6 +543,7 @@
         },
         {
           "id": "29",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_57.png",
           "type": "favor",
           "name": "아제나포리움 브로치",
           "grade": 3,
@@ -513,6 +551,7 @@
         },
         {
           "id": "31",
+          "icon": "efui_iconatlas/use/use_2_193.png",
           "type": "etc",
           "name": "드라이에이징 된 고기",
           "grade": 2,
@@ -520,6 +559,7 @@
         },
         {
           "id": "283",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "진저웨일",
           "grade": 4,
@@ -535,6 +575,7 @@
       "items": [
         {
           "id": "247",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -542,6 +583,7 @@
         },
         {
           "id": "246",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -549,6 +591,7 @@
         },
         {
           "id": "39",
+          "icon": "efui_iconatlas/all_quest/all_quest_02_32.png",
           "type": "etc",
           "name": "뜨거운 초코 커피",
           "grade": 2,
@@ -556,6 +599,7 @@
         },
         {
           "id": "290",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "발탄",
           "grade": 4,
@@ -563,6 +607,7 @@
         },
         {
           "id": "32",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "집행관 솔라스",
           "grade": 1,
@@ -570,6 +615,7 @@
         },
         {
           "id": "33",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "녹스",
           "grade": 2,
@@ -577,6 +623,7 @@
         },
         {
           "id": "34",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "세리아",
           "grade": 2,
@@ -584,6 +631,7 @@
         },
         {
           "id": "35",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_183.png",
           "type": "favor",
           "name": "디오리카 밀짚모자",
           "grade": 3,
@@ -591,6 +639,7 @@
         },
         {
           "id": "36",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_161.png",
           "type": "favor",
           "name": "루테란의 검 모형",
           "grade": 3,
@@ -598,6 +647,7 @@
         },
         {
           "id": "37",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_57.png",
           "type": "favor",
           "name": "아제나포리움 브로치",
           "grade": 3,
@@ -605,6 +655,7 @@
         },
         {
           "id": "38",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_155.png",
           "type": "favor",
           "name": "사슬전쟁 실록",
           "grade": 4,
@@ -612,6 +663,7 @@
         },
         {
           "id": "282",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "에스더 루테란",
           "grade": 4,
@@ -627,6 +679,7 @@
       "items": [
         {
           "id": "44",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_172.png",
           "type": "favor",
           "name": "모코코 당근",
           "grade": 3,
@@ -634,6 +687,7 @@
         },
         {
           "id": "41",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "수호자 에오로",
           "grade": 2,
@@ -641,6 +695,7 @@
         },
         {
           "id": "42",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "모카모카",
           "grade": 3,
@@ -648,6 +703,7 @@
         },
         {
           "id": "43",
+          "icon": "efui_iconatlas/use/use_3_129.png",
           "type": "favor",
           "name": "동글동글한 유리조각",
           "grade": 3,
@@ -655,6 +711,7 @@
         },
         {
           "id": "249",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -662,6 +719,7 @@
         },
         {
           "id": "40",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "창조의 알",
           "grade": 1,
@@ -669,6 +727,7 @@
         },
         {
           "id": "298",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "하이비 집행관",
           "grade": 2,
@@ -676,6 +735,7 @@
         },
         {
           "id": "46",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_66.png",
           "type": "favor",
           "name": "수줍은 바람꽃가루",
           "grade": 4,
@@ -683,6 +743,7 @@
         },
         {
           "id": "248",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -690,6 +751,7 @@
         },
         {
           "id": "45",
+          "icon": "efui_iconatlas/all_quest/all_quest_03_113.png",
           "type": "favor",
           "name": "특대 무당벌레 인형",
           "grade": 3,
@@ -705,6 +767,7 @@
       "items": [
         {
           "id": "292",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "비아키스",
           "grade": 4,
@@ -712,6 +775,7 @@
         },
         {
           "id": "51",
+          "icon": "efui_iconatlas/use/use_8_38.png",
           "type": "favor",
           "name": "비무제 참가 인장",
           "grade": 3,
@@ -719,6 +783,7 @@
         },
         {
           "id": "49",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "수령도사",
           "grade": 1,
@@ -726,6 +791,7 @@
         },
         {
           "id": "48",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "객주도사",
           "grade": 1,
@@ -733,6 +799,7 @@
         },
         {
           "id": "47",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "월향도사",
           "grade": 1,
@@ -740,6 +807,7 @@
         },
         {
           "id": "50",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "웨이",
           "grade": 4,
@@ -747,6 +815,7 @@
         },
         {
           "id": "289",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_02_99.png",
           "type": "etc",
           "name": "태초의 주머니",
           "grade": 4,
@@ -754,6 +823,7 @@
         },
         {
           "id": "285",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "에스더 시엔",
           "grade": 4,
@@ -761,6 +831,7 @@
         },
         {
           "id": "284",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "가디언 루",
           "grade": 4,
@@ -768,6 +839,7 @@
         },
         {
           "id": "251",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -775,6 +847,7 @@
         },
         {
           "id": "250",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -782,6 +855,7 @@
         },
         {
           "id": "52",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_01_59.png",
           "type": "favor",
           "name": "강태공의 낚싯대",
           "grade": 4,
@@ -797,6 +871,7 @@
       "items": [
         {
           "id": "55",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "카인",
           "grade": 3,
@@ -804,6 +879,7 @@
         },
         {
           "id": "253",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -811,6 +887,7 @@
         },
         {
           "id": "252",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -818,6 +895,7 @@
         },
         {
           "id": "56",
+          "icon": "efui_iconatlas/use/use_8_42.png",
           "type": "favor",
           "name": "에너지 X7 캡슐",
           "grade": 3,
@@ -825,6 +903,7 @@
         },
         {
           "id": "57",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_90.png",
           "type": "favor",
           "name": "고급 축음기",
           "grade": 4,
@@ -832,6 +911,7 @@
         },
         {
           "id": "53",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "아이히만 박사",
           "grade": 2,
@@ -839,6 +919,7 @@
         },
         {
           "id": "58",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_31.png",
           "type": "etc",
           "name": "아드레날린 강화 수액",
           "grade": 2,
@@ -846,6 +927,7 @@
         },
         {
           "id": "293",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "일리아칸",
           "grade": 4,
@@ -853,6 +935,7 @@
         },
         {
           "id": "54",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "슈테른 네리아",
           "grade": 2,
@@ -868,6 +951,7 @@
       "items": [
         {
           "id": "254",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -875,6 +959,7 @@
         },
         {
           "id": "65",
+          "icon": "efui_iconatlas/all_quest/all_quest_02_71.png",
           "type": "favor",
           "name": "마력 결정",
           "grade": 3,
@@ -882,6 +967,7 @@
         },
         {
           "id": "66",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_56.png",
           "type": "favor",
           "name": "화려한 오르골",
           "grade": 3,
@@ -889,6 +975,7 @@
         },
         {
           "id": "67",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_253.png",
           "type": "favor",
           "name": "베른 건국 기념주화",
           "grade": 4,
@@ -896,6 +983,7 @@
         },
         {
           "id": "68",
+          "icon": "efui_iconatlas/tokenitem/tokenitem_2.png",
           "type": "etc",
           "name": "위대한 미술품 #2",
           "grade": 3,
@@ -903,6 +991,7 @@
         },
         {
           "id": "59",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "페일린",
           "grade": 2,
@@ -910,6 +999,7 @@
         },
         {
           "id": "60",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "기드온",
           "grade": 2,
@@ -917,6 +1007,7 @@
         },
         {
           "id": "61",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "라하르트",
           "grade": 3,
@@ -924,6 +1015,7 @@
         },
         {
           "id": "62",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_141.png",
           "type": "favor",
           "name": "기사단 가입 신청서",
           "grade": 3,
@@ -931,6 +1023,7 @@
         },
         {
           "id": "63",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_105.png",
           "type": "favor",
           "name": "고블린 고구마",
           "grade": 3,
@@ -938,6 +1031,7 @@
         },
         {
           "id": "64",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_207.png",
           "type": "favor",
           "name": "마법 옷감",
           "grade": 3,
@@ -945,6 +1039,7 @@
         },
         {
           "id": "255",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -960,6 +1055,7 @@
       "items": [
         {
           "id": "70",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "시안",
           "grade": 2,
@@ -967,6 +1063,7 @@
         },
         {
           "id": "71",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "진 매드닉",
           "grade": 3,
@@ -974,6 +1071,7 @@
         },
         {
           "id": "72",
+          "icon": "efui_iconatlas/use/use_8_41.png",
           "type": "favor",
           "name": "빛나는 정수",
           "grade": 3,
@@ -981,6 +1079,7 @@
         },
         {
           "id": "73",
+          "icon": "efui_iconatlas/all_quest/all_quest_03_4.png",
           "type": "favor",
           "name": "시리우스의 성서",
           "grade": 4,
@@ -988,6 +1087,7 @@
         },
         {
           "id": "257",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -995,6 +1095,7 @@
         },
         {
           "id": "256",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -1002,6 +1103,7 @@
         },
         {
           "id": "74",
+          "icon": "efui_iconatlas/use/use_3_167.png",
           "type": "etc",
           "name": "사파이어 정어리",
           "grade": 2,
@@ -1009,6 +1111,7 @@
         },
         {
           "id": "69",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "자베른",
           "grade": 1,
@@ -1024,6 +1127,7 @@
       "items": [
         {
           "id": "75",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "알리페르",
           "grade": 2,
@@ -1031,6 +1135,7 @@
         },
         {
           "id": "82",
+          "icon": "efui_iconatlas/use/use_7_133.png",
           "type": "favor",
           "name": "실린여왕의 축복",
           "grade": 4,
@@ -1038,6 +1143,7 @@
         },
         {
           "id": "83",
+          "icon": "efui_iconatlas/use/use_5_213.png",
           "type": "etc",
           "name": "두근두근 마카롱",
           "grade": 3,
@@ -1045,6 +1151,7 @@
         },
         {
           "id": "81",
+          "icon": "efui_iconatlas/use/use_7_132.png",
           "type": "favor",
           "name": "다뉴브의 귀걸이",
           "grade": 3,
@@ -1052,6 +1159,7 @@
         },
         {
           "id": "80",
+          "icon": "efui_iconatlas/use/use_6_11.png",
           "type": "favor",
           "name": "정령의 깃털",
           "grade": 3,
@@ -1059,6 +1167,7 @@
         },
         {
           "id": "79",
+          "icon": "efui_iconatlas/use/use_6_10.png",
           "type": "favor",
           "name": "새벽의 마력석",
           "grade": 3,
@@ -1066,6 +1175,7 @@
         },
         {
           "id": "78",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "아제나&이난나",
           "grade": 4,
@@ -1073,6 +1183,7 @@
         },
         {
           "id": "77",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "그노시스",
           "grade": 3,
@@ -1080,6 +1191,7 @@
         },
         {
           "id": "76",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "엘레노아",
           "grade": 2,
@@ -1087,6 +1199,7 @@
         },
         {
           "id": "258",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -1094,6 +1207,7 @@
         },
         {
           "id": "259",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -1101,6 +1215,7 @@
         },
         {
           "id": "296",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "몽환의 나이트",
           "grade": 1,
@@ -1116,6 +1231,7 @@
       "items": [
         {
           "id": "84",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "피에르",
           "grade": 2,
@@ -1123,6 +1239,7 @@
         },
         {
           "id": "86",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "케이사르",
           "grade": 3,
@@ -1130,6 +1247,7 @@
         },
         {
           "id": "260",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -1137,6 +1255,7 @@
         },
         {
           "id": "85",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "위대한 성 네리아",
           "grade": 2,
@@ -1144,6 +1263,7 @@
         },
         {
           "id": "88",
+          "icon": "efui_iconatlas/use/use_8_44.png",
           "type": "favor",
           "name": "피에르의 비법서",
           "grade": 3,
@@ -1151,6 +1271,7 @@
         },
         {
           "id": "261",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -1158,6 +1279,7 @@
         },
         {
           "id": "87",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "바훈투르",
           "grade": 4,
@@ -1165,6 +1287,7 @@
         },
         {
           "id": "89",
+          "icon": "efui_iconatlas/use/use_6_84.png",
           "type": "favor",
           "name": "파후투르 맥주",
           "grade": 4,
@@ -1172,6 +1295,7 @@
         },
         {
           "id": "90",
+          "icon": "efui_iconatlas/use/use_6_49.png",
           "type": "etc",
           "name": "뒷골목 럼주",
           "grade": 1,
@@ -1179,6 +1303,7 @@
         },
         {
           "id": "286",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "에스더 갈라투르",
           "grade": 4,
@@ -1194,6 +1319,7 @@
       "items": [
         {
           "id": "92",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "비올레",
           "grade": 2,
@@ -1201,6 +1327,7 @@
         },
         {
           "id": "91",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "굴딩",
           "grade": 2,
@@ -1208,6 +1335,7 @@
         },
         {
           "id": "93",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "칼도르",
           "grade": 3,
@@ -1215,6 +1343,7 @@
         },
         {
           "id": "94",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "페데리코",
           "grade": 3,
@@ -1222,6 +1351,7 @@
         },
         {
           "id": "262",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -1229,6 +1359,7 @@
         },
         {
           "id": "263",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -1236,6 +1367,7 @@
         },
         {
           "id": "99",
+          "icon": "efui_iconatlas/use/use_2_24.png",
           "type": "etc",
           "name": "선지 덩어리",
           "grade": 2,
@@ -1243,6 +1375,7 @@
         },
         {
           "id": "96",
+          "icon": "efui_iconatlas/use/use_6_229.png",
           "type": "favor",
           "name": "생존의 서",
           "grade": 3,
@@ -1250,6 +1383,7 @@
         },
         {
           "id": "98",
+          "icon": "efui_iconatlas/use/use_6_231.png",
           "type": "favor",
           "name": "붉은 달의 눈물",
           "grade": 4,
@@ -1257,6 +1391,7 @@
         },
         {
           "id": "97",
+          "icon": "efui_iconatlas/use/use_6_230.png",
           "type": "favor",
           "name": "바싹 마른 목상",
           "grade": 3,
@@ -1264,6 +1399,7 @@
         },
         {
           "id": "95",
+          "icon": "efui_iconatlas/use/use_6_228.png",
           "type": "favor",
           "name": "부러진 단검",
           "grade": 3,
@@ -1279,6 +1415,7 @@
       "items": [
         {
           "id": "265",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -1286,6 +1423,7 @@
         },
         {
           "id": "100",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "세토",
           "grade": 2,
@@ -1293,6 +1431,7 @@
         },
         {
           "id": "101",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "스텔라",
           "grade": 2,
@@ -1300,6 +1439,7 @@
         },
         {
           "id": "102",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "키케라",
           "grade": 2,
@@ -1307,6 +1447,7 @@
         },
         {
           "id": "103",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "알비온",
           "grade": 3,
@@ -1314,6 +1455,7 @@
         },
         {
           "id": "104",
+          "icon": "efui_iconatlas/use/use_7_134.png",
           "type": "favor",
           "name": "포튼쿨 열매",
           "grade": 3,
@@ -1321,6 +1463,7 @@
         },
         {
           "id": "105",
+          "icon": "efui_iconatlas/use/use_7_135.png",
           "type": "favor",
           "name": "피냐타 제작 세트",
           "grade": 3,
@@ -1328,6 +1471,7 @@
         },
         {
           "id": "106",
+          "icon": "efui_iconatlas/use/use_7_136.png",
           "type": "favor",
           "name": "무지개 티카티카 꽃",
           "grade": 3,
@@ -1335,6 +1479,7 @@
         },
         {
           "id": "107",
+          "icon": "efui_iconatlas/use/use_7_137.png",
           "type": "favor",
           "name": "오레하의 수석",
           "grade": 4,
@@ -1342,6 +1487,7 @@
         },
         {
           "id": "110",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_01_235.png",
           "type": "etc",
           "name": "부드러운 주머니",
           "grade": 3,
@@ -1349,6 +1495,7 @@
         },
         {
           "id": "111",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_01_251.png",
           "type": "etc",
           "name": "빛나는 백금 주머니",
           "grade": 3,
@@ -1356,6 +1503,7 @@
         },
         {
           "id": "291",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "쿠크세이튼",
           "grade": 4,
@@ -1363,6 +1511,7 @@
         },
         {
           "id": "109",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_01_249.png",
           "type": "etc",
           "name": "신비한 녹색 주머니",
           "grade": 3,
@@ -1370,6 +1519,7 @@
         },
         {
           "id": "108",
+          "icon": "efui_iconatlas/all_quest/all_quest_02_126.png",
           "type": "etc",
           "name": "멧돼지 생고기",
           "grade": 2,
@@ -1377,6 +1527,7 @@
         },
         {
           "id": "287",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "광기를 잃은 쿠크세이튼",
           "grade": 4,
@@ -1384,6 +1535,7 @@
         },
         {
           "id": "264",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -1399,6 +1551,7 @@
       "items": [
         {
           "id": "295",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "아브렐슈드",
           "grade": 4,
@@ -1406,6 +1559,7 @@
         },
         {
           "id": "113",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "킬리언",
           "grade": 1,
@@ -1413,6 +1567,7 @@
         },
         {
           "id": "125",
+          "icon": "efui_iconatlas/use/use_7_200.png",
           "type": "etc",
           "name": "집중 룬",
           "grade": 4,
@@ -1420,6 +1575,7 @@
         },
         {
           "id": "124",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_01_248.png",
           "type": "etc",
           "name": "보석 장식 주머니",
           "grade": 3,
@@ -1427,6 +1583,7 @@
         },
         {
           "id": "123",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_01_238.png",
           "type": "etc",
           "name": "신기한 마법 주머니",
           "grade": 3,
@@ -1434,6 +1591,7 @@
         },
         {
           "id": "122",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_01_246.png",
           "type": "etc",
           "name": "질긴 가죽 주머니",
           "grade": 3,
@@ -1441,6 +1599,7 @@
         },
         {
           "id": "121",
+          "icon": "efui_iconatlas/use/use_9_212.png",
           "type": "favor",
           "name": "사령술사의 기록",
           "grade": 4,
@@ -1448,6 +1607,7 @@
         },
         {
           "id": "120",
+          "icon": "efui_iconatlas/use/use_9_211.png",
           "type": "favor",
           "name": "모형 반딧불이",
           "grade": 3,
@@ -1455,6 +1615,7 @@
         },
         {
           "id": "119",
+          "icon": "efui_iconatlas/use/use_9_210.png",
           "type": "favor",
           "name": "깃털 부채",
           "grade": 3,
@@ -1462,6 +1623,7 @@
         },
         {
           "id": "118",
+          "icon": "efui_iconatlas/use/use_9_209.png",
           "type": "favor",
           "name": "페브리 포션",
           "grade": 3,
@@ -1469,6 +1631,7 @@
         },
         {
           "id": "117",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "천둥날개",
           "grade": 3,
@@ -1476,6 +1639,7 @@
         },
         {
           "id": "116",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "베른 젠로드",
           "grade": 2,
@@ -1483,6 +1647,7 @@
         },
         {
           "id": "114",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "루기네",
           "grade": 2,
@@ -1490,6 +1655,7 @@
         },
         {
           "id": "267",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -1497,6 +1663,7 @@
         },
         {
           "id": "266",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -1504,6 +1671,7 @@
         },
         {
           "id": "112",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "사트라",
           "grade": 1,
@@ -1511,6 +1679,7 @@
         },
         {
           "id": "115",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "제레온",
           "grade": 2,
@@ -1526,6 +1695,7 @@
       "items": [
         {
           "id": "140",
+          "icon": "efui_iconatlas/use/use_10_108.png",
           "type": "favor",
           "name": "엔야카 향유",
           "grade": 3,
@@ -1533,6 +1703,7 @@
         },
         {
           "id": "139",
+          "icon": "efui_iconatlas/use/use_10_107.png",
           "type": "favor",
           "name": "늑대 이빨 목걸이",
           "grade": 3,
@@ -1540,6 +1711,7 @@
         },
         {
           "id": "128",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "아르노",
           "grade": 2,
@@ -1547,6 +1719,7 @@
         },
         {
           "id": "137",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "오스피어",
           "grade": 3,
@@ -1554,6 +1727,7 @@
         },
         {
           "id": "136",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "뮨 히다카",
           "grade": 3,
@@ -1561,6 +1735,7 @@
         },
         {
           "id": "135",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "마리나",
           "grade": 2,
@@ -1568,6 +1743,7 @@
         },
         {
           "id": "134",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "하눈",
           "grade": 2,
@@ -1575,6 +1751,7 @@
         },
         {
           "id": "133",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "빌헬름",
           "grade": 2,
@@ -1582,6 +1759,7 @@
         },
         {
           "id": "132",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "피엘라",
           "grade": 2,
@@ -1589,6 +1767,7 @@
         },
         {
           "id": "131",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "앙케",
           "grade": 2,
@@ -1596,6 +1775,7 @@
         },
         {
           "id": "130",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "사일러스",
           "grade": 2,
@@ -1603,6 +1783,7 @@
         },
         {
           "id": "129",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "바스키아",
           "grade": 2,
@@ -1610,6 +1791,7 @@
         },
         {
           "id": "269",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -1617,6 +1799,7 @@
         },
         {
           "id": "268",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -1624,6 +1807,7 @@
         },
         {
           "id": "138",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "다르시",
           "grade": 3,
@@ -1631,6 +1815,7 @@
         },
         {
           "id": "127",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "레퓌스",
           "grade": 1,
@@ -1638,6 +1823,7 @@
         },
         {
           "id": "126",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "로웬 젠로드",
           "grade": 1,
@@ -1645,6 +1831,7 @@
         },
         {
           "id": "142",
+          "icon": "efui_iconatlas/use/use_10_110.png",
           "type": "favor",
           "name": "보온용 귀도리",
           "grade": 4,
@@ -1652,6 +1839,7 @@
         },
         {
           "id": "141",
+          "icon": "efui_iconatlas/use/use_10_109.png",
           "type": "favor",
           "name": "최상급 육포",
           "grade": 3,
@@ -1667,6 +1855,7 @@
       "items": [
         {
           "id": "288",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "베아트리스",
           "grade": 4,
@@ -1674,6 +1863,7 @@
         },
         {
           "id": "297",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "아르카디아",
           "grade": 3,
@@ -1681,6 +1871,7 @@
         },
         {
           "id": "143",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "코니",
           "grade": 0,
@@ -1688,6 +1879,7 @@
         },
         {
           "id": "144",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "티엔",
           "grade": 1,
@@ -1695,6 +1887,7 @@
         },
         {
           "id": "145",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "키르케",
           "grade": 1,
@@ -1702,6 +1895,7 @@
         },
         {
           "id": "146",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "유클리드",
           "grade": 1,
@@ -1709,6 +1903,7 @@
         },
         {
           "id": "147",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "프리우나",
           "grade": 1,
@@ -1716,6 +1911,7 @@
         },
         {
           "id": "148",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "하늘 고래",
           "grade": 1,
@@ -1723,6 +1919,7 @@
         },
         {
           "id": "149",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "별자리 큰뱀",
           "grade": 1,
@@ -1730,6 +1927,7 @@
         },
         {
           "id": "150",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "아자키엘",
           "grade": 2,
@@ -1737,6 +1935,7 @@
         },
         {
           "id": "151",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "벨루마테",
           "grade": 2,
@@ -1744,6 +1943,7 @@
         },
         {
           "id": "152",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "다이나웨일",
           "grade": 2,
@@ -1751,6 +1951,7 @@
         },
         {
           "id": "153",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "디오게네스",
           "grade": 2,
@@ -1758,6 +1959,7 @@
         },
         {
           "id": "154",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "라우리엘",
           "grade": 3,
@@ -1765,6 +1967,7 @@
         },
         {
           "id": "155",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "영원의 아크 카양겔",
           "grade": 3,
@@ -1772,6 +1975,7 @@
         },
         {
           "id": "156",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "에버그레이스",
           "grade": 4,
@@ -1779,6 +1983,7 @@
         },
         {
           "id": "157",
+          "icon": "efui_iconatlas/use/use_10_158.png",
           "type": "favor",
           "name": "빛을 머금은 과실주",
           "grade": 3,
@@ -1786,6 +1991,7 @@
         },
         {
           "id": "158",
+          "icon": "efui_iconatlas/use/use_10_159.png",
           "type": "favor",
           "name": "별자리 큰뱀의 껍질",
           "grade": 3,
@@ -1793,6 +1999,7 @@
         },
         {
           "id": "159",
+          "icon": "efui_iconatlas/use/use_10_160.png",
           "type": "favor",
           "name": "크레도프 유리경",
           "grade": 3,
@@ -1800,6 +2007,7 @@
         },
         {
           "id": "160",
+          "icon": "efui_iconatlas/use/use_10_161.png",
           "type": "favor",
           "name": "행운의 초롱별 꽃",
           "grade": 4,
@@ -1807,6 +2015,7 @@
         },
         {
           "id": "161",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_01_240.png",
           "type": "etc",
           "name": "향기 나는 주머니",
           "grade": 3,
@@ -1814,6 +2023,7 @@
         },
         {
           "id": "162",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_01_243.png",
           "type": "etc",
           "name": "반짝이는 주머니",
           "grade": 3,
@@ -1821,6 +2031,7 @@
         },
         {
           "id": "270",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -1828,6 +2039,7 @@
         },
         {
           "id": "271",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -1843,6 +2055,7 @@
       "items": [
         {
           "id": "173",
+          "icon": "efui_iconatlas/use/use_11_63.png",
           "type": "etc",
           "name": "미술품 캐리어",
           "grade": 4,
@@ -1850,6 +2063,7 @@
         },
         {
           "id": "167",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "클라우디아",
           "grade": 2,
@@ -1857,6 +2071,7 @@
         },
         {
           "id": "273",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -1864,6 +2079,7 @@
         },
         {
           "id": "272",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -1871,6 +2087,7 @@
         },
         {
           "id": "163",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "자크라",
           "grade": 2,
@@ -1878,6 +2095,7 @@
         },
         {
           "id": "169",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_51.png",
           "type": "favor",
           "name": "교육용 해도",
           "grade": 3,
@@ -1885,6 +2103,7 @@
         },
         {
           "id": "170",
+          "icon": "efui_iconatlas/all_quest/all_quest_02_21.png",
           "type": "favor",
           "name": "정체불명의 입",
           "grade": 3,
@@ -1892,6 +2111,7 @@
         },
         {
           "id": "168",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "어린 아만",
           "grade": 3,
@@ -1899,6 +2119,7 @@
         },
         {
           "id": "171",
+          "icon": "efui_iconatlas/all_quest/all_quest_02_17.png",
           "type": "favor",
           "name": "컬러풀 집게 장난감",
           "grade": 3,
@@ -1906,6 +2127,7 @@
         },
         {
           "id": "172",
+          "icon": "efui_iconatlas/all_quest/all_quest_01_85.png",
           "type": "favor",
           "name": "불과 얼음의 축제",
           "grade": 4,
@@ -1913,6 +2135,7 @@
         },
         {
           "id": "164",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "로잘린 베디체",
           "grade": 2,
@@ -1920,6 +2143,7 @@
         },
         {
           "id": "166",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "알폰스 베디체",
           "grade": 2,
@@ -1927,6 +2151,7 @@
         },
         {
           "id": "165",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "안토니오 주교",
           "grade": 2,
@@ -1942,6 +2167,7 @@
       "items": [
         {
           "id": "181",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "라자람",
           "grade": 3,
@@ -1949,6 +2175,7 @@
         },
         {
           "id": "180",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "베히모스",
           "grade": 3,
@@ -1956,6 +2183,7 @@
         },
         {
           "id": "179",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "칼리나리 네리아",
           "grade": 2,
@@ -1963,6 +2191,7 @@
         },
         {
           "id": "178",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "마레가",
           "grade": 2,
@@ -1970,6 +2199,7 @@
         },
         {
           "id": "177",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "아이작",
           "grade": 2,
@@ -1977,6 +2207,7 @@
         },
         {
           "id": "176",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "마리우",
           "grade": 2,
@@ -1984,6 +2215,7 @@
         },
         {
           "id": "175",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "닐라이",
           "grade": 1,
@@ -1991,6 +2223,7 @@
         },
         {
           "id": "174",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "베라드",
           "grade": 1,
@@ -1998,6 +2231,7 @@
         },
         {
           "id": "275",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -2005,6 +2239,7 @@
         },
         {
           "id": "274",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -2012,6 +2247,7 @@
         },
         {
           "id": "192",
+          "icon": "efui_iconatlas/use/use_11_150.png",
           "type": "etc",
           "name": "안정된 연성 촉매",
           "grade": 2,
@@ -2019,6 +2255,7 @@
         },
         {
           "id": "195",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_02_8.png",
           "type": "etc",
           "name": "무지개 정수",
           "grade": 3,
@@ -2026,6 +2263,7 @@
         },
         {
           "id": "194",
+          "icon": "efui_iconatlas/all_quest/all_quest_05_47.png",
           "type": "etc",
           "name": "무지개 미끼",
           "grade": 1,
@@ -2033,6 +2271,7 @@
         },
         {
           "id": "193",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_01_253.png",
           "type": "etc",
           "name": "마력이 스민 주머니",
           "grade": 3,
@@ -2040,6 +2279,7 @@
         },
         {
           "id": "191",
+          "icon": "efui_iconatlas/use/use_11_127.png",
           "type": "etc",
           "name": "오징어",
           "grade": 4,
@@ -2047,6 +2287,7 @@
         },
         {
           "id": "190",
+          "icon": "efui_iconatlas/use/use_11_135.png",
           "type": "favor",
           "name": "볼다이칸 스톤",
           "grade": 4,
@@ -2054,6 +2295,7 @@
         },
         {
           "id": "189",
+          "icon": "efui_iconatlas/use/use_11_136.png",
           "type": "favor",
           "name": "속삭이는 휘스피",
           "grade": 3,
@@ -2061,6 +2303,7 @@
         },
         {
           "id": "188",
+          "icon": "efui_iconatlas/use/use_11_137.png",
           "type": "favor",
           "name": "쿠리구리 물약",
           "grade": 3,
@@ -2068,6 +2311,7 @@
         },
         {
           "id": "187",
+          "icon": "efui_iconatlas/use/use_11_138.png",
           "type": "favor",
           "name": "정체불명의 꼬리",
           "grade": 3,
@@ -2075,6 +2319,7 @@
         },
         {
           "id": "186",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "바르칸",
           "grade": 4,
@@ -2082,6 +2327,7 @@
         },
         {
           "id": "185",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "세헤라데",
           "grade": 3,
@@ -2089,6 +2335,7 @@
         },
         {
           "id": "184",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "파이어혼",
           "grade": 3,
@@ -2096,6 +2343,7 @@
         },
         {
           "id": "183",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "칼테이야",
           "grade": 3,
@@ -2103,6 +2351,7 @@
         },
         {
           "id": "182",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "라카이서스",
           "grade": 3,
@@ -2118,6 +2367,7 @@
       "items": [
         {
           "id": "199",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "까미",
           "grade": 1,
@@ -2125,6 +2375,7 @@
         },
         {
           "id": "198",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "프타",
           "grade": 1,
@@ -2132,6 +2383,7 @@
         },
         {
           "id": "197",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "네페르",
           "grade": 1,
@@ -2139,6 +2391,7 @@
         },
         {
           "id": "196",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "게메트",
           "grade": 1,
@@ -2146,6 +2399,7 @@
         },
         {
           "id": "276",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -2153,6 +2407,7 @@
         },
         {
           "id": "277",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -2160,6 +2415,7 @@
         },
         {
           "id": "210",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_02_21.png",
           "type": "etc",
           "name": "줄기로 엮은 티아라",
           "grade": 2,
@@ -2167,6 +2423,7 @@
         },
         {
           "id": "209",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_02_23.png",
           "type": "etc",
           "name": "구릿빛 반지",
           "grade": 2,
@@ -2174,6 +2431,7 @@
         },
         {
           "id": "208",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_02_13.png",
           "type": "etc",
           "name": "거무스름한 주머니",
           "grade": 3,
@@ -2181,6 +2439,7 @@
         },
         {
           "id": "207",
+          "icon": "efui_iconatlas/use/use_1_175.png",
           "type": "etc",
           "name": "군용 보급 정화제",
           "grade": 4,
@@ -2188,6 +2447,7 @@
         },
         {
           "id": "206",
+          "icon": "efui_iconatlas/use/use_1_175.png",
           "type": "etc",
           "name": "고급 정화제",
           "grade": 3,
@@ -2195,6 +2455,7 @@
         },
         {
           "id": "205",
+          "icon": "efui_iconatlas/use/use_1_175.png",
           "type": "etc",
           "name": "간이 정화제",
           "grade": 2,
@@ -2202,6 +2463,7 @@
         },
         {
           "id": "204",
+          "icon": "efui_iconatlas/use/use_12_2.png",
           "type": "favor",
           "name": "시들지 않는 불꽃",
           "grade": 4,
@@ -2209,6 +2471,7 @@
         },
         {
           "id": "203",
+          "icon": "efui_iconatlas/use/use_12_5.png",
           "type": "favor",
           "name": "흑요석 거울",
           "grade": 3,
@@ -2216,6 +2479,7 @@
         },
         {
           "id": "202",
+          "icon": "efui_iconatlas/use/use_12_4.png",
           "type": "favor",
           "name": "투케투스 고래 기름",
           "grade": 3,
@@ -2223,6 +2487,7 @@
         },
         {
           "id": "201",
+          "icon": "efui_iconatlas/use/use_12_3.png",
           "type": "favor",
           "name": "유황 버섯 납작구이",
           "grade": 3,
@@ -2230,6 +2495,7 @@
         },
         {
           "id": "200",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "다르키엘",
           "grade": 3,
@@ -2245,6 +2511,7 @@
       "items": [
         {
           "id": "215",
+          "icon": "efui_iconatlas/use/use_12_124.png",
           "type": "favor",
           "name": "둥근 뿌리 차",
           "grade": 3,
@@ -2252,6 +2519,7 @@
         },
         {
           "id": "217",
+          "icon": "efui_iconatlas/use/use_12_123.png",
           "type": "favor",
           "name": "전투 식량",
           "grade": 3,
@@ -2259,6 +2527,7 @@
         },
         {
           "id": "218",
+          "icon": "efui_iconatlas/use/use_12_126.png",
           "type": "favor",
           "name": "부서진 토우",
           "grade": 4,
@@ -2266,6 +2535,7 @@
         },
         {
           "id": "219",
+          "icon": "efui_iconatlas/use/use_12_168.png",
           "type": "etc",
           "name": "수상한 지도",
           "grade": 3,
@@ -2273,6 +2543,7 @@
         },
         {
           "id": "220",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_02_38.png",
           "type": "etc",
           "name": "검은 미끼 주머니",
           "grade": 3,
@@ -2280,6 +2551,7 @@
         },
         {
           "id": "221",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_02_44.png",
           "type": "etc",
           "name": "조각난 금속 파편",
           "grade": 2,
@@ -2287,6 +2559,7 @@
         },
         {
           "id": "213",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "타무트",
           "grade": 2,
@@ -2294,6 +2567,7 @@
         },
         {
           "id": "212",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "알키오네",
           "grade": 1,
@@ -2301,6 +2575,7 @@
         },
         {
           "id": "211",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "아그리스",
           "grade": 1,
@@ -2308,6 +2583,7 @@
         },
         {
           "id": "294",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "카멘",
           "grade": 4,
@@ -2315,6 +2591,7 @@
         },
         {
           "id": "278",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -2322,6 +2599,7 @@
         },
         {
           "id": "279",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -2329,6 +2607,7 @@
         },
         {
           "id": "214",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "렌",
           "grade": 3,
@@ -2336,6 +2615,7 @@
         },
         {
           "id": "216",
+          "icon": "efui_iconatlas/use/use_12_125.png",
           "type": "favor",
           "name": "아사르 가면",
           "grade": 3,
@@ -2351,6 +2631,7 @@
       "items": [
         {
           "id": "224",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "타라코룸",
           "grade": 2,
@@ -2358,6 +2639,7 @@
         },
         {
           "id": "232",
+          "icon": "efui_iconatlas/use/use_13_10.png",
           "type": "etc",
           "name": "빛바랜 황금 사과",
           "grade": 3,
@@ -2365,6 +2647,7 @@
         },
         {
           "id": "231",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_02_79.png",
           "type": "etc",
           "name": "밀가루",
           "grade": 2,
@@ -2372,6 +2655,7 @@
         },
         {
           "id": "230",
+          "icon": "efui_iconatlas/use/use_12_233.png",
           "type": "favor",
           "name": "유리 나비",
           "grade": 4,
@@ -2379,6 +2663,7 @@
         },
         {
           "id": "229",
+          "icon": "efui_iconatlas/use/use_12_236.png",
           "type": "favor",
           "name": "환영 잉크",
           "grade": 3,
@@ -2386,6 +2671,7 @@
         },
         {
           "id": "228",
+          "icon": "efui_iconatlas/use/use_12_235.png",
           "type": "favor",
           "name": "날씨 상자",
           "grade": 3,
@@ -2393,6 +2679,7 @@
         },
         {
           "id": "227",
+          "icon": "efui_iconatlas/use/use_12_234.png",
           "type": "favor",
           "name": "기묘한 주전자",
           "grade": 3,
@@ -2400,6 +2687,7 @@
         },
         {
           "id": "223",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "린",
           "grade": 2,
@@ -2407,6 +2695,7 @@
         },
         {
           "id": "222",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "긴",
           "grade": 2,
@@ -2414,6 +2703,7 @@
         },
         {
           "id": "280",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "영웅 호감도",
           "grade": 3,
@@ -2421,6 +2711,7 @@
         },
         {
           "id": "281",
+          "icon": "efui_iconatlas/shop_icon/shop_icon_17.png",
           "type": "favor",
           "name": "전설 호감도",
           "grade": 4,
@@ -2428,6 +2719,7 @@
         },
         {
           "id": "226",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "헤아누",
           "grade": 3,
@@ -2435,6 +2727,7 @@
         },
         {
           "id": "225",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "란게",
           "grade": 3,
@@ -2442,6 +2735,7 @@
         },
         {
           "id": "237",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "파후",
           "grade": 3,
@@ -2449,6 +2743,7 @@
         },
         {
           "id": "236",
+          "icon": "efui_iconatlas/use/use_2_13.png",
           "type": "card",
           "name": "유즈",
           "grade": 3,
@@ -2456,6 +2751,7 @@
         },
         {
           "id": "235",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_02_92.png",
           "type": "etc",
           "name": "불그스럼 주머니",
           "grade": 3,
@@ -2463,6 +2759,7 @@
         },
         {
           "id": "234",
+          "icon": "efui_iconatlas/lifelevel/lifelevel_02_87.png",
           "type": "etc",
           "name": "비법의 주머니",
           "grade": 3,
@@ -2470,6 +2767,7 @@
         },
         {
           "id": "233",
+          "icon": "efui_iconatlas/use/use_13_10.png",
           "type": "etc",
           "name": "왠지 가벼운 빛바랜 황금 사과",
           "grade": 3,
