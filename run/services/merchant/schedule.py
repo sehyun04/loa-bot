@@ -118,6 +118,26 @@ def servers() -> tuple[str, ...]:
     return tuple(s["name"] for s in _data()["servers"])
 
 
+@lru_cache(maxsize=1)
+def _card_index() -> dict[str, Item]:
+    out: dict[str, Item] = {}
+    for r in all_regions():
+        for i in r.items_of("card"):
+            if i.hidden:
+                continue
+            out.setdefault(i.name, i)
+    return out
+
+
+def card_names() -> tuple[str, ...]:
+    """지역을 안 가리고 뜰 수 있는 모든 카드 이름. 자동완성용, 중복 제거."""
+    return tuple(sorted(_card_index()))
+
+
+def card_by_name(name: str) -> Item | None:
+    return _card_index().get(name)
+
+
 def server_id(name: str) -> int | None:
     """서버 이름 → kloa 제보 API의 server 번호."""
     return next((s["id"] for s in _data()["servers"] if s["name"] == name), None)

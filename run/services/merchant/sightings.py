@@ -92,6 +92,10 @@ async def subscriptions() -> list[dict]:
     return [dict(r) for r in rows]
 
 
+async def unclaim(key: str) -> None:
+    await db.aexecute("DELETE FROM notify_claims WHERE claim_key=?", (key,))
+
+
 async def claim(key: str) -> bool:
     """이 알림을 내가 보낸다고 선점한다. 이미 보냈으면 False."""
     try:
