@@ -1,8 +1,15 @@
+import json
+import re
 import urllib.parse
 from dataclasses import dataclass, field
 
 from run.core import errors
 from run.services.lostark.client import get_client
+
+# 스톤 각인 텍스트는 "[색상]이름[/색상]] ... Lv.n" 형태로 툴팁 안에 박혀 있다.
+_STONE_ENGRAVING_RE = re.compile(
+    r"\[<FONT COLOR='#[0-9A-Fa-f]+'>(?P<name>[^<]+)</FONT>\][^L]*Lv\.(?P<level>\d+)"
+)
 
 # 통합 엔드포인트는 filters로 필요한 것만 고를 수 있다. 지정하지 않으면
 # 수집품/아바타/스킬까지 전부 와서 응답이 불필요하게 커진다.
@@ -51,6 +58,7 @@ class Character:
     card_sets: list[str] = field(default_factory=list)
     gems: list[str] = field(default_factory=list)
     ark_passive: list[tuple[str, int]] = field(default_factory=list)
+    ability_stone: list[str] = field(default_factory=list)
 
 
 def _parse_profile(data: dict, char: Character) -> None:
@@ -103,6 +111,26 @@ def _parse_gems(data: dict, char: Character) -> None:
     char.gems = [f"{k} {v}개" for k, v in sorted(counter.items(), key=lambda x: -int(x[0][:-2]))]
 
 
+def _parse_ability_stone(equipment: list[dict], char: Character) -> None:
+    stone = next((item for item in equipment if item.get("Type") == "어빌리티 스톤"), None)
+    if stone is None:
+        return
+    try:
+        tooltip = json.loads(stone.get("Tooltip") or "")
+    except ValueError:
+        return
+
+    for element in tooltip.values():
+        if not isinstance(element, dict) or element.get("type") != "IndentStringGroup":
+            continue
+        for group in (element.get("value") or {}).values():
+            for entry in (group.get("contentStr") or {}).values():
+                match = _STONE_ENGRAVING_RE.search(entry.get("contentStr", ""))
+                if not match:
+                    continue
+                char.ability_stone.append(f"{match['name']} Lv.{match['level']}")
+
+
 def _parse_ark_passive(data: dict, char: Character) -> None:
     for point in data.get("Points") or []:
         name, value = point.get("Name"), point.get("Value")
@@ -137,6 +165,8 @@ async def fetch_character(name: str) -> Character:
         _parse_gems(gems, char)
     if ark := payload.get("ArkPassive"):
         _parse_ark_passive(ark, char)
+    if equipment := payload.get("ArmoryEquipment"):
+        _parse_ability_stone(equipment, char)
 
     if char.server is None and char.item_level is None:
         raise errors.CharacterNotFound(name)

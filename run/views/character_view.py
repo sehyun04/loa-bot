@@ -26,6 +26,8 @@ def character_embed(char: Character) -> discord.Embed:
         )
     if char.gems:
         embed.add_field(name="보석", value=" · ".join(char.gems), inline=True)
+    if char.ability_stone:
+        embed.add_field(name="어빌리티 스톤", value="\n".join(char.ability_stone), inline=False)
     if char.card_sets:
         embed.add_field(name="카드", value=" · ".join(char.card_sets[:3]), inline=True)
 
