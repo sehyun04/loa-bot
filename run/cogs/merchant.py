@@ -93,7 +93,7 @@ class MerchantCog(commands.Cog):
         if window is None:
             upcoming = sch.next_window(now)
             await interaction.response.send_message(
-                embed=common.notice_embed(
+                view=common.notice_view(
                     "지금은 떠상 시간이 아니에요",
                     f"다음 등장 {timez.to_discord_timestamp(upcoming.start, 'R')} 이후에 제보해주세요.",
                 ),
@@ -114,14 +114,11 @@ class MerchantCog(commands.Cog):
             guild_id=str(interaction.guild_id) if interaction.guild_id else None,
         )
 
-        embed = common.base_embed(
-            "제보 고마워요",
-            f"**{서버.value}** · {지역}" + (f" · {region.npc}" if region else ""),
-        )
+        desc = f"**{서버.value}** · {지역}" + (f" · {region.npc}" if region else "")
         if items:
-            embed.add_field(name="판매 품목", value=", ".join(items), inline=False)
-        embed.set_footer(text=f"이 제보는 {window.end.strftime('%H:%M')} 까지 유효해요")
-        await interaction.response.send_message(embed=embed)
+            desc += f"\n판매 품목 · {', '.join(items)}"
+        desc += f"\n-# 이 제보는 {window.end.strftime('%H:%M')} 까지 유효해요"
+        await interaction.response.send_message(view=common.base_view("제보 고마워요", desc))
 
     @report.autocomplete("지역")
     async def report_autocomplete(self, interaction: discord.Interaction, current: str):
@@ -147,19 +144,16 @@ class MerchantCog(commands.Cog):
         if 끄기:
             await sightings.unsubscribe(guild_id, channel_id)
             await interaction.response.send_message(
-                embed=common.notice_embed("알림을 껐어요", "이 채널로 더는 떠상 알림을 보내지 않아요.")
+                view=common.notice_view("알림을 껐어요", "이 채널로 더는 떠상 알림을 보내지 않아요.")
             )
             return
 
         lead = max(1, min(알림분, 60))
         await sightings.subscribe(guild_id, channel_id, 서버.value if 서버 else None, lead)
-        await interaction.response.send_message(
-            embed=common.base_embed(
-                "떠상 알림을 켰어요",
-                f"등장 **{lead}분 전**에 이 채널로 알려드릴게요."
-                + (f"\n대상 서버: {서버.value}" if 서버 else ""),
-            )
-        )
+        desc = f"등장 **{lead}분 전**에 이 채널로 알려드릴게요."
+        if 서버:
+            desc += f"\n대상 서버 · {서버.value}"
+        await interaction.response.send_message(view=common.base_view("떠상 알림을 켰어요", desc))
 
     @app_commands.command(name="떠상카드알림", description="원하는 카드가 뜨면 이 채널에서 멘션해드려요")
     @app_commands.describe(서버="어느 서버를 볼지", 카드="기다리는 카드")
@@ -176,7 +170,7 @@ class MerchantCog(commands.Cog):
 
         if 카드 not in sch.card_names():
             await interaction.response.send_message(
-                embed=common.error_embed("모르는 카드예요", "목록에서 골라주세요. 자동완성을 써보세요."),
+                view=common.error_view("모르는 카드예요", "목록에서 골라주세요. 자동완성을 써보세요."),
                 ephemeral=True,
             )
             return
@@ -197,7 +191,7 @@ class MerchantCog(commands.Cog):
             await sightings.unclaim(f"cardalert:{window.id}:{user_id}:{서버.value}:{카드}")
 
         await interaction.response.send_message(
-            embed=common.base_embed(
+            view=common.base_view(
                 "카드 알림을 등록했어요",
                 f"**{서버.value}**에서 **{카드}**가 뜨면 이 채널에서 멘션해드릴게요.\n"
                 "해제하려면 `/떠상카드해제`를 써주세요.",
@@ -221,12 +215,12 @@ class MerchantCog(commands.Cog):
         removed = await wants_svc.remove(str(interaction.user.id), 서버.value, 카드)
         if removed:
             await interaction.response.send_message(
-                embed=common.notice_embed("알림을 껐어요", f"**{서버.value}** · {카드} 알림을 더는 보내지 않아요."),
+                view=common.notice_view("알림을 껐어요", f"**{서버.value}** · {카드} 알림을 더는 보내지 않아요."),
                 ephemeral=True,
             )
         else:
             await interaction.response.send_message(
-                embed=common.notice_embed("등록되어 있지 않아요", f"**{서버.value}** · {카드}는 등록한 적이 없어요."),
+                view=common.notice_view("등록되어 있지 않아요", f"**{서버.value}** · {카드}는 등록한 적이 없어요."),
                 ephemeral=True,
             )
 
@@ -254,14 +248,14 @@ class MerchantCog(commands.Cog):
         items = await wants_svc.for_user(str(interaction.user.id))
         if not items:
             await interaction.response.send_message(
-                embed=common.notice_embed("등록된 카드 알림이 없어요", "`/떠상카드알림`으로 등록해보세요."),
+                view=common.notice_view("등록된 카드 알림이 없어요", "`/떠상카드알림`으로 등록해보세요."),
                 ephemeral=True,
             )
             return
 
         lines = [f"**{w.server}** · {w.card_name}" for w in items]
         await interaction.response.send_message(
-            embed=common.base_embed("등록한 카드 알림", "\n".join(lines)),
+            view=common.base_view("등록한 카드 알림", "\n".join(lines)),
             ephemeral=True,
         )
 
@@ -349,7 +343,7 @@ class MerchantCog(commands.Cog):
             if channel is None:
                 continue
             try:
-                await channel.send(embed=merchant_view.upcoming_embed(upcoming, sub["server"]))
+                await channel.send(view=merchant_view.upcoming_view(upcoming, sub["server"]))
             except discord.HTTPException:
                 log.warning("떠상 알림 전송 실패: channel=%s", sub["channel_id"])
 

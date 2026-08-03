@@ -238,20 +238,16 @@ def reports_text(reports: list) -> str:
     return "\n".join(lines)
 
 
-def upcoming_embed(window: sch.Window, server: str | None) -> discord.Embed:
+def upcoming_view(window: sch.Window, server: str | None) -> discord.ui.LayoutView:
     regions = sch.regions_for(window.groups)
-    embed = common.base_embed(
-        f"곧 떠돌이 상인이 나와요 — {_groups_text(window.groups)}",
+    footer = f"-# {server} · 발견하면 /떠상제보 로 공유해주세요" if server else "-# 발견하면 /떠상제보 로 공유해주세요"
+    text = (
+        f"## 곧 떠돌이 상인이 나와요 — {_groups_text(window.groups)}\n"
         f"{timez.to_discord_timestamp(window.start, 'R')} 등장 "
-        f"({window.start.strftime('%H:%M')} ~ {window.end.strftime('%H:%M')})",
+        f"({window.start.strftime('%H:%M')} ~ {window.end.strftime('%H:%M')})\n"
+        f"등장 가능 지역 · {' · '.join(r.name for r in regions)}\n"
+        f"{footer}"
     )
-    embed.add_field(
-        name="등장 가능 지역",
-        value=" · ".join(r.name for r in regions),
-        inline=False,
-    )
-    if server:
-        embed.set_footer(text=f"{server} · 발견하면 /떠상제보 로 공유해주세요")
-    else:
-        embed.set_footer(text="발견하면 /떠상제보 로 공유해주세요")
-    return embed
+    view = discord.ui.LayoutView()
+    view.add_item(discord.ui.Container(discord.ui.TextDisplay(text), accent_colour=common.BRAND))
+    return view

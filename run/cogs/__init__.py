@@ -18,5 +18,7 @@ async def setup_all_cogs(bot: commands.Bot) -> None:
 
     if config.has_lostark_api():
         from run.cogs.character import CharacterCog
+        from run.cogs.hellreward import HellRewardCog
 
         await bot.add_cog(CharacterCog(bot))
+        await bot.add_cog(HellRewardCog(bot))

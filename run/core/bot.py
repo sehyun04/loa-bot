@@ -102,13 +102,21 @@ class LoaBot(commands.Bot):
         self, interaction: discord.Interaction, error: app_commands.AppCommandError
     ) -> None:
         original = getattr(error, "original", error)
+        name = interaction.command.qualified_name if interaction.command else "?"
 
         # 인터랙션 토큰 3초 만료. 이미 응답할 대상이 사라진 것이라 알릴 방법이 없다.
         if isinstance(original, discord.NotFound) and original.code == 10062:
-            log.warning("인터랙션 만료: %s", interaction.command)
+            log.warning("인터랙션 만료: /%s", name)
             return
 
-        log.exception("커맨드 오류: %s", interaction.command, exc_info=original)
+        # 게이트웨이가 끊겼다 재연결되는 타이밍에 같은 인터랙션이 중복 전달되면 먼저
+        # 처리된 쪽이 이미 응답해버려서, 뒤이은 처리는 여기로 떨어진다. 실패가 아니라
+        # 중복 처리의 부작용이라 에러 메시지를 또 보내려 하면 그것도 똑같이 실패한다.
+        if isinstance(original, discord.HTTPException) and original.code == 40060:
+            log.warning("중복 인터랙션 (이미 응답됨): /%s", name)
+            return
+
+        log.exception("커맨드 오류: /%s", name, exc_info=original)
         embed = common.error_embed("문제가 생겼어요", "잠시 후 다시 시도해주세요.")
         try:
             if interaction.response.is_done():

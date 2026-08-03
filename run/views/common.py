@@ -17,6 +17,27 @@ def notice_embed(title: str, description: str) -> discord.Embed:
     return discord.Embed(title=title, description=description, color=MUTED)
 
 
+def _notice_view(title: str, description: str, colour: discord.Colour) -> discord.ui.LayoutView:
+    view = discord.ui.LayoutView()
+    view.add_item(discord.ui.Container(
+        discord.ui.TextDisplay(f"## {title}\n{description}"),
+        accent_colour=colour,
+    ))
+    return view
+
+
+def base_view(title: str, description: str) -> discord.ui.LayoutView:
+    return _notice_view(title, description, BRAND)
+
+
+def error_view(title: str, description: str) -> discord.ui.LayoutView:
+    return _notice_view(title, description, DANGER)
+
+
+def notice_view(title: str, description: str) -> discord.ui.LayoutView:
+    return _notice_view(title, description, MUTED)
+
+
 def api_key_missing_embed() -> discord.Embed:
     return error_embed(
         "로스트아크 API 키가 없어요",
