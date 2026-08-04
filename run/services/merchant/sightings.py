@@ -71,24 +71,29 @@ async def purge_old(keep_windows: list[str]) -> int:
     )
 
 
-async def subscribe(guild_id: str, channel_id: str, server: str | None, lead_minutes: int) -> None:
+async def subscribe(
+    guild_id: str, channel_id: str, user_id: str, server: str | None, lead_minutes: int
+) -> None:
     await db.aexecute(
-        "INSERT INTO merchant_subs (guild_id, channel_id, server, lead_minutes, created_at) "
-        "VALUES (?,?,?,?,?) "
-        "ON CONFLICT(guild_id, channel_id) DO UPDATE SET "
+        "INSERT INTO merchant_subs (user_id, guild_id, channel_id, server, lead_minutes, created_at) "
+        "VALUES (?,?,?,?,?,?) "
+        "ON CONFLICT(user_id, guild_id, channel_id) DO UPDATE SET "
         "  server=excluded.server, lead_minutes=excluded.lead_minutes",
-        (guild_id, channel_id, server, lead_minutes, int(time.time())),
+        (user_id, guild_id, channel_id, server, lead_minutes, int(time.time())),
     )
 
 
-async def unsubscribe(guild_id: str, channel_id: str) -> int:
+async def unsubscribe(guild_id: str, channel_id: str, user_id: str) -> int:
     return await db.aexecute(
-        "DELETE FROM merchant_subs WHERE guild_id=? AND channel_id=?", (guild_id, channel_id)
+        "DELETE FROM merchant_subs WHERE guild_id=? AND channel_id=? AND user_id=?",
+        (guild_id, channel_id, user_id),
     )
 
 
 async def subscriptions() -> list[dict]:
-    rows = await db.aquery("SELECT guild_id, channel_id, server, lead_minutes FROM merchant_subs")
+    rows = await db.aquery(
+        "SELECT user_id, guild_id, channel_id, server, lead_minutes FROM merchant_subs"
+    )
     return [dict(r) for r in rows]
 
 

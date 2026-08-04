@@ -124,15 +124,14 @@ class MerchantCog(commands.Cog):
     async def report_autocomplete(self, interaction: discord.Interaction, current: str):
         return await self._region_choices(interaction, current)
 
-    @app_commands.command(name="떠상알림", description="떠상 등장 알림을 이 채널에 받습니다")
-    @app_commands.describe(서버="알림받을 서버", 알림분="등장 몇 분 전에 알릴지", 끄기="알림을 해제하려면 켜세요")
+    @app_commands.command(name="떠상알림", description="떠상 등장 알림을 이 채널에서 나에게 멘션으로 받습니다")
+    @app_commands.describe(서버="알림받을 서버", 알림설정="등장 몇 분 전에 알림을 받을지 (기본 10분)")
     @app_commands.choices(서버=SERVER_CHOICES)
     async def subscribe(
         self,
         interaction: discord.Interaction,
         서버: app_commands.Choice[str] | None = None,
-        알림분: int = 10,
-        끄기: bool = False,
+        알림설정: int = 10,
     ) -> None:
         if interaction.guild_id is None:
             await interaction.response.send_message("서버 채널에서만 쓸 수 있어요.", ephemeral=True)
@@ -140,20 +139,36 @@ class MerchantCog(commands.Cog):
 
         guild_id = str(interaction.guild_id)
         channel_id = str(interaction.channel_id)
+        user_id = str(interaction.user.id)
 
-        if 끄기:
-            await sightings.unsubscribe(guild_id, channel_id)
-            await interaction.response.send_message(
-                view=common.notice_view("알림을 껐어요", "이 채널로 더는 떠상 알림을 보내지 않아요.")
-            )
-            return
-
-        lead = max(1, min(알림분, 60))
-        await sightings.subscribe(guild_id, channel_id, 서버.value if 서버 else None, lead)
-        desc = f"등장 **{lead}분 전**에 이 채널로 알려드릴게요."
+        lead = max(1, min(알림설정, 60))
+        await sightings.subscribe(guild_id, channel_id, user_id, 서버.value if 서버 else None, lead)
+        desc = f"등장 **{lead}분 전**에 이 채널에서 멘션으로 알려드릴게요."
         if 서버:
             desc += f"\n대상 서버 · {서버.value}"
-        await interaction.response.send_message(view=common.base_view("떠상 알림을 켰어요", desc))
+        await interaction.response.send_message(view=common.base_view("떠상 알림을 켰어요", desc), ephemeral=True)
+
+    @app_commands.command(name="떠상알림해제", description="등록해둔 떠상 등장 알림을 해제합니다")
+    async def unsubscribe(self, interaction: discord.Interaction) -> None:
+        if interaction.guild_id is None:
+            await interaction.response.send_message("서버 채널에서만 쓸 수 있어요.", ephemeral=True)
+            return
+
+        guild_id = str(interaction.guild_id)
+        channel_id = str(interaction.channel_id)
+        user_id = str(interaction.user.id)
+
+        removed = await sightings.unsubscribe(guild_id, channel_id, user_id)
+        if removed:
+            await interaction.response.send_message(
+                view=common.notice_view("알림을 껐어요", "이 채널에서 더는 떠상 알림을 보내지 않아요."),
+                ephemeral=True,
+            )
+        else:
+            await interaction.response.send_message(
+                view=common.notice_view("등록되어 있지 않아요", "이 채널에서 떠상 알림을 받고 있지 않아요."),
+                ephemeral=True,
+            )
 
     @app_commands.command(name="떠상카드알림", description="원하는 카드가 뜨면 이 채널에서 멘션해드려요")
     @app_commands.describe(서버="어느 서버를 볼지", 카드="기다리는 카드")
@@ -331,21 +346,26 @@ class MerchantCog(commands.Cog):
         if not subs:
             return
 
+        # (channel_id, server) -> 이 알림을 같이 받을 유저 목록. 채널+서버가 같으면
+        # 보여줄 내용이 동일해 한 메시지에 멘션만 모아서 보낸다.
+        groups: dict[tuple[str, str | None], list[str]] = {}
         for sub in subs:
             lead = sub["lead_minutes"]
             if not (lead - 1 < minutes_left <= lead):
                 continue
             # 1분마다 도는 루프라 같은 알림이 두 번 걸릴 수 있다
-            if not await sightings.claim(f"merchant:{upcoming.id}:{sub['channel_id']}"):
+            if not await sightings.claim(f"merchant:{upcoming.id}:{sub['channel_id']}:{sub['user_id']}"):
                 continue
+            groups.setdefault((sub["channel_id"], sub["server"]), []).append(sub["user_id"])
 
-            channel = self.bot.get_channel(int(sub["channel_id"]))
+        for (channel_id, server), user_ids in groups.items():
+            channel = self.bot.get_channel(int(channel_id))
             if channel is None:
                 continue
             try:
-                await channel.send(view=merchant_view.upcoming_view(upcoming, sub["server"]))
+                await channel.send(view=merchant_view.upcoming_view(upcoming, server, user_ids))
             except discord.HTTPException:
-                log.warning("떠상 알림 전송 실패: channel=%s", sub["channel_id"])
+                log.warning("떠상 알림 전송 실패: channel=%s", channel_id)
 
     @notify_loop.before_loop
     async def before_notify(self) -> None:

@@ -238,16 +238,27 @@ def reports_text(reports: list) -> str:
     return "\n".join(lines)
 
 
-def upcoming_view(window: sch.Window, server: str | None) -> discord.ui.LayoutView:
-    regions = sch.regions_for(window.groups)
-    footer = f"-# {server} · 발견하면 /떠상제보 로 공유해주세요" if server else "-# 발견하면 /떠상제보 로 공유해주세요"
-    text = (
-        f"## 곧 떠돌이 상인이 나와요 — {_groups_text(window.groups)}\n"
+def upcoming_view(
+    window: sch.Window, server: str | None, mention_user_ids: list[str] | None = None
+) -> discord.ui.LayoutView:
+    """/떠상알림 사전 알림. 뭐가 뜰지는 등장 전엔 랜덤이라 지역 후보만 보여준다."""
+    regions = sorted(sch.regions_for(window.groups), key=lambda x: (x.group, x.name))
+    mentions = " ".join(f"<@{uid}>" for uid in mention_user_ids) + "\n" if mention_user_ids else ""
+    heading = (
+        f"{mentions}## 곧 떠돌이 상인이 나와요 — {_groups_text(window.groups)}\n"
         f"{timez.to_discord_timestamp(window.start, 'R')} 등장 "
-        f"({window.start.strftime('%H:%M')} ~ {window.end.strftime('%H:%M')})\n"
-        f"등장 가능 지역 · {' · '.join(r.name for r in regions)}\n"
-        f"{footer}"
+        f"({window.start.strftime('%H:%M')} ~ {window.end.strftime('%H:%M')})"
     )
+    region_lines = f"\n{_ROW_GAP}\n".join(f"📍 {r.name} · {r.npc}" for r in regions)
+    footer = f"-# {server} · 발견하면 /떠상제보 로 공유해주세요" if server else "-# 발견하면 /떠상제보 로 공유해주세요"
+
+    c = discord.ui.Container(accent_colour=common.BRAND)
+    c.add_item(discord.ui.TextDisplay(heading))
+    c.add_item(discord.ui.Separator(spacing=_LARGE))
+    c.add_item(discord.ui.TextDisplay(f"### 등장 가능 지역\n{region_lines}"))
+    c.add_item(discord.ui.Separator(spacing=_SMALL))
+    c.add_item(discord.ui.TextDisplay(footer))
+
     view = discord.ui.LayoutView()
-    view.add_item(discord.ui.Container(discord.ui.TextDisplay(text), accent_colour=common.BRAND))
+    view.add_item(c)
     return view

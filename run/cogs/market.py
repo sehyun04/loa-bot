@@ -13,6 +13,17 @@ _PRESETS: list[str] = json.loads(
     (config.RESOURCE_DIR / "market_presets.json").read_text(encoding="utf-8")
 )["presets"]
 
+# 거래소에 실제로 올라와 있는 아이템 전체 이름 목록. scripts/fetch_market_items.py로
+# 미리 받아둔 로컬 스냅샷이라 자동완성이 키 입력마다 API를 부르지 않는다.
+# _PRESETS 뒤에 붙여서 쓴다 - 입력이 비어 있을 때는 여전히 _PRESETS(자주 찾는
+# 재련 재료)가 먼저 보이고, 뭔가 입력했을 때만 이 전체 카탈로그까지 검색된다.
+_CATALOG: list[str] = [
+    row["name"]
+    for row in json.loads(
+        (config.RESOURCE_DIR / "market_items.json").read_text(encoding="utf-8")
+    )["items"]
+]
+
 # 유저별 최근 검색어. autocomplete에서 API를 부르지 않기 위한 재료다.
 _recent: OrderedDict[str, list[str]] = OrderedDict()
 _RECENT_MAX = 10
@@ -62,7 +73,10 @@ class MarketCog(commands.Cog):
     ) -> list[app_commands.Choice[str]]:
         # 키 입력 한 글자마다 호출된다. 여기서 API를 부르면 한도가 순식간에 녹는다.
         text = current.strip().lower()
-        pool = _recent.get(str(interaction.user.id), []) + _PRESETS
+        # 입력이 비어 있을 땐 카탈로그(알파벳/가나다순이라 코스튬 상자 같은 게
+        # 먼저 걸린다)까지 섞지 않고 자주 찾는 재련 재료(_PRESETS)만 보여준다.
+        recent = _recent.get(str(interaction.user.id), [])
+        pool = recent + _PRESETS + (_CATALOG if text else [])
         seen, out = set(), []
         for name in pool:
             if name in seen:
