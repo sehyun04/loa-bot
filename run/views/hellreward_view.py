@@ -11,10 +11,13 @@ def _format_category_line(rank: int | None, cv: hellreward.CategoryValue, tier: 
         return f"{prefix}**{cv.category}** — {parts}\n-# 시세 조회 불가 (귀속/확률형 포함)"
 
     note = parts
+    label = None
     if cv.category == "특수 재련":
         label = hellreward.special_refine_label(tier)
-        if label:
-            note = f"{parts} · {label}"
+    elif cv.category == "팔찌" and cv.items:
+        label = hellreward.bracelet_label(cv.items[0].name)
+    if label:
+        note = f"{parts} · {label}"
     return f"{prefix}**{cv.category}** — {cv.total_gold:,.0f} 골드\n-# {note}"
 
 

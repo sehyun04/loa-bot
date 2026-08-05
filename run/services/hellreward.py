@@ -74,15 +74,26 @@ _SPECIAL_REFINE_LABEL = {
 def special_refine_label(tier: str) -> str | None:
     return _SPECIAL_REFINE_LABEL.get(tier)
 
+# 팔찌는 옵션이 랜덤이라 거래소에 "고대 팔찌"라는 이름의 단일 시세가 없다 - 실제
+# 가치는 "쓸 만한 옵션 조합이 뜰 확률 x 그 조합의 시세"의 기댓값이라, 참고 사이트가
+# 그렇게 계산해 내놓은 개당 값을 그대로 가져다 쓴다 (2026-08-05).
+# 원래는 값을 못 매긴다고 보고 계산에서 뺐는데, 그러면 팔찌 층이 통째로 "시세 조회
+# 불가"로 빠져서 다른 보상과 비교 자체가 안 되는 게 더 큰 문제였다.
+_BRACELET_GOLD = {
+    "고대 팔찌": 1250,
+    "유물 팔찌": 955,
+}
+
+
+def bracelet_label(item_name: str) -> str | None:
+    gold = _BRACELET_GOLD.get(item_name)
+    return f"개당 {gold:,}골드 기준" if gold is not None else None
+
 # 귀속(비거래) 이거나 아직 가치 기준이 안 잡힌 것들.
 # "혼돈의 돌"은 무기/방어구 세부 수량을 사이트에서 못 얻어서 같이 뺐다.
-# 팔찌는 옵션이 랜덤이라 페온 정가를 매겨도 실질 가치가 없다고 보고 계산에서 뺐다 -
-# 참고 사이트도 팔찌는 페온 "포함"으로 켜도 값이 거의 안 붙는 걸 보고 같은 결론을 냈다.
 _NOT_PRICEABLE = {
     "천상 도전 횟수 +1 (귀속)",
     "정련된 운명의 돌",
-    "고대 팔찌",
-    "유물 팔찌",
 }
 
 _MARKET_CATEGORY = 50000  # 강화 재료 - 지옥 보상 아이템은 전부 이 카테고리 아래에 있다
@@ -142,6 +153,8 @@ async def _price_one(item_name: str, qty: int, tier: str) -> float | None:
     if display_name(item_name) in ("순환 돌파석", "전이 돌파석"):
         gold_per_unit = _SPECIAL_REFINE_GOLD.get(tier)
         return gold_per_unit * qty if gold_per_unit is not None else None
+    if item_name in _BRACELET_GOLD:
+        return _BRACELET_GOLD[item_name] * qty
     if item_name in _PHEON_COST:
         return _PHEON_COST[item_name] * _pheon_gold_value() * qty
     if item_name == "희귀 젬 선택 상자":
