@@ -1,24 +1,27 @@
 {
-  "_comment": "숙제 체크리스트 대상 컨텐츠. 로아는 패치마다 레이드가 추가/개편되므로 이 파일만 고치면 봇 코드는 손댈 필요 없다. cycle=daily|weekly, gates=관문 수, min_level=입장 아이템레벨, order=표시 순서(작을수록 위).",
-  "_updated": "2026-07-26",
+  "_comment": "숙제 체크리스트 대상 컨텐츠. 로아는 패치마다 레이드가 추가/개편되므로 이 파일만 고치면 봇 코드는 손댈 필요 없다. cycle=daily|weekly, min_level=입장 아이템레벨, max_level=이 레벨부터는 졸업해서 목록에서 빠짐(null이면 안 빠짐), order=표시 순서(작을수록 위). levels=고를 수 있는 난이도를 쉬운 것부터 적는다(빈 배열이면 난이도 없이 완료/미완료만). 관문은 구분하지 않는다. contents를 고치면 이미 등록된 캐릭터의 숙제 목록이 다음 /숙제 에서 자동으로 맞춰진다(homework.catalog_version 참고) - _updated는 참고용이라 안 올려도 된다.",
+  "_levels_note": "levels 순서가 버튼 색을 정한다. 1번째=초록, 2번째=빨강, 3번째=블러플. 디스코드 버튼에는 보라색이 없어서 나이트메어는 블러플이 최선이다. 난이도별 입장 레벨이 다르면 {\"name\":\"하드\",\"min_level\":1770}으로 적고, 컨텐츠 입장 레벨과 같으면 \"하드\"처럼 문자열로만 적으면 된다. 캐릭터가 못 가는 난이도는 버튼이 아예 안 뜬다.",
+  "_updated": "2026-08-08",
   "contents": [
-    { "id": "chaos",    "name": "카오스 던전",   "cycle": "daily",  "gates": 1, "min_level": 1490, "order": 10 },
-    { "id": "guardian", "name": "가디언 토벌",   "cycle": "daily",  "gates": 1, "min_level": 1490, "order": 20 },
+    { "id": "chaos",    "name": "카오스 던전", "cycle": "daily", "min_level": 1490, "max_level": null, "levels": [], "order": 10 },
+    { "id": "guardian", "name": "가디언 토벌", "cycle": "daily", "min_level": 1490, "max_level": null, "levels": [], "order": 20 },
 
-    { "id": "epona",     "name": "주간 에포나",    "cycle": "weekly", "gates": 1, "min_level": 0,    "order": 100 },
-    { "id": "kurzan",    "name": "쿠르잔 전선",    "cycle": "weekly", "gates": 1, "min_level": 1610, "order": 110 },
+    { "id": "hourglass", "name": "할의 모래시계", "cycle": "weekly", "min_level": 1730, "max_level": null, "levels": [], "order": 100 },
 
-    { "id": "echidna",    "name": "에키드나",     "cycle": "weekly", "gates": 2, "min_level": 1620, "order": 200 },
-    { "id": "behemoth",   "name": "베히모스",     "cycle": "weekly", "gates": 2, "min_level": 1640, "order": 210 },
-    { "id": "ageoros",    "name": "아게오로스",    "cycle": "weekly", "gates": 2, "min_level": 1640, "order": 220 },
-    { "id": "aegir",      "name": "에기르",       "cycle": "weekly", "gates": 2, "min_level": 1660, "order": 230 },
-    { "id": "skolakia",   "name": "스콜라키아",    "cycle": "weekly", "gates": 3, "min_level": 1680, "order": 240 },
-    { "id": "drextalas",  "name": "드렉탈라스",    "cycle": "weekly", "gates": 2, "min_level": 1700, "order": 250 },
-    { "id": "serka",      "name": "그림자 세르카",  "cycle": "weekly", "gates": 1, "min_level": 1710, "order": 260 },
-    { "id": "kratios",    "name": "크라티오스",    "cycle": "weekly", "gates": 2, "min_level": 1720, "order": 270 },
+    { "id": "echidna",  "name": "에키드나",   "cycle": "weekly", "min_level": 1620, "max_level": 1710, "levels": ["노말", "하드"], "order": 200 },
+    { "id": "behemoth", "name": "베히모스",   "cycle": "weekly", "min_level": 1640, "max_level": 1710, "levels": ["노말", "하드"], "order": 210 },
+    { "id": "aegir",    "name": "에기르",     "cycle": "weekly", "min_level": 1660, "max_level": 1710, "levels": ["노말", "하드"], "order": 220 },
+    { "id": "skolakia", "name": "스콜라키아", "cycle": "weekly", "min_level": 1680, "max_level": 1710, "levels": ["노말", "하드"], "order": 230 },
 
-    { "id": "kazeros_4",  "name": "카제로스 4막",  "cycle": "weekly", "gates": 1, "min_level": 1700, "order": 300 },
-    { "id": "kazeros_fin","name": "카제로스 종막", "cycle": "weekly", "gates": 1, "min_level": 1710, "order": 310 },
-    { "id": "kazeros_ex", "name": "카제로스 익스트림", "cycle": "weekly", "gates": 1, "min_level": 1720, "order": 320 }
+    { "id": "kazeros_4",   "name": "카제로스 4막", "cycle": "weekly", "min_level": 1700, "max_level": null, "order": 300,
+      "levels": [{ "name": "노말", "min_level": 1700 }, { "name": "하드", "min_level": 1720 }] },
+    { "id": "kazeros_fin", "name": "카제로스 종막", "cycle": "weekly", "min_level": 1710, "max_level": null, "order": 310,
+      "levels": [{ "name": "노말", "min_level": 1710 }, { "name": "하드", "min_level": 1730 }] },
+    { "id": "cathedral",   "name": "지평의 성당",   "cycle": "weekly", "min_level": 1710, "max_level": null, "order": 320,
+      "levels": [{ "name": "1단계", "min_level": 1710 }, { "name": "2단계", "min_level": 1720 }, { "name": "3단계", "min_level": 1750 }] },
+    { "id": "serka",       "name": "그림자 세르카", "cycle": "weekly", "min_level": 1710, "max_level": null, "order": 330,
+      "levels": [{ "name": "노말", "min_level": 1710 }, { "name": "하드", "min_level": 1730 }, { "name": "나메", "min_level": 1740 }] },
+    { "id": "belgardin",   "name": "벨가르딘",     "cycle": "weekly", "min_level": 1750, "max_level": null, "order": 340,
+      "levels": [{ "name": "노말", "min_level": 1750 }, { "name": "하드", "min_level": 1770 }, { "name": "나메", "min_level": 1780 }] }
   ]
 }

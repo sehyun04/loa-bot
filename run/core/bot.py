@@ -30,10 +30,14 @@ class LoaBot(commands.Bot):
             log.info("마이그레이션 적용: %s", applied)
 
         from run.cogs import setup_all_cogs
-        from run.views.homework_view import HomeworkToggle
+        from run.views.homework_view import (
+            HomeworkCharacterSelect,
+            HomeworkPick,
+            HomeworkToggle,
+        )
 
         # 재시작 전에 보낸 메시지의 버튼도 계속 동작하게 한다
-        self.add_dynamic_items(HomeworkToggle)
+        self.add_dynamic_items(HomeworkPick, HomeworkToggle, HomeworkCharacterSelect)
 
         await setup_all_cogs(self)
         self.tree.on_error = self._on_app_command_error

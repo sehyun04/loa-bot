@@ -30,7 +30,7 @@ class HomeworkCog(commands.Cog):
         chars = await homework.list_characters(user_id)
         if not chars:
             await interaction.response.send_message(
-                embed=common.notice_embed(
+                view=common.notice_view(
                     "등록된 캐릭터가 없어요", "`/숙제설정` 으로 캐릭터를 먼저 등록해주세요."
                 ),
                 ephemeral=True,
@@ -38,10 +38,22 @@ class HomeworkCog(commands.Cog):
             return
 
         target = 캐릭터 or chars[0]["character_name"]
+        if not any(c["character_name"] == target for c in chars):
+            await interaction.response.send_message(
+                view=common.notice_view(
+                    f"{target} 은 등록된 캐릭터가 아니에요",
+                    "`/숙제설정` 으로 먼저 등록해주세요.",
+                ),
+                ephemeral=True,
+            )
+            return
+
+        await homework.sync_contents(user_id, target)
         tasks = await homework.load_tasks(user_id, target)
+        roster = homework.same_roster(chars, target)
         await interaction.response.send_message(
-            embed=homework_view.homework_embed(target, tasks),
-            view=homework_view.HomeworkView(tasks),
+            view=homework_view.homework_layout(target, tasks, user_id, roster),
+            ephemeral=True,
         )
 
     @show.autocomplete("캐릭터")
