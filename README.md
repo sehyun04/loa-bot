@@ -107,14 +107,39 @@ run/
 
 ### 접속 설정 (한 번만)
 
-배포 담당자에게 SSH 개인키를 받아 `~/.ssh/oci_loa` 로 두고, `~/.ssh/config` 에 추가합니다.
+**개인키를 주고받지 않습니다.** 각자 자기 키를 만들고 공개키만 등록합니다.
+사람마다 서버 계정이 따로 있어서, 누가 무엇을 했는지 로그에서 구분되고
+나중에 회수할 때 그 계정만 지우면 됩니다.
 
-```
-Host loa
-    HostName <서버 IP>
-    User ubuntu
-    IdentityFile ~/.ssh/oci_loa
-```
+1. 키를 만듭니다. **없을 때만** — 이미 있으면 그걸 쓰세요.
+
+   ```bash
+   ssh-keygen -t ed25519 -C "<본인 이름>@loa-bot"
+   ```
+
+   Windows 는 PowerShell 에서 같은 명령이 그대로 됩니다(OpenSSH 기본 내장).
+   Git for Windows 의 Git Bash 를 써도 됩니다.
+
+2. **공개키**(`.pub` 로 끝나는 쪽)를 배포 담당자에게 보냅니다.
+
+   ```bash
+   cat ~/.ssh/id_ed25519.pub                       # macOS / Linux / Git Bash
+   Get-Content $env:USERPROFILE\.ssh\id_ed25519.pub # Windows PowerShell
+   ```
+
+   `.pub` 가 붙지 않은 파일은 **개인키입니다. 절대 보내지 마세요.**
+
+3. 담당자가 등록했다고 하면 `~/.ssh/config` 에 추가합니다.
+   Windows 경로는 `C:\Users\<사용자>\.ssh\config` 이고, 안의 `~` 는 그대로 씁니다.
+
+   ```
+   Host loa
+       HostName <서버 IP>
+       User <본인 계정명>
+       IdentityFile ~/.ssh/id_ed25519
+   ```
+
+`ssh loa` 로 붙으면 끝입니다. `docker` 와 `sudo` 를 쓸 수 있습니다.
 
 ### 배포 — `main` 에 올리면 자동입니다
 
@@ -159,6 +184,28 @@ ssh loa 'cd loa-bot && docker compose up -d'
 
 **로컬에서 테스트할 때는 서버 봇과 같은 토큰을 쓰지 마세요.** 세션이 충돌해
 양쪽 다 무한 재연결에 빠집니다. 자세한 내용은 [SECRETS.md](SECRETS.md) 를 보세요.
+
+### 인프라 콘솔 (인스턴스가 아예 안 뜰 때)
+
+SSH 로 붙을 수 없는 상황 — 인스턴스가 멈췄거나, 방화벽을 잘못 건드려 22번이 막혔거나 —
+은 서버 안이 아니라 오라클 콘솔에서 풀어야 합니다.
+
+[cloud.oracle.com](https://cloud.oracle.com) → 로그인 화면에서 **테넌시는 `goenho0613`**,
+아이덴티티 도메인은 **`Default`** 를 씁니다. 계정은 초대 메일로 받은 것을 쓰세요.
+홈 리전은 오사카(`ap-osaka-1`) 입니다.
+
+`loa-bot-ops` 그룹에 속한 사람이 할 수 있는 일:
+
+| 할 수 있음 | 못 함 |
+|---|---|
+| 인스턴스 재시작 · 중지 · 시작 | **기존 인스턴스 삭제** |
+| 방화벽(Security List) 수정 | 결제·구독 변경 |
+| 시리얼 콘솔 접속 (SSH 죽었을 때 복구용) | 다른 사용자 권한 변경 |
+| 새 인스턴스 생성 | |
+
+삭제만 막아둔 이유가 있습니다. 이 인스턴스는 Always Free 인 `VM.Standard.E2.1.Micro`
+인데, 한 번 지우면 같은 사양이 그 지역에 남아 있다는 보장이 없습니다. 재고가 없으면
+되돌릴 방법이 없습니다.
 
 ## 기여
 
