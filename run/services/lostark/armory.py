@@ -138,7 +138,11 @@ def _parse_ark_passive(data: dict, char: Character) -> None:
             char.ark_passive.append((name, value))
 
 
-async def fetch_character(name: str) -> Character:
+async def fetch_raw(name: str) -> dict:
+    """파싱 전 원본 응답. 장비 재련 단계처럼 Character 에 담지 않은 값이 필요할 때 쓴다.
+
+    fetch_character 와 캐시 키가 같아서, 둘을 이어서 불러도 API 호출은 한 번이다.
+    """
     client = get_client()
     quoted = urllib.parse.quote(name)
     filters = FILTER_SEPARATOR.join(CHARACTER_FILTERS)
@@ -153,6 +157,11 @@ async def fetch_character(name: str) -> Character:
     # 없는 캐릭터에 404가 아니라 200 + null이 오는 경우가 있다
     if not payload:
         raise errors.CharacterNotFound(name)
+    return payload
+
+
+async def fetch_character(name: str) -> Character:
+    payload = await fetch_raw(name)
 
     char = Character(name=name)
     if profile := payload.get("ArmoryProfile"):
