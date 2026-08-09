@@ -15,6 +15,15 @@ FAIL_GAIN_RATIO = 0.465
 # 부르는 천장이다.
 ARTISAN_FULL = 1.0
 
+# 실패로 인한 성공률 증가에는 상한이 있다. 공식 가이드가 "실패로 인한 성공률 증가가
+# 최대치에 도달할 경우, 성공률이 더 이상 상승하지 않습니다"라고 못박아 뒀고, 로펙도
+# 실패 횟수를 10에서 자른다. 이 상한이 없으면 확률이 계속 올라 성공까지의 횟수를
+# 실제보다 적게 잡는다.
+#
+# 장인의 기운은 여기 걸리지 않고 계속 쌓인다. 그래서 확률이 멈춘 뒤에도 기운은
+# 차오르고, 결국 장기백이 실제로 도달 가능한 천장이 된다.
+FAIL_STACK_CAP = 10
+
 # 확률이 0에 가까우면 시도 횟수가 발산한다. 게임에 그런 재련은 없지만, 잘못 입력된
 # 값으로 계산이 멈추지 않게 막아둔다.
 _MAX_TRIES = 10_000
@@ -100,7 +109,8 @@ def simulate(
     for i in range(_MAX_TRIES):
         current_artisan = min(artisan + gain * i, ARTISAN_FULL)
         guaranteed = current_artisan >= ARTISAN_FULL
-        rate = 1.0 if guaranteed else min(base_rate + gain * (failed + i), 1.0)
+        stack = min(failed + i, FAIL_STACK_CAP)
+        rate = 1.0 if guaranteed else min(base_rate + gain * stack, 1.0)
 
         attempts.append(Attempt(
             index=i + 1, success_rate=rate, artisan=current_artisan, guaranteed=guaranteed

@@ -30,7 +30,8 @@ def build_result_view(outcome: refine.RefineOutcome, base_rate: float, artisan: 
         lines.append(
             f"운이 최악이어도 **{outcome.max_tries}번**이면 확정이에요"
             f"{_cost_suffix(outcome.max_cost)}\n"
-            f"-# 실패할 때마다 성공률과 장인의 기운이 {gain * 100:.2f}%p씩 올라요"
+            f"-# 실패마다 {gain * 100:.2f}%p씩 올라요 · "
+            f"성공률은 {refine.FAIL_STACK_CAP}번까지만, 장인의 기운은 끝까지"
         )
     else:
         lines.append(
