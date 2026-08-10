@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>젬 툴팁 화면 인식 POC</title>
+  <link rel="stylesheet" href="style.css?v=2026-08-09.1">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-mark">GEM</span>
+      <div>
+        <h1>젬 툴팁 화면 인식 POC</h1>
+        <p class="brand-sub">화면 공유 + Tesseract.js OCR + 정규식 파싱 실험</p>
+      </div>
+    </div>
+    <div class="topbar-status">
+      <span id="engineDot" class="dot dot-idle"></span>
+      <span id="engineStatus">엔진 대기 중</span>
+      <span id="buildTag" class="build-tag" title="지금 브라우저가 실행 중인 app.js 판. 코드를 고쳤는데 이 값이 그대로면 캐시된 옛 파일이다.">build ?</span>
+    </div>
+  </div>
+</header>
+
+<main class="layout">
+
+  <!-- 좌측: 캡처 + 선택 영역 -->
+  <section class="panel panel-capture">
+    <div class="panel-head">
+      <h2>1. 화면 캡처</h2>
+      <span class="hint">공유할 창으로 로스트아크 게임 창을 선택하세요</span>
+    </div>
+
+    <div class="controls">
+      <button id="btnShare" class="btn btn-primary">화면 공유 시작</button>
+      <button id="btnStop" class="btn" disabled>공유 중지</button>
+      <span id="sourceInfo" class="meta">해상도 -</span>
+    </div>
+
+    <div id="stageWrap" class="stage-wrap">
+      <video id="video" playsinline muted autoplay></video>
+
+      <!-- 실제 영상 픽셀 영역에만 정확히 겹쳐지는 레이어 -->
+      <div id="stage" class="stage" hidden>
+        <div id="selBox" class="sel-box">
+          <div class="sel-label" id="selLabel">0 x 0</div>
+          <span class="handle" data-dir="nw"></span>
+          <span class="handle" data-dir="n"></span>
+          <span class="handle" data-dir="ne"></span>
+          <span class="handle" data-dir="e"></span>
+          <span class="handle" data-dir="se"></span>
+          <span class="handle" data-dir="s"></span>
+          <span class="handle" data-dir="sw"></span>
+          <span class="handle" data-dir="w"></span>
+        </div>
+      </div>
+
+      <div id="stagePlaceholder" class="stage-placeholder">
+        <p>화면 공유를 시작하면 여기에 미리보기가 표시됩니다.</p>
+        <p class="dim">브라우저가 공유 대상 선택 창을 띄웁니다. 로스트아크 창을 고르세요.</p>
+      </div>
+    </div>
+
+    <p class="tip">
+      사각형 안쪽을 끌면 이동, 모서리·변의 점을 끌면 크기 조절입니다.
+    </p>
+    <p class="tip tip-strong">
+      가공 화면이라면 <b>"다음 항목 중 무작위로 적용됩니다" 문구부터 그 아래 4열까지만</b>
+      감싸세요. 상단의 원형 장식 배경은 글씨가 거의 안 읽히고, 그 잡음에서 가짜 항목이
+      만들어집니다. 좁게 자를수록 결과가 좋아집니다.
+    </p>
+
+    <div class="controls">
+      <button id="btnResetSel" class="btn btn-ghost">선택 영역 초기화</button>
+      <span id="selInfo" class="meta">선택 영역 -</span>
+    </div>
+  </section>
+
+  <!-- 우측 상단: 인식 설정 -->
+  <section class="panel panel-recognize">
+    <div class="panel-head">
+      <h2>2. 인식</h2>
+      <span class="hint">전처리 값을 바꿔가며 아래 미리보기가 가장 또렷할 때 인식하세요</span>
+    </div>
+
+    <div class="controls">
+      <button id="btnRecognize" class="btn btn-primary" disabled>지금 인식</button>
+      <label class="toggle">
+        <input type="checkbox" id="chkAuto" disabled>
+        <span>2초마다 자동 인식</span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" id="chkColumns" checked>
+        <span>열 자동 재구성</span>
+      </label>
+    </div>
+
+    <p class="tip tip-tight">
+      가공 화면처럼 항목이 가로로 늘어선 화면은, 평문만 보면 이름 줄과 값 줄이 따로 뭉쳐서
+      어떤 값이 어떤 항목의 것인지 알 수 없습니다. "열 자동 재구성"을 켜면 단어 위치 정보로
+      이름과 값을 다시 짝지어 줍니다. 세로로 나열된 일반 툴팁에서는 자동으로 평문 처리됩니다.
+    </p>
+
+    <div class="options">
+      <label class="opt">
+        <span class="opt-name">확대 배율 <b id="valScale">3.0x</b></span>
+        <input type="range" id="rngScale" min="1" max="5" step="0.5" value="3">
+      </label>
+      <p class="opt-note">
+        2.0x 에서는 "Lv." 가 "1." 로 오독되는 일이 잦습니다. 측정상 3.0x 부터 안정적입니다.
+      </p>
+
+      <label class="opt">
+        <span class="opt-name">인식 모드 (PSM)</span>
+        <select id="selPsm" class="opt-select">
+          <option value="6" selected>6 - 단일 블록 (기본)</option>
+          <option value="4">4 - 단일 컬럼</option>
+          <option value="3">3 - 자동</option>
+          <option value="11">11 - 흩어진 텍스트</option>
+        </select>
+      </label>
+
+      <label class="opt">
+        <span class="opt-name">이진화 임계값 <b id="valThresh">사용 안 함</b></span>
+        <input type="range" id="rngThresh" min="0" max="255" step="1" value="0">
+      </label>
+
+      <label class="opt opt-inline">
+        <input type="checkbox" id="chkInvert" checked>
+        <span>밝기 반전 (어두운 배경 + 밝은 글씨용, 기본 켬)</span>
+      </label>
+
+      <label class="opt opt-inline">
+        <input type="checkbox" id="chkContrast" checked>
+        <span>자동 대비 보정</span>
+      </label>
+    </div>
+
+    <div class="crop-preview">
+      <div class="crop-head">
+        <span>OCR 입력 이미지 (전처리 결과)</span>
+        <span id="cropInfo" class="meta">-</span>
+      </div>
+      <div class="crop-canvas-wrap">
+        <canvas id="cropCanvas"></canvas>
+      </div>
+    </div>
+
+    <div id="progressWrap" class="progress" hidden>
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+    <p id="engineLog" class="engine-log">Tesseract 엔진은 첫 인식 때 한 번만 초기화됩니다. 학습 데이터(kor+eng)를 내려받느라 수십 초 걸릴 수 있습니다.</p>
+  </section>
+
+  <!-- 결과 -->
+  <section class="panel panel-result">
+    <div class="panel-head">
+      <h2>3. 결과</h2>
+      <div class="result-actions">
+        <button id="btnSample" class="btn btn-ghost btn-sm">샘플 텍스트로 파서 테스트</button>
+        <button id="btnCopy" class="btn btn-ghost btn-sm">JSON 복사</button>
+      </div>
+    </div>
+
+    <div class="result-grid">
+      <div class="result-col">
+        <h3>원본 OCR 텍스트</h3>
+        <textarea id="rawText" spellcheck="false" placeholder="인식 결과가 여기에 그대로 표시됩니다. 직접 고쳐 넣고 아래 파싱 결과가 어떻게 바뀌는지 볼 수도 있습니다."></textarea>
+        <div class="raw-foot">
+          <span id="confInfo" class="meta">신뢰도 -</span>
+          <button id="btnReparse" class="btn btn-ghost btn-sm">위 텍스트 다시 파싱</button>
+        </div>
+      </div>
+
+      <div class="result-col">
+        <h3>파싱 결과</h3>
+        <div class="parsed">
+          <div class="kv">
+            <span class="k">인식 방식</span>
+            <span class="v" id="outMode">-</span>
+          </div>
+          <div class="kv">
+            <span class="k">영역 게이트</span>
+            <span class="v" id="outGate">-</span>
+          </div>
+          <div class="kv">
+            <span class="k">젬 계열</span>
+            <span class="v" id="outType">-</span>
+          </div>
+          <div class="kv">
+            <span class="k">젬 레벨</span>
+            <span class="v" id="outGemLevel">-</span>
+          </div>
+
+          <h4>옵션</h4>
+          <ul id="outOptions" class="opt-list">
+            <li class="empty">아직 인식된 옵션이 없습니다.</li>
+          </ul>
+
+          <h4>의심스러운 항목 (잡음일 가능성)</h4>
+          <ul id="outSuspect" class="opt-list dim-list">
+            <li class="empty">-</li>
+          </ul>
+
+          <h4>파싱되지 않은 줄</h4>
+          <ul id="outUnmatched" class="opt-list dim-list">
+            <li class="empty">-</li>
+          </ul>
+
+          <h4>재구성된 줄</h4>
+          <ul id="outRecon" class="opt-list dim-list">
+            <li class="empty">-</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <details class="json-details">
+      <summary>구조화 JSON 보기</summary>
+      <pre id="outJson">{}</pre>
+    </details>
+
+    <p class="warn">
+      주의: 이 파서는 실제 게임 스크린샷 없이 작성한 <b>베스트 에포트 초안</b>입니다.
+      스탯 이름 목록을 고정해 두지 않고 <code>Lv.n</code> / <code>n 포인트</code> / <code>n%</code> /
+      줄 끝 숫자 같은 <b>형태</b>만 보고 뽑아냅니다.
+      실제 툴팁 문구에 맞춰 <code>app.js</code>의 <code>LINE_PATTERNS</code>를 손보셔야 정확해집니다.
+    </p>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="app.js?v=2026-08-09.1"></script>
+</body>
+</html>

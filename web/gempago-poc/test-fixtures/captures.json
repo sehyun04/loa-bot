@@ -1,0 +1,203 @@
+{
+  "_readme": [
+    "실제 게임 화면에서 나온 OCR 결과 모음. 재캡처 없이 파서 회귀를 확인한다.",
+    "",
+    "캡처 하나는 두 가지 형태로 넣을 수 있다:",
+    "  rawText : OCR 원문 그대로. 평문 경로(parseGemTooltip)로 검사한다.",
+    "            열이 가로로 늘어선 화면은 원문만으로는 이름-값 짝을 복원할 수 없으므로,",
+    "            여기서는 주로 '가짜 옵션이 안 나오는지'를 본다.",
+    "  lines   : 열 재구성을 거친 뒤의 논리적 줄들. 줄 단위 정규식(parseLinesArray)을 검사한다.",
+    "            페이지의 '재구성된 줄' 패널에 보이는 값을 그대로 옮기면 된다.",
+    "",
+    "expect 항목:",
+    "  minOptions / maxOptions : 옵션 개수 하한/상한",
+    "  options   : 반드시 나와야 하는 항목들(부분 집합, 라벨은 공백 무시 비교)",
+    "  forbid    : 옵션 라벨에 나오면 안 되는 조각(가짜 옵션 회귀 방지)",
+    "  unmatched : 반드시 미매칭으로 남아야 하는 줄 조각(복구 불가능한 오독을 억지로 잡지 않는지)",
+    "  type / gemLevel / gemLevelNot",
+    "",
+    "새 캡처 추가: '지금 인식' 후 원본 OCR 텍스트 칸과 '재구성된 줄' 패널을 그대로 복사해 넣고,",
+    "화면을 눈으로 보고 expect 를 채운다."
+  ],
+
+  "captures": [
+    {
+      "id": "roundD-noise-false-positives",
+      "note": "상단 원형 장식 배경의 판독 불가 잡음. 여기서 옵션이 하나라도 나오면 회귀다. (실제로 gemLevel 437, 라벨 '\" 할게aah 0Bl-...' 같은 가짜 항목이 나왔던 사례)",
+      "partial": true,
+      "rawText": "SS ENP LRN, las df PSL [9802\n\" 할게aah 0Bl-.. 34\n가공 완료 가공 하기 (9/\n0 2: BAY), CER EI __\n[9802 |] 437",
+      "expect": {
+        "maxOptions": 0,
+        "forbid": ["할게", "가공 하기", "가공 완료"],
+        "gemLevelNot": [437, 9, 34]
+      }
+    },
+
+    {
+      "id": "roundD-buttons-not-options",
+      "note": "하단 버튼/비용 영역. 옵션이 아니라 화면 정보다. 여는 괄호로 끝나는 라벨이 통과하던 구멍을 막았는지 본다.",
+      "partial": false,
+      "rawText": "가공 완료 가공 하기 (9/9)\n가공 1회 후 사용 가능",
+      "expect": {
+        "forbid": ["가공 하기", "가공 완료"]
+      }
+    },
+
+    {
+      "id": "roundD-columns-reconstructed",
+      "note": "열 재구성이 처음 성공한 캡처의 재구성 결과. 4열 중 3열은 값이 정확했고, 4번째는 'Lv.' 가 통째로 '1.' 로 오독되어 복구 불가였다. 확대배율 2.0x 시절.",
+      "partial": true,
+      "lines": [
+        "의지력효율 +2 증가 A",
+        "CER EI XA 1회 증가",
+        "XA효율 +3 증가 A",
+        "공격력 1. 1 증카 A"
+      ],
+      "expect": {
+        "minOptions": 3,
+        "options": [
+          { "label": "의지력효율", "valueText": "+2", "delta": "증가" },
+          { "kind": "count", "value": 1, "delta": "증가" },
+          { "kind": "number", "valueText": "+3", "delta": "증가" }
+        ],
+        "unmatched": ["1."]
+      }
+    },
+
+    {
+      "id": "roundA-label-row-digits",
+      "note": "라벨 행에 아이콘 잡음으로 숫자가 섞였던 사례의 재구성 결과. 라벨이 깨져도 값은 살아야 한다.",
+      "partial": true,
+      "lines": [
+        "의지력효율3A +2 증가",
+        "｢)2 1회 증가",
+        "의지력 효율 +3 증가",
+        "공격력 Lv. 1 증가"
+      ],
+      "expect": {
+        "minOptions": 4,
+        "options": [
+          { "kind": "count", "value": 1, "delta": "증가" },
+          { "label": "의지력 효율", "valueText": "+3", "delta": "증가" },
+          { "label": "공격력", "kind": "level", "value": 1, "delta": "증가" }
+        ]
+      }
+    },
+
+    {
+      "id": "delta-ocr-variants",
+      "note": "'증가' 가 캡처마다 증카/중가/종카로 깨지는 것을 실제로 관찰했다. 전부 '증가' 로 정규화되어야 한다.",
+      "partial": false,
+      "lines": [
+        "공격력 Lv. 1 증카",
+        "의지력 효율 +2 중가",
+        "낙인력 Lv. 2 종가",
+        "혼돈 포인트 +3 증가"
+      ],
+      "expect": {
+        "minOptions": 4,
+        "options": [
+          { "label": "공격력", "kind": "level", "value": 1, "delta": "증가" },
+          { "label": "의지력 효율", "valueText": "+2", "delta": "증가" },
+          { "label": "낙인력", "kind": "level", "value": 2, "delta": "증가" },
+          { "label": "혼돈 포인트", "kind": "point", "valueText": "+3", "delta": "증가" }
+        ]
+      }
+    },
+
+    {
+      "id": "arrow-icon-tail-noise",
+      "note": "값 오른쪽 상승 화살표(▲)가 'A' 나 '초' 로 읽히는 것을 실측했다. 줄 끝 잡음 하나는 허용해야 한다.",
+      "partial": false,
+      "lines": [
+        "의지력 효율 +2 증가 A",
+        "공격력 Lv. 1 증가 초",
+        "낙인력 Lv. 2 증가 ▲"
+      ],
+      "expect": {
+        "minOptions": 3,
+        "options": [
+          { "label": "공격력", "kind": "level", "value": 1, "delta": "증가" },
+          { "label": "낙인력", "kind": "level", "value": 2, "delta": "증가" }
+        ]
+      }
+    },
+
+    {
+      "id": "roundE-merged-columns",
+      "note": "3.0x + 좁은 크롭 실전 캡처. 1,2번 칸은 완벽했고 3,4번 칸이 한 셀로 붙어 나왔다. 화살표 아이콘이 '\"' 와 '속' 으로 깨져 열 사이 빈 공간에 걸터앉은 것이 원인. 이 합쳐진 줄 자체는 옵션으로 잡히면 안 된다(값이 뒤섞여 있어 뭘 집어도 틀린다).",
+      "partial": true,
+      "lines": [
+        "의지력효율 +2 증가",
+        "다른항목보기 1회 증가",
+        "공격력 +3증가\"속 14. 1 증가 A"
+      ],
+      "expect": {
+        "minOptions": 2,
+        "options": [
+          { "label": "의지력효율", "valueText": "+2", "delta": "증가" },
+          { "kind": "count", "value": 1, "delta": "증가" }
+        ],
+        "unmatched": ["14."],
+        "forbid": ["공격력"]
+      }
+    },
+
+    {
+      "id": "roundE-lv-broken-variants",
+      "note": "'Lv.' 가 캡처마다 다르게 깨진 사례 모음(1. / 14. / v). 정규식으로 쫓지 않고, 복구 불가능한 것은 미매칭으로 남겨야 한다. 억지로 숫자를 뽑아내면 틀린 값을 맞다고 보여주게 된다.",
+      "partial": true,
+      "lines": [
+        "공격력 1. 1 증가",
+        "공격력 14. 1 증가 A",
+        "낙인력 v2 증가"
+      ],
+      "expect": {
+        "unmatched": ["1.", "14."],
+        "options": [
+          { "label": "낙인력", "kind": "level", "value": 2, "delta": "증가" }
+        ]
+      }
+    },
+
+    {
+      "id": "gem-tooltip-vertical",
+      "note": "세로형 젬 툴팁(원래 목표). 이쪽이 깨지지 않았는지 확인하는 회귀 테스트.",
+      "partial": false,
+      "rawText": "질서의 젬\nLv.7\n아군 공격력 강화 Lv.3\n낙인력 강화 Lv.2\n포인트 8\n보스 피해 12.5%",
+      "expect": {
+        "type": "질서",
+        "gemLevel": 7,
+        "minOptions": 4,
+        "options": [
+          { "label": "아군 공격력 강화", "kind": "level", "value": 3 },
+          { "label": "낙인력 강화", "kind": "level", "value": 2 }
+        ]
+      }
+    },
+
+    {
+      "id": "chaos-point-not-gem-type",
+      "note": "'혼돈 포인트' 의 '혼돈' 이 젬 계열로 오탐되면 안 된다.",
+      "partial": false,
+      "rawText": "혼돈 포인트 +3 증가",
+      "expect": {
+        "type": null
+      }
+    },
+
+    {
+      "id": "cost-rows-not-paired",
+      "note": "'가공 비용 900' / '소지 금액 254,126' 이 서로 짝지어지면 안 된다. 천 단위 쉼표도 확인.",
+      "partial": false,
+      "rawText": "가공 비용 900\n소지 금액 254,126",
+      "expect": {
+        "forbid": ["가공 비용 소지 금액"],
+        "options": [
+          { "label": "가공 비용", "value": 900 },
+          { "label": "소지 금액", "value": 254126 }
+        ]
+      }
+    }
+  ]
+}

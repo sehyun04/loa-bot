@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>젬파고 - 가공 계산기</title>
+<link rel="stylesheet" href="style.css?v=2026-08-10.2">
+</head>
+<body>
+
+<header class="top">
+  <h1>젬파고</h1>
+  <p class="sub">지금 뜬 4개로 굴릴지, 리롤할지 계산한다. 시뮬레이션이 아니라 정확한 값이다.</p>
+</header>
+
+<main class="grid">
+
+  <section class="panel">
+    <h2>젬 상태</h2>
+
+    <label class="row">
+      <span>등급</span>
+      <select id="grade">
+        <option value="5">고급 (가공 5회)</option>
+        <option value="7">희귀 (가공 7회)</option>
+        <option value="9" selected>영웅 (가공 9회)</option>
+      </select>
+    </label>
+
+    <div class="stats" id="stats"></div>
+
+    <label class="row">
+      <span>남은 가공</span>
+      <select id="attempts"></select>
+    </label>
+
+    <label class="row">
+      <span>남은 리롤</span>
+      <select id="rerolls"></select>
+    </label>
+
+    <label class="row">
+      <span>가공 비용</span>
+      <select id="cost">
+        <option value="0" selected>기본</option>
+        <option value="1">+100%</option>
+        <option value="-1">-100%</option>
+      </select>
+    </label>
+  </section>
+
+  <section class="panel">
+    <h2>목표</h2>
+    <p class="hint">이 목표에 따라 리롤 판단이 통째로 바뀐다.</p>
+
+    <div class="presets" id="presets">
+      <button type="button" data-target='{"will":5,"point":5}'>의지력/포인트 5/5</button>
+      <button type="button" data-target='{"will":5,"point":5,"opt1":5,"opt2":5}'>전부 5/5/5/5</button>
+      <button type="button" data-target='{"opt1":4}'>1번 효과 4 이상</button>
+      <button type="button" data-target='{"will":4,"point":4}'>의지력/포인트 4/4</button>
+    </div>
+
+    <div class="stats" id="target"></div>
+    <p class="hint">1 은 "상관없음"과 같다 (모든 젬이 이미 1 이상).</p>
+  </section>
+
+  <section class="panel wide">
+    <h2>화면에 뜬 항목 4개</h2>
+    <p class="hint">"다음 항목 중 무작위로 적용됩니다" 아래 4개를 그대로 고른다.</p>
+    <div class="picks" id="picks"></div>
+  </section>
+
+  <section class="panel wide result" id="result" hidden>
+    <div class="verdict" id="verdict"></div>
+
+    <div class="compare">
+      <div class="opt" id="optCommit">
+        <span class="k">굴리기</span>
+        <strong class="v" id="valCommit">-</strong>
+      </div>
+      <div class="opt" id="optReroll">
+        <span class="k">리롤</span>
+        <strong class="v" id="valReroll">-</strong>
+      </div>
+    </div>
+
+    <table class="breakdown">
+      <thead><tr><th>걸리는 항목</th><th>적용 후 달성 확률</th></tr></thead>
+      <tbody id="breakdown"></tbody>
+    </table>
+
+    <p class="meta" id="meta"></p>
+  </section>
+
+  <section class="panel wide note" id="note">
+    <strong>계산 준비 중</strong>
+    <span id="noteText">확률 표와 솔버를 불러오는 중.</span>
+  </section>
+
+</main>
+
+<script src="app.js?v=2026-08-10.2"></script>
+</body>
+</html>

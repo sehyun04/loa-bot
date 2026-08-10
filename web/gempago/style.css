@@ -1,0 +1,144 @@
+:root {
+  --bg: #14161c;
+  --panel: #1c1f27;
+  --panel-2: #232733;
+  --line: #2e3341;
+  --fg: #e5e8ef;
+  --dim: #8f97a8;
+  --accent: #6ea8fe;
+  --good: #56c98a;
+  --warn: #e0af68;
+}
+
+* { box-sizing: border-box; }
+
+/* HTML 의 hidden 속성은 브라우저 기본 스타일(display:none)이라 우선순위가 가장 낮다.
+   아래에서 .result 에 display:grid, .note 에 display:flex 를 주는 순간 그대로 덮여서
+   hidden=true 인데도 계속 보인다. gempago-poc 에서 같은 원인으로 오버레이가 안 사라지고
+   드래그 이벤트를 전부 가로챈 적이 있다. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  padding: 24px 20px 64px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px/1.55 "Pretendard", "Malgun Gothic", system-ui, sans-serif;
+}
+
+.top { max-width: 980px; margin: 0 auto 20px; }
+.top h1 { margin: 0; font-size: 22px; letter-spacing: -0.02em; }
+.sub { margin: 4px 0 0; color: var(--dim); font-size: 13px; }
+
+.grid {
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.wide { grid-column: 1 / -1; }
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px;
+}
+.panel h2 { margin: 0 0 12px; font-size: 14px; color: var(--accent); }
+.hint { margin: -6px 0 12px; color: var(--dim); font-size: 12px; }
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.row > span { color: var(--dim); font-size: 13px; }
+
+select {
+  background: var(--panel-2);
+  color: var(--fg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font: inherit;
+  min-width: 132px;
+}
+select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.stats { display: grid; gap: 8px; margin-bottom: 12px; }
+
+.presets { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.presets button {
+  background: var(--panel-2);
+  color: var(--fg);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.presets button:hover { border-color: var(--accent); }
+.presets button[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #10131a;
+  font-weight: 600;
+}
+
+.picks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.picks select { min-width: 0; width: 100%; }
+@media (max-width: 720px) {
+  .grid { grid-template-columns: 1fr; }
+  .picks { grid-template-columns: 1fr 1fr; }
+}
+
+.result { display: grid; gap: 14px; }
+
+.verdict {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.verdict small { display: block; font-size: 12px; font-weight: 400; color: var(--dim); margin-top: 3px; }
+.verdict.commit { color: var(--good); }
+.verdict.reroll { color: var(--warn); }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.opt {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.opt .k { display: block; color: var(--dim); font-size: 12px; }
+.opt .v { font-size: 21px; font-variant-numeric: tabular-nums; }
+/* 추천 쪽만 테두리로 표시한다. 이모지나 별표 대신. */
+.opt.pick { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+
+.breakdown { width: 100%; border-collapse: collapse; font-size: 13px; }
+.breakdown th {
+  text-align: left;
+  color: var(--dim);
+  font-weight: 400;
+  font-size: 12px;
+  padding: 0 8px 6px 0;
+  border-bottom: 1px solid var(--line);
+}
+.breakdown td { padding: 6px 8px 6px 0; border-bottom: 1px solid var(--line); }
+.breakdown td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+
+.meta { margin: 0; color: var(--dim); font-size: 12px; }
+
+.note {
+  color: var(--dim);
+  font-size: 13px;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+.note strong { color: var(--fg); }
+.note.error strong { color: #f7768e; }
