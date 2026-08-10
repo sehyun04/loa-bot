@@ -9,6 +9,8 @@
 const path = require('path');
 const png = require('./png.js');
 const ncc = require('./ncc.js');
+const layout = require('./layout.js');
+const reader = require('./reader.js');
 
 let pass = 0, fail = 0;
 
@@ -79,7 +81,7 @@ console.log('classify 는 2등과의 격차를 돌려준다');
 
 console.log('실제 캡처: 템플릿은 UI 컨텍스트에 종속된다');
 {
-  const tplLv = png.loadGray(here('templates', 'tpl_lv.png'));
+  const tplLv = png.loadGray(here('fixtures', 'tpl_lv.png'));
   const row = png.loadGray(here('fixtures', 'cmp_row.png'));
   const diamond = png.loadGray(here('fixtures', 'cmp_diamond.png'));
 
@@ -97,7 +99,7 @@ console.log('실제 캡처: 템플릿은 UI 컨텍스트에 종속된다');
 
 console.log('PNG 디코더');
 {
-  const src = png.loadGray(here('templates', 'tpl_lv.png'));
+  const src = png.loadGray(here('fixtures', 'tpl_lv.png'));
   const round = png.toGray(png.decode(png.encodeGray(src)));
   check('encode -> decode 크기 유지', round.width === src.width && round.height === src.height);
   let maxDiff = 0;
@@ -106,6 +108,67 @@ console.log('PNG 디코더');
   }
   // 그레이 -> RGB 로 다시 쓰면서 반올림하므로 1 이내 오차는 정상.
   check('픽셀 오차 <= 1 (max ' + maxDiff.toFixed(2) + ')', maxDiff <= 1);
+}
+
+console.log('템플릿끼리 서로 구분되는가 (이게 안 되면 나머지는 의미 없다)');
+{
+  const atlas = require('./atlas.js').load();
+
+  // 옵션명은 통째로 매칭해도 충분히 갈린다.
+  const agun = atlas.label.agun, hondon = atlas.label.hondon;
+  const [wide, narrow] = agun.width >= hondon.width ? [agun, hondon] : [hondon, agun];
+  const cross = ncc.best(wide, narrow).score;
+  check('다른 옵션명끼리 0.3 미만 (' + cross.toFixed(3) + ')', cross < 0.3);
+
+  // 숫자는 8px 창 덕분에 갈린다. 창 없이 값 전체를 비교하면 0.9 가 나와서 못 쓴다.
+  const d1 = atlas.digit['1'], d2 = atlas.digit['2'];
+  const dCross = ncc.best(d1, d2).score;
+  check('숫자 1 vs 2 가 0.4 미만 (' + dCross.toFixed(3) + ')', dCross < 0.4);
+  check('숫자 템플릿 폭이 ' + reader.DIGIT_WINDOW + 'px', d1.width === reader.DIGIT_WINDOW);
+
+  const lv = atlas.prefix.lv, plus = atlas.prefix.plus;
+  check('접두 Lv. vs + 가 0.7 미만', ncc.best(lv, plus).score < 0.7, String(ncc.best(lv, plus).score));
+}
+
+console.log('실제 캡처를 끝까지 읽는다');
+{
+  const atlas = require('./atlas.js').load();
+  const img = png.loadGray(here('fixtures', 'options-roaring2.png'));
+
+  const t0 = Date.now();
+  const r = reader.readOptions(img, atlas);
+  const ms = Date.now() - t0;
+
+  check('가공 화면을 찾았다', r.ok, r.reason);
+  check('앵커 점수 > 0.99 (' + r.origin.score.toFixed(4) + ')', r.origin.score > 0.99);
+
+  // 스크린샷에 실제로 보이는 4개. 눈으로 확인한 정답이다.
+  const want = [
+    ['아군 피해 강화', 'Lv. 1 증가'],
+    ['혼돈 포인트', '+2 증가'],
+    ['혼돈 포인트', '+1 증가'],
+    ['아군 피해 강화', 'Lv. 2 증가'],
+  ];
+  want.forEach(([label, value], i) => {
+    const o = r.options[i];
+    check(`열${i + 1} ${label} / ${value}`,
+      o.labelText === label && o.value && o.value.text === value,
+      `${o.labelText} / ${o.value && o.value.text}`);
+  });
+
+  check('4개 모두 confident', r.options.every((o) => o.confident));
+  const minMargin = Math.min(...r.options.map((o) => Math.min(o.labelMargin, o.value.scores.digitMargin)));
+  check('최소 마진 > 0.5 (' + minMargin.toFixed(3) + ')', minMargin > 0.5);
+  console.log('  (' + ms + 'ms)');
+}
+
+console.log('앵커가 없으면 못 찾았다고 말한다');
+{
+  const atlas = require('./atlas.js').load();
+  // 가공 화면이 아닌 것: 옵션 행만 잘라낸 이미지에는 앵커 문장이 없다.
+  const notGem = png.loadGray(here('fixtures', 'cmp_row.png'));
+  const r = reader.readOptions(notGem, atlas);
+  check('엉뚱한 이미지는 거부한다', !r.ok, JSON.stringify(r.options && r.options[0]));
 }
 
 console.log();

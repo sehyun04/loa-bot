@@ -125,6 +125,50 @@
     };
   }
 
+  /**
+   * 정수배 축소. 앵커를 전체 화면에서 찾을 때 쓴다.
+   * 2048x1280 에서 220x14 템플릿을 전탐색하면 80억 연산이라 끝나지 않는다.
+   * 1/4 로 줄여서 대충 찾고 원본에서 주변만 다시 훑는다.
+   */
+  function downsample(img, f) {
+    const w = Math.floor(img.width / f);
+    const h = Math.floor(img.height / f);
+    const out = new Float32Array(w * h);
+    const inv = 1 / (f * f);
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        let sum = 0;
+        for (let j = 0; j < f; j++) {
+          const o = (y * f + j) * img.width + x * f;
+          for (let i = 0; i < f; i++) sum += img.data[o + i];
+        }
+        out[y * w + x] = sum * inv;
+      }
+    }
+    return { width: w, height: h, data: out };
+  }
+
+  /**
+   * 큰 이미지에서 템플릿 위치 찾기. 축소본에서 후보를 잡고 원본에서 다듬는다.
+   * @returns {{x:number,y:number,score:number}|null}
+   */
+  function locate(img, tpl, factor, refine) {
+    const f = factor || 4;
+    const pad = refine == null ? f * 2 : refine;
+
+    if (tpl.width < f * 4 || tpl.height < f * 2) return best(img, tpl); // 너무 작으면 축소가 손해
+    const coarse = best(downsample(img, f), downsample(tpl, f));
+    if (!coarse) return null;
+
+    const band = {
+      x: Math.max(0, coarse.x * f - pad),
+      y: Math.max(0, coarse.y * f - pad),
+      w: tpl.width + pad * 2,
+      h: tpl.height + pad * 2,
+    };
+    return best(img, tpl, band);
+  }
+
   /** 브라우저 canvas 의 ImageData -> 그레이 이미지. */
   function imageDataToGray(imageData) {
     const { width, height, data } = imageData;
@@ -135,5 +179,5 @@
     return { width, height, data: g };
   }
 
-  return { matchTemplate, best, peaks, classify, imageDataToGray };
+  return { matchTemplate, best, peaks, classify, downsample, locate, imageDataToGray };
 });

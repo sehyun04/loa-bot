@@ -18,8 +18,8 @@ python -m http.server 8777
 ## 테스트
 
 ```
-node web/gempago/test.js          # 확률 표 + 솔버
-node web/gempago/vision/test.js   # NCC 매칭 + PNG
+node web/gempago/test.js          # 확률 표 + 솔버 (26)
+node web/gempago/vision/test.js   # 화면 인식 (29)
 ```
 
 ## 어떻게 계산하나
@@ -76,8 +76,16 @@ V(s, n, r) = E_S[ max( 지금 뜬 4개로 굴리기, 리롤하고 다시 보기 
 `worker.js` 가 `importScripts` 대신 자체 CommonJS 로더를 쓰는 이유는 거기 주석에 있다
 (전역 스코프 공유 때문에 `MIN_VALUE` 등이 재선언 에러를 낸다).
 
+## 화면 인식
+
+`vision/` 이 가공 화면에서 "다음 항목" 4개를 읽는다. 2048x1280 전체 화면 기준 130ms 에
+옵션명 4/4 · 값 4/4 를 맞춘다. 자세한 내용과 **아직 믿으면 안 되는 부분**은
+[vision/README.md](vision/README.md) 에 있다 — 요약하면 어휘가 거의 비어 있고
+(옵션명 2개, 숫자 2개) 검증에 쓴 캡처가 사실상 한 장이다.
+
 ## 남은 일
 
-- `vision/` 을 계산기에 연결 (지금은 수동 입력)
+- 서로 다른 젬/옵션 캡처를 모아 아틀라스 채우기. 그 전까진 인식을 UI 에 붙일 수 없다
+- 읽은 결과를 `rules.js` 의 항목 id 로 변환 (`아군 피해 강화 Lv. 1 증가` -> `opt2+1`)
 - `MAX_REROLL = 6` 은 절단이다. 7·8과 비교해서 오차가 무시 가능한지 미확인
 - 골드 비용을 고려한 판단 (지금은 확률만 본다)

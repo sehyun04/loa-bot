@@ -1,0 +1,88 @@
+{
+  "source": "로아젬1.PNG (2048x1280)",
+  "note": "좌표는 이 캡처 기준. layout.js 의 REF 와 같아야 한다.",
+  "items": [
+    {
+      "file": "anchor.png",
+      "text": "다음 항목 중 무작위로 적용됩니다.",
+      "rect": [
+        914,
+        640,
+        220,
+        14
+      ]
+    },
+    {
+      "file": "label-agun.png",
+      "text": "아군 피해 강화",
+      "rect": [
+        788,
+        686,
+        93,
+        14
+      ]
+    },
+    {
+      "file": "label-hondon.png",
+      "text": "혼돈 포인트",
+      "rect": [
+        922,
+        686,
+        74,
+        14
+      ]
+    },
+    {
+      "file": "prefix-lv.png",
+      "text": "Lv.",
+      "rect": [
+        790,
+        709,
+        20,
+        13
+      ],
+      "pattern": "{p} {d} {s}"
+    },
+    {
+      "file": "prefix-plus.png",
+      "text": "+",
+      "rect": [
+        922,
+        709,
+        8,
+        13
+      ],
+      "pattern": "{p}{d} {s}"
+    },
+    {
+      "file": "digit-1.png",
+      "text": "1",
+      "rect": [
+        815,
+        709,
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-2.png",
+      "text": "2",
+      "rect": [
+        931,
+        709,
+        8,
+        13
+      ]
+    },
+    {
+      "file": "suffix-jeungga.png",
+      "text": "증가",
+      "rect": [
+        829,
+        709,
+        27,
+        13
+      ]
+    }
+  ]
+}
