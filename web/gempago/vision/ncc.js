@@ -169,6 +169,62 @@
     return best(img, tpl, band);
   }
 
+  /** 임의 배율 이중선형 확대/축소. 화면 배율을 기준 배율로 맞출 때 쓴다. */
+  function resize(img, factor) {
+    if (factor === 1) return img;
+    const w = Math.max(1, Math.round(img.width * factor));
+    const h = Math.max(1, Math.round(img.height * factor));
+    const out = new Float32Array(w * h);
+    const sx = img.width / w, sy = img.height / h;
+    for (let y = 0; y < h; y++) {
+      const fy = Math.min(img.height - 1, (y + 0.5) * sy - 0.5);
+      const y0 = Math.max(0, Math.floor(fy));
+      const y1 = Math.min(img.height - 1, y0 + 1);
+      const wy = fy - y0;
+      for (let x = 0; x < w; x++) {
+        const fx = Math.min(img.width - 1, (x + 0.5) * sx - 0.5);
+        const x0 = Math.max(0, Math.floor(fx));
+        const x1 = Math.min(img.width - 1, x0 + 1);
+        const wx = fx - x0;
+        const a = img.data[y0 * img.width + x0], b = img.data[y0 * img.width + x1];
+        const c = img.data[y1 * img.width + x0], d = img.data[y1 * img.width + x1];
+        out[y * w + x] = (a * (1 - wx) + b * wx) * (1 - wy) + (c * (1 - wx) + d * wx) * wy;
+      }
+    }
+    return { width: w, height: h, data: out };
+  }
+
+  /**
+   * 템플릿이 몇 배율로 찍혀 있는지 찾는다.
+   *
+   * NCC 는 배율에 전혀 관대하지 않다 - 2.3% 만 달라도 앵커 점수가 1.000 에서 0.56 으로
+   * 떨어진다(실측). 위치만 맞추고 배율을 안 맞추면 다른 해상도에서 통째로 무너진다.
+   * 굵게 훑어 후보를 잡고 그 주변만 촘촘히 다시 본다.
+   */
+  function findScale(img, tpl, opts) {
+    const o = opts || {};
+    const lo = o.min == null ? 0.5 : o.min;
+    const hi = o.max == null ? 1.6 : o.max;
+    const coarseStep = o.coarseStep || 0.05;
+
+    let best2 = null;
+    const probe = (s) => {
+      const t = resize(tpl, s);
+      if (t.width > img.width || t.height > img.height) return;
+      const r = locate(img, t, 4);
+      if (r && (!best2 || r.score > best2.score)) best2 = { scale: s, x: r.x, y: r.y, score: r.score };
+    };
+
+    for (let s = lo; s <= hi + 1e-9; s += coarseStep) probe(Math.round(s * 1000) / 1000);
+    if (!best2) return null;
+
+    const c = best2.scale;
+    for (let s = c - coarseStep; s <= c + coarseStep + 1e-9; s += 0.005) {
+      if (s > 0) probe(Math.round(s * 1000) / 1000);
+    }
+    return best2;
+  }
+
   /** 브라우저 canvas 의 ImageData -> 그레이 이미지. */
   function imageDataToGray(imageData) {
     const { width, height, data } = imageData;
@@ -179,5 +235,8 @@
     return { width, height, data: g };
   }
 
-  return { matchTemplate, best, peaks, classify, downsample, locate, imageDataToGray };
+  return {
+    matchTemplate, best, peaks, classify,
+    downsample, resize, locate, findScale, imageDataToGray,
+  };
 });

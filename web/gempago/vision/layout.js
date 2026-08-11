@@ -29,31 +29,49 @@
   };
 
   /**
-   * 앵커를 찾아 원점을 잡는다.
-   * @returns {{x:number,y:number,score:number,scale:number}|null}
+   * 화면을 기준 배율로 맞추고 앵커로 원점을 잡는다.
+   *
+   * 배율을 안 맞추면 다른 해상도에서 통째로 무너진다. NCC 는 배율에 관대하지 않아서
+   * 2.3% 차이에 앵커 점수가 1.000 -> 0.56 으로 떨어진다(실측).
+   * 템플릿마다 크기를 바꾸는 대신 화면 쪽을 기준 배율로 되돌린다 - 그러면 이후 코드가
+   * 배율을 전혀 몰라도 된다.
+   *
+   * @returns {{image, x, y, score, scale}|null} image 는 기준 배율로 맞춘 화면
    */
-  function locate(img, anchorTpl, minScore) {
-    const r = ncc.locate(img, anchorTpl, 4);
-    if (!r || r.score < (minScore == null ? 0.7 : minScore)) return null;
-    return { x: r.x, y: r.y, score: r.score, scale: 1 };
+  function locate(img, anchorTpl, opts) {
+    const o = opts || {};
+    const minScore = o.minScore == null ? 0.7 : o.minScore;
+
+    // 배율 탐색은 2초쯤 걸린다. 같은 화면을 반복해서 읽을 때는 호출부가 알려주면 된다.
+    let scale = o.scale;
+    if (scale == null) {
+      const found = ncc.findScale(img, anchorTpl, { min: o.minScale, max: o.maxScale });
+      if (!found) return null;
+      scale = found.scale;
+    }
+
+    const image = scale === 1 ? img : ncc.resize(img, 1 / scale);
+    const r = ncc.locate(image, anchorTpl, 4);
+    if (!r || r.score < minScore) return null;
+    return { image, x: r.x, y: r.y, score: r.score, scale };
   }
 
-  function rect(origin, band, col, s) {
-    const cx = origin.x + REF.columnDx[col] * s;
+  // locate 가 화면을 기준 배율로 되돌려 주므로 여기서는 배율을 곱하지 않는다.
+  function rect(origin, band, col) {
+    const cx = origin.x + REF.columnDx[col];
     return {
-      x: Math.round(cx - REF.cellHalf * s),
-      y: Math.round(origin.y + band.dy * s),
-      w: Math.round(REF.cellHalf * 2 * s),
-      h: Math.round(band.h * s),
+      x: Math.round(cx - REF.cellHalf),
+      y: Math.round(origin.y + band.dy),
+      w: REF.cellHalf * 2,
+      h: band.h,
     };
   }
 
   /** 네 열의 옵션명/값 영역. */
   function cells(origin) {
-    const s = origin.scale || 1;
     const out = [];
     for (let c = 0; c < 4; c++) {
-      out.push({ label: rect(origin, REF.labelBand, c, s), value: rect(origin, REF.valueBand, c, s) });
+      out.push({ label: rect(origin, REF.labelBand, c), value: rect(origin, REF.valueBand, c) });
     }
     return out;
   }

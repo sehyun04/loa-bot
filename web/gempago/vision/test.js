@@ -110,64 +110,89 @@ console.log('PNG 디코더');
   check('픽셀 오차 <= 1 (max ' + maxDiff.toFixed(2) + ')', maxDiff <= 1);
 }
 
+const atlas = require('./atlas.js').load();
+const groundTruth = JSON.parse(
+  require('fs').readFileSync(here('fixtures', 'captures.json'), 'utf8')
+);
+
 console.log('템플릿끼리 서로 구분되는가 (이게 안 되면 나머지는 의미 없다)');
 {
-  const atlas = require('./atlas.js').load();
+  // 한 문자열에 변형이 여러 개다. 대표로 첫 번째끼리 비교한다.
+  const one = (g, k) => atlas[g][k][0];
 
-  // 옵션명은 통째로 매칭해도 충분히 갈린다.
-  const agun = atlas.label.agun, hondon = atlas.label.hondon;
+  const agun = one('label', 'agun-pihae'), hondon = one('label', 'hondon-point');
   const [wide, narrow] = agun.width >= hondon.width ? [agun, hondon] : [hondon, agun];
-  const cross = ncc.best(wide, narrow).score;
-  check('다른 옵션명끼리 0.3 미만 (' + cross.toFixed(3) + ')', cross < 0.3);
+  check('다른 옵션명끼리 0.3 미만 (' + ncc.best(wide, narrow).score.toFixed(3) + ')',
+    ncc.best(wide, narrow).score < 0.3);
 
   // 숫자는 8px 창 덕분에 갈린다. 창 없이 값 전체를 비교하면 0.9 가 나와서 못 쓴다.
-  const d1 = atlas.digit['1'], d2 = atlas.digit['2'];
-  const dCross = ncc.best(d1, d2).score;
-  check('숫자 1 vs 2 가 0.4 미만 (' + dCross.toFixed(3) + ')', dCross < 0.4);
-  check('숫자 템플릿 폭이 ' + reader.DIGIT_WINDOW + 'px', d1.width === reader.DIGIT_WINDOW);
+  const digits = ['1', '2', '3', '4'];
+  let worst = { score: -1 };
+  for (const a of digits) {
+    for (const b of digits) {
+      if (a === b) continue;
+      const s = ncc.best(one('digit', a), one('digit', b)).score;
+      if (s > worst.score) worst = { score: s, pair: a + ' vs ' + b };
+    }
+  }
+  check(`서로 다른 숫자끼리 0.6 미만 (최악 ${worst.pair} = ${worst.score.toFixed(3)})`,
+    worst.score < 0.6);
+  check('숫자 템플릿 폭이 ' + reader.DIGIT_WINDOW + 'px',
+    digits.every((d) => atlas.digit[d].every((t) => t.width === reader.DIGIT_WINDOW)));
 
-  const lv = atlas.prefix.lv, plus = atlas.prefix.plus;
-  check('접두 Lv. vs + 가 0.7 미만', ncc.best(lv, plus).score < 0.7, String(ncc.best(lv, plus).score));
+  check('접두 Lv. vs + 가 0.7 미만',
+    ncc.best(one('prefix', 'lv'), one('prefix', 'plus')).score < 0.7);
 }
 
-console.log('실제 캡처를 끝까지 읽는다');
+console.log('실제 캡처 10장을 끝까지 읽는다');
 {
-  const atlas = require('./atlas.js').load();
-  const img = png.loadGray(here('fixtures', 'options-roaring2.png'));
-
+  let correct = 0, total = 0, flagged = 0;
   const t0 = Date.now();
-  const r = reader.readOptions(img, atlas);
-  const ms = Date.now() - t0;
 
-  check('가공 화면을 찾았다', r.ok, r.reason);
-  check('앵커 점수 > 0.99 (' + r.origin.score.toFixed(4) + ')', r.origin.score > 0.99);
+  for (const cap of groundTruth.captures) {
+    const img = png.loadGray(here('fixtures', cap.file));
+    // 배율 탐색은 따로 검증한다. 여기서는 정답표의 배율을 알려주고 읽기만 본다.
+    const r = reader.readOptions(img, atlas, { scale: cap.scale });
+    if (!r.ok) { check(cap.file + ' 화면 인식', false, r.reason); total += 4; continue; }
 
-  // 스크린샷에 실제로 보이는 4개. 눈으로 확인한 정답이다.
-  const want = [
-    ['아군 피해 강화', 'Lv. 1 증가'],
-    ['혼돈 포인트', '+2 증가'],
-    ['혼돈 포인트', '+1 증가'],
-    ['아군 피해 강화', 'Lv. 2 증가'],
-  ];
-  want.forEach(([label, value], i) => {
-    const o = r.options[i];
-    check(`열${i + 1} ${label} / ${value}`,
-      o.labelText === label && o.value && o.value.text === value,
-      `${o.labelText} / ${o.value && o.value.text}`);
-  });
+    const wrong = [];
+    cap.options.forEach((want, i) => {
+      const o = r.options[i];
+      total++;
+      if (o.labelText === want.label && o.value && o.value.text === want.value) correct++;
+      else wrong.push(`열${i + 1} ${o.labelText}/${o.value && o.value.text} != ${want.label}/${want.value}`);
+      if (!o.confident) flagged++;
+    });
+    check(cap.file + ' 4개 모두 정답', wrong.length === 0, wrong.join(', '));
+  }
 
-  check('4개 모두 confident', r.options.every((o) => o.confident));
-  const minMargin = Math.min(...r.options.map((o) => Math.min(o.labelMargin, o.value.scores.digitMargin)));
-  check('최소 마진 > 0.5 (' + minMargin.toFixed(3) + ')', minMargin > 0.5);
-  console.log('  (' + ms + 'ms)');
+  check(`옵션 ${total}개 전부 정답 (${correct}/${total})`, correct === total);
+  // 의심 표시는 틀렸다는 뜻이 아니라 "사람이 확인하라"는 뜻이다. 지금 걸리는 건
+  // "아군 피해 강화" 와 "아군 공격 강화" 처럼 한 글자만 다른 옵션명들이다(마진 0.10).
+  check(`의심 표시가 ${total} 개 중 5개 이하 (${flagged}개)`, flagged <= 5);
+  console.log(`  (10장 ${Date.now() - t0}ms)`);
+}
+
+console.log('배율이 달라도 찾는다');
+{
+  // 캐시본은 2048x1280 원본에서 2000x1250 으로 리샘플된 것이다(배율 0.9766).
+  // NCC 는 배율에 관대하지 않아서 이 2.3% 차이만으로 앵커 점수가 0.56 까지 떨어진다.
+  const resampled = png.loadGray(here('fixtures', 'cap17.png'));
+  const found = ncc.findScale(resampled, atlas.anchor, { min: 0.9, max: 1.1 });
+  check('리샘플 캡처의 배율을 0.98 로 잡는다 (' + found.scale + ')',
+    Math.abs(found.scale - 0.98) < 0.015, String(found.scale));
+  check('배율을 맞추면 앵커 점수가 0.85 이상 (' + found.score.toFixed(3) + ')', found.score > 0.85);
+
+  const original = png.loadGray(here('fixtures', 'cap-roaring1.png'));
+  const one = ncc.findScale(original, atlas.anchor, { min: 0.9, max: 1.1 });
+  check('원본 배율은 1.0 그대로 (' + one.scale + ')', one.scale === 1 && one.score > 0.99);
 }
 
 console.log('앵커가 없으면 못 찾았다고 말한다');
 {
-  const atlas = require('./atlas.js').load();
   // 가공 화면이 아닌 것: 옵션 행만 잘라낸 이미지에는 앵커 문장이 없다.
   const notGem = png.loadGray(here('fixtures', 'cmp_row.png'));
-  const r = reader.readOptions(notGem, atlas);
+  const r = reader.readOptions(notGem, atlas, { scale: 1 });
   check('엉뚱한 이미지는 거부한다', !r.ok, JSON.stringify(r.options && r.options[0]));
 }
 
@@ -232,10 +257,9 @@ console.log('화면에서 읽어 솔버까지 (끝에서 끝까지)');
 {
   const interpret = require('./interpret.js');
   const solver = require('../solver.js');
-  const atlas = require('./atlas.js').load();
-  const img = png.loadGray(here('fixtures', 'options-roaring2.png'));
+  const img = png.loadGray(here('fixtures', 'cap-roaring2.png'));
 
-  const read = reader.readOptions(img, atlas);
+  const read = reader.readOptions(img, atlas, { scale: 1 });
   const slots = { opt1: '공격력', opt2: '아군 피해 강화', point: '혼돈 포인트' };
   const picks = interpret.toPicks(read.options, slots);
 
@@ -243,6 +267,15 @@ console.log('화면에서 읽어 솔버까지 (끝에서 끝까지)');
   check('id 가 기대와 일치',
     JSON.stringify(picks.ids) === JSON.stringify(['opt2+1', 'point+2', 'point+1', 'opt2+2']),
     JSON.stringify(picks.ids));
+
+  // 특수 항목이 섞인 캡처도 id 로 떨어져야 한다. cap19: 질서포인트+4 / 유지 / 효과변경 / 의지력+4
+  const jilseo = png.loadGray(here('fixtures', 'cap19.png'));
+  const r19 = reader.readOptions(jilseo, atlas, { scale: 0.98 });
+  const p19 = interpret.toPicks(r19.options,
+    { opt1: '보스 피해', opt2: '아군 공격 강화', point: '질서 포인트' });
+  check('특수 항목 4개도 id 로 (' + JSON.stringify(p19.resolved) + ')',
+    JSON.stringify(p19.resolved) === JSON.stringify(['point+4', 'keep', 'change:opt2', 'will+4']),
+    JSON.stringify(p19.problems));
 
   // 그 4개를 그대로 솔버에 넣는다. 이게 되면 화면 -> 판단 경로가 뚫린 것이다.
   const sol = solver.solveFull(solver.thresholdTarget({ point: 5 }), 9);

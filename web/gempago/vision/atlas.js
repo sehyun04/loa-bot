@@ -10,43 +10,39 @@ const fs = require('fs');
 const png = require('./png.js');
 
 const DIR = path.join(__dirname, 'templates');
+const GROUPS = ['label', 'whole', 'prefix', 'suffix', 'digit'];
 
-function load() {
-  const manifest = JSON.parse(fs.readFileSync(path.join(DIR, 'manifest.json'), 'utf8'));
-  const byFile = new Map(manifest.items.map((i) => [i.file, i]));
-  const img = (f) => png.loadGray(path.join(DIR, f));
-  const text = { label: {}, prefix: {}, suffix: {} };
-  const pattern = { prefix: {} };
+/**
+ * 같은 key 에 템플릿이 여러 개일 수 있다. 출처(선명한 원본 / 리샘플된 캡처)가 다르면
+ * 같은 글자라도 점수가 크게 갈리기 때문이다 - 매칭은 그중 최고점을 쓴다.
+ * 자세한 실측값은 vision/README.md 참고.
+ */
+function load(dir) {
+  const base = dir || DIR;
+  const manifest = JSON.parse(fs.readFileSync(path.join(base, 'manifest.json'), 'utf8'));
 
-  const group = (prefix, kind) => {
-    const out = {};
-    for (const item of manifest.items) {
-      if (!item.file.startsWith(prefix + '-')) continue;
-      const key = item.file.slice(prefix.length + 1, -4);
-      out[key] = img(item.file);
-      if (text[kind]) text[kind][key] = item.text;
-      if (item.pattern && pattern[kind]) pattern[kind][key] = item.pattern;
-    }
-    return out;
-  };
-
-  const digit = {};
-  for (const item of manifest.items) {
-    if (!item.file.startsWith('digit-')) continue;
-    digit[item.text] = img(item.file); // 키가 곧 숫자 문자열이다
+  const atlas = { manifest, text: {}, pattern: {}, family: {} };
+  for (const g of GROUPS) {
+    atlas[g] = {};
+    atlas.text[g] = {};
   }
 
-  return {
-    anchor: img('anchor.png'),
-    label: group('label', 'label'),
-    prefix: group('prefix', 'prefix'),
-    suffix: group('suffix', 'suffix'),
-    digit,
-    text,
-    pattern,
-    manifest,
-    byFile,
-  };
+  for (const item of manifest.items) {
+    if (item.group === 'anchor') {
+      atlas.anchor = png.loadGray(path.join(base, item.file));
+      continue;
+    }
+    if (!GROUPS.includes(item.group)) continue;
+
+    const bucket = atlas[item.group];
+    (bucket[item.key] || (bucket[item.key] = [])).push(png.loadGray(path.join(base, item.file)));
+    atlas.text[item.group][item.key] = item.text;
+    if (item.pattern) atlas.pattern[item.key] = item.pattern;
+    if (item.family) atlas.family[item.key] = item.family;
+  }
+
+  if (!atlas.anchor) throw new Error('anchor 템플릿이 manifest 에 없습니다');
+  return atlas;
 }
 
-module.exports = { load, DIR };
+module.exports = { load, DIR, GROUPS };

@@ -1,0 +1,126 @@
+{
+  "note": "실제 게임 캡처의 정답표. 눈으로 읽어서 적었다. 이미지는 앵커 주변만 잘라 저장했다(원본은 4.5MB).",
+  "crop": { "x": 690, "y": 595, "w": 710, "h": 170 },
+  "captures": [
+    {
+      "file": "cap-roaring1.png",
+      "source": "로아젬1.PNG 2048x1280",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 1,
+      "options": [
+        { "label": "아군 피해 강화", "value": "Lv. 1 증가" },
+        { "label": "혼돈 포인트", "value": "+2 증가" },
+        { "label": "혼돈 포인트", "value": "+1 증가" },
+        { "label": "아군 피해 강화", "value": "Lv. 2 증가" }
+      ]
+    },
+    {
+      "file": "cap-roaring2.png",
+      "source": "로아젬2.PNG 2048x1280 (로아젬1 과 같은 화면, 1분 뒤)",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 1,
+      "options": [
+        { "label": "아군 피해 강화", "value": "Lv. 1 증가" },
+        { "label": "혼돈 포인트", "value": "+2 증가" },
+        { "label": "혼돈 포인트", "value": "+1 증가" },
+        { "label": "아군 피해 강화", "value": "Lv. 2 증가" }
+      ]
+    },
+    {
+      "file": "cap14.png",
+      "source": "2000x1250 (2048x1280 에서 리샘플됨)",
+      "gem": "질서의 젬 : 견고",
+      "scale": 0.98,
+      "options": [
+        { "label": "보스 피해", "value": "Lv. 3 증가" },
+        { "label": "아군 피해 강화", "value": "효과 변경" },
+        { "label": "의지력 효율", "value": "-1 감소" },
+        { "label": "의지력 효율", "value": "+1 증가" }
+      ]
+    },
+    {
+      "file": "cap15.png",
+      "source": "2000x1250",
+      "gem": "질서의 젬 : 견고",
+      "scale": 0.98,
+      "options": [
+        { "label": "아군 피해 강화", "value": "Lv. 3 증가" },
+        { "label": "질서 포인트", "value": "+1 증가" },
+        { "label": "보스 피해", "value": "Lv. 1 증가" },
+        { "label": "가공 상태", "value": "유지" }
+      ]
+    },
+    {
+      "file": "cap16.png",
+      "source": "2000x1250",
+      "gem": "질서의 젬 : 견고",
+      "scale": 0.98,
+      "options": [
+        { "label": "다른 항목 보기", "value": "1회 증가" },
+        { "label": "아군 피해 강화", "value": "Lv. 2 증가" },
+        { "label": "질서 포인트", "value": "+3 증가" },
+        { "label": "질서 포인트", "value": "+1 증가" }
+      ]
+    },
+    {
+      "file": "cap17.png",
+      "source": "2000x1250",
+      "gem": "질서의 젬 : 견고",
+      "scale": 0.98,
+      "options": [
+        { "label": "질서 포인트", "value": "+1 증가" },
+        { "label": "가공 상태", "value": "유지" },
+        { "label": "질서 포인트", "value": "+2 증가" },
+        { "label": "질서 포인트", "value": "+4 증가" }
+      ]
+    },
+    {
+      "file": "cap18.png",
+      "source": "2000x1250",
+      "gem": "질서의 젬 : 견고",
+      "scale": 0.98,
+      "options": [
+        { "label": "아군 피해 강화", "value": "Lv. 3 증가" },
+        { "label": "아군 피해 강화", "value": "Lv. 1 증가" },
+        { "label": "아군 공격 강화", "value": "Lv. 1 증가" },
+        { "label": "질서 포인트", "value": "+1 증가" }
+      ]
+    },
+    {
+      "file": "cap19.png",
+      "source": "2000x1250",
+      "gem": "질서의 젬 : 견고",
+      "scale": 0.98,
+      "options": [
+        { "label": "질서 포인트", "value": "+4 증가" },
+        { "label": "가공 상태", "value": "유지" },
+        { "label": "아군 공격 강화", "value": "효과 변경" },
+        { "label": "의지력 효율", "value": "+4 증가" }
+      ]
+    },
+    {
+      "file": "cap20.png",
+      "source": "2000x1250",
+      "gem": "질서의 젬 : 견고",
+      "scale": 0.98,
+      "options": [
+        { "label": "아군 공격 강화", "value": "Lv. 1 증가" },
+        { "label": "아군 공격 강화", "value": "효과 변경" },
+        { "label": "가공 비용", "value": "+100% 증가" },
+        { "label": "질서 포인트", "value": "+1 증가" }
+      ]
+    },
+    {
+      "file": "cap21.png",
+      "source": "2000x1250",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.98,
+      "options": [
+        { "label": "아군 피해 강화", "value": "Lv. 3 증가" },
+        { "label": "의지력 효율", "value": "+2 증가" },
+        { "label": "추가 피해", "value": "효과 변경" },
+        { "label": "아군 피해 강화", "value": "Lv. 4 증가" }
+      ]
+    }
+  ]
+}

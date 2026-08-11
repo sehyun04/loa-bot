@@ -25,14 +25,14 @@
   };
 
   /**
-   * 수치 증감이 아닌 항목들. 화면 표기가 이렇다는 것까지는 캡처로 확인했지만
-   * (가공 완료 화면의 "다른 항목 보기 N회"), 증감 항목만큼 여러 번 본 건 아니다.
-   * 실제 캡처가 모이면 여기부터 다시 맞춰야 한다.
+   * 수치 증감이 아닌 항목들. 전부 실제 캡처로 확인한 표기다.
+   * 옵션명 줄과 값 줄이 이렇게 갈린다 - "가공 상태 유지"는 한 덩어리가 아니라
+   * 옵션명 "가공 상태" + 값 "유지" 이고, 비용은 "가공 비용" + "+100% 증가" 다.
    */
   const SPECIAL_LABELS = {
     '다른 항목 보기': 'reroll',
     '가공 비용': 'cost',
-    '가공 상태 유지': 'keep',
+    '가공 상태': 'keep',
   };
 
   const norm = (s) => (s == null ? '' : String(s).replace(/\s+/g, ' ').trim());
@@ -148,9 +148,9 @@
       const mag = Math.abs(outcome.delta);
       const dir = outcome.delta > 0 ? '증가' : '감소';
       const isEffect = outcome.stat === 'opt1' || outcome.stat === 'opt2';
-      // 감소에 "+" 를 붙이면 "+1 감소" 가 되어 읽는 사람이 헷갈린다. 방향은 접미가 말한다.
-      // 실제 게임이 "1 감소" 로 찍는지 "-1 감소" 로 찍는지는 아직 캡처로 확인하지 못했다.
-      const num = isEffect ? `Lv. ${mag}` : (outcome.delta > 0 ? `+${mag}` : `${mag}`);
+      // 게임은 감소도 부호를 찍는다: "-1 감소" (캡처 확인). 파서는 부호가 아니라
+      // 접미(증가/감소)로 방향을 정하므로, 여기서는 표기만 게임에 맞춘다.
+      const num = isEffect ? `Lv. ${mag}` : (outcome.delta > 0 ? `+${mag}` : `-${mag}`);
       return {
         labelText: nameOf(outcome.stat),
         value: {
@@ -165,10 +165,15 @@
       return { labelText: nameOf(outcome.slot), value: { text: '효과 변경' } };
     }
     if (outcome.kind === 'cost') {
-      return { labelText: '가공 비용', value: { text: (outcome.costMod > 0 ? '+' : '-') + '100%' } };
+      // "+100% 증가" 는 캡처로 확인했다. 감소 쪽은 아직 뜬 걸 못 봐서 접미를 모른다
+      // ("-100% 감소" 인지 그냥 "-100%" 인지). 파서는 부호만 보므로 읽는 데는 지장 없다.
+      return {
+        labelText: '가공 비용',
+        value: { text: outcome.costMod > 0 ? '+100% 증가' : '-100%' },
+      };
     }
     if (outcome.kind === 'keep') {
-      return { labelText: '가공 상태 유지', value: { text: '' } };
+      return { labelText: '가공 상태', value: { text: '유지' } };
     }
     if (outcome.kind === 'reroll') {
       return {

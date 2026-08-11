@@ -1,88 +1,434 @@
 {
-  "source": "로아젬1.PNG (2048x1280)",
-  "note": "좌표는 이 캡처 기준. layout.js 의 REF 와 같아야 한다.",
+  "note": "캡처에서 잘라낸 템플릿. 같은 key 가 여러 개면 출처가 다른 변형이고, 매칭은 최고점을 쓴다.",
+  "groundTruth": "fixtures/captures.json",
   "items": [
     {
       "file": "anchor.png",
+      "group": "anchor",
+      "key": "anchor",
       "text": "다음 항목 중 무작위로 적용됩니다.",
-      "rect": [
-        914,
-        640,
-        220,
-        14
-      ]
+      "src": "로아젬1.PNG"
     },
     {
-      "file": "label-agun.png",
+      "file": "label-agun-pihae-1.png",
+      "group": "label",
+      "key": "agun-pihae",
       "text": "아군 피해 강화",
-      "rect": [
-        788,
-        686,
+      "src": "cap-roaring1.png 열1",
+      "size": [
+        93,
+        14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-agun-pihae-2.png",
+      "group": "label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap18.png 열2",
+      "size": [
         93,
         14
       ]
     },
     {
-      "file": "label-hondon.png",
+      "file": "label-hondon-point-1.png",
+      "group": "label",
+      "key": "hondon-point",
       "text": "혼돈 포인트",
-      "rect": [
-        922,
-        686,
+      "src": "cap-roaring1.png 열2",
+      "size": [
         74,
         14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-boss-pihae-1.png",
+      "group": "label",
+      "key": "boss-pihae",
+      "text": "보스 피해",
+      "src": "cap14.png 열1",
+      "size": [
+        60,
+        14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-uijiryeok-1.png",
+      "group": "label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap14.png 열3",
+      "size": [
+        73,
+        14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-jilseo-point-1.png",
+      "group": "label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap16.png 열3",
+      "size": [
+        73,
+        14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-agun-gonggyeok-1.png",
+      "group": "label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap18.png 열3",
+      "size": [
+        93,
+        14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-chuga-pihae-1.png",
+      "group": "label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap21.png 열3",
+      "size": [
+        59,
+        14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-gagong-sangtae-1.png",
+      "group": "label",
+      "key": "gagong-sangtae",
+      "text": "가공 상태",
+      "src": "cap15.png 열4",
+      "size": [
+        59,
+        14
+      ],
+      "family": "keep"
+    },
+    {
+      "file": "label-dareun-hangmok-1.png",
+      "group": "label",
+      "key": "dareun-hangmok",
+      "text": "다른 항목 보기",
+      "src": "cap16.png 열1",
+      "size": [
+        91,
+        14
+      ],
+      "family": "reroll"
+    },
+    {
+      "file": "label-gagong-biyong-1.png",
+      "group": "label",
+      "key": "gagong-biyong",
+      "text": "가공 비용",
+      "src": "cap20.png 열3",
+      "size": [
+        60,
+        14
+      ],
+      "family": "cost"
+    },
+    {
+      "file": "whole-yuji-1.png",
+      "group": "whole",
+      "key": "yuji",
+      "text": "유지",
+      "src": "cap15.png 열4",
+      "size": [
+        26,
+        13
       ]
     },
     {
-      "file": "prefix-lv.png",
+      "file": "whole-yuji-2.png",
+      "group": "whole",
+      "key": "yuji",
+      "text": "유지",
+      "src": "cap17.png 열2",
+      "size": [
+        26,
+        13
+      ]
+    },
+    {
+      "file": "whole-change-1.png",
+      "group": "whole",
+      "key": "change",
+      "text": "효과 변경",
+      "src": "cap14.png 열2",
+      "size": [
+        59,
+        13
+      ]
+    },
+    {
+      "file": "whole-change-2.png",
+      "group": "whole",
+      "key": "change",
+      "text": "효과 변경",
+      "src": "cap19.png 열3",
+      "size": [
+        59,
+        13
+      ]
+    },
+    {
+      "file": "whole-cost-plus-1.png",
+      "group": "whole",
+      "key": "cost-plus",
+      "text": "+100% 증가",
+      "src": "cap20.png 열3",
+      "size": [
+        81,
+        13
+      ]
+    },
+    {
+      "file": "prefix-lv-1.png",
+      "group": "prefix",
+      "key": "lv",
       "text": "Lv.",
-      "rect": [
-        790,
-        709,
+      "src": "cap-roaring1.png 열1",
+      "size": [
         20,
         13
       ],
       "pattern": "{p} {d} {s}"
     },
     {
-      "file": "prefix-plus.png",
+      "file": "prefix-lv-2.png",
+      "group": "prefix",
+      "key": "lv",
+      "text": "Lv.",
+      "src": "cap16.png 열2",
+      "size": [
+        20,
+        13
+      ]
+    },
+    {
+      "file": "prefix-lv-3.png",
+      "group": "prefix",
+      "key": "lv",
+      "text": "Lv.",
+      "src": "cap21.png 열4",
+      "size": [
+        20,
+        13
+      ]
+    },
+    {
+      "file": "prefix-plus-1.png",
+      "group": "prefix",
+      "key": "plus",
       "text": "+",
-      "rect": [
-        922,
-        709,
+      "src": "cap-roaring1.png 열2",
+      "size": [
         8,
         13
       ],
       "pattern": "{p}{d} {s}"
     },
     {
-      "file": "digit-1.png",
+      "file": "prefix-plus-2.png",
+      "group": "prefix",
+      "key": "plus",
+      "text": "+",
+      "src": "cap17.png 열1",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "prefix-plus-3.png",
+      "group": "prefix",
+      "key": "plus",
+      "text": "+",
+      "src": "cap21.png 열2",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "prefix-minus-1.png",
+      "group": "prefix",
+      "key": "minus",
+      "text": "-",
+      "src": "cap14.png 열3",
+      "size": [
+        7,
+        13
+      ],
+      "pattern": "{p}{d} {s}"
+    },
+    {
+      "file": "digit-1-1.png",
+      "group": "digit",
+      "key": "1",
       "text": "1",
-      "rect": [
-        815,
-        709,
+      "src": "cap-roaring1.png 열1",
+      "size": [
         8,
         13
       ]
     },
     {
-      "file": "digit-2.png",
+      "file": "digit-1-2.png",
+      "group": "digit",
+      "key": "1",
+      "text": "1",
+      "src": "cap17.png 열1",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-1-3.png",
+      "group": "digit",
+      "key": "1",
+      "text": "1",
+      "src": "cap18.png 열2",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-2-1.png",
+      "group": "digit",
+      "key": "2",
       "text": "2",
-      "rect": [
-        931,
-        709,
+      "src": "cap-roaring1.png 열2",
+      "size": [
         8,
         13
       ]
     },
     {
-      "file": "suffix-jeungga.png",
-      "text": "증가",
-      "rect": [
-        829,
-        709,
-        27,
+      "file": "digit-2-2.png",
+      "group": "digit",
+      "key": "2",
+      "text": "2",
+      "src": "cap16.png 열2",
+      "size": [
+        8,
         13
       ]
+    },
+    {
+      "file": "digit-2-3.png",
+      "group": "digit",
+      "key": "2",
+      "text": "2",
+      "src": "cap21.png 열2",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-3-1.png",
+      "group": "digit",
+      "key": "3",
+      "text": "3",
+      "src": "cap16.png 열3",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-4-1.png",
+      "group": "digit",
+      "key": "4",
+      "text": "4",
+      "src": "cap17.png 열4",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-4-2.png",
+      "group": "digit",
+      "key": "4",
+      "text": "4",
+      "src": "cap21.png 열4",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "suffix-jeungga-1.png",
+      "group": "suffix",
+      "key": "jeungga",
+      "text": "증가",
+      "src": "cap-roaring1.png 열1",
+      "size": [
+        28,
+        13
+      ]
+    },
+    {
+      "file": "suffix-jeungga-2.png",
+      "group": "suffix",
+      "key": "jeungga",
+      "text": "증가",
+      "src": "cap16.png 열2",
+      "size": [
+        28,
+        13
+      ]
+    },
+    {
+      "file": "suffix-jeungga-3.png",
+      "group": "suffix",
+      "key": "jeungga",
+      "text": "증가",
+      "src": "cap21.png 열2",
+      "size": [
+        28,
+        13
+      ]
+    },
+    {
+      "file": "suffix-gamso-1.png",
+      "group": "suffix",
+      "key": "gamso",
+      "text": "감소",
+      "src": "cap14.png 열3",
+      "size": [
+        34,
+        13
+      ]
+    },
+    {
+      "file": "suffix-hoi-jeungga-1.png",
+      "group": "suffix",
+      "key": "hoi-jeungga",
+      "text": "회 증가",
+      "src": "cap16.png 열1",
+      "size": [
+        47,
+        13
+      ],
+      "pattern": "{d}{s}"
     }
   ]
 }
