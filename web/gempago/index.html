@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>젬파고 - 가공 계산기</title>
-<link rel="stylesheet" href="style.css?v=2026-08-10.2">
+<link rel="stylesheet" href="style.css?v=2026-08-11.2">
 </head>
 <body>
 
@@ -25,6 +25,24 @@
         <option value="7">희귀 (가공 7회)</option>
         <option value="9" selected>영웅 (가공 9회)</option>
       </select>
+    </label>
+
+    <label class="row">
+      <span>젬 계열</span>
+      <select id="gemType">
+        <option value="혼돈 포인트" selected>혼돈</option>
+        <option value="질서 포인트">질서</option>
+      </select>
+    </label>
+
+    <p class="hint">1번/2번 효과 이름은 젬마다 다르다. 화면에 적힌 그대로 넣으면 아래 수치와 항목 목록이 같은 표기로 바뀐다.</p>
+    <label class="row">
+      <span>1번 효과 이름</span>
+      <input id="name_opt1" type="text" placeholder="공격력" autocomplete="off">
+    </label>
+    <label class="row">
+      <span>2번 효과 이름</span>
+      <input id="name_opt2" type="text" placeholder="아군 피해 강화" autocomplete="off">
     </label>
 
     <div class="stats" id="stats"></div>
@@ -99,6 +117,6 @@
 
 </main>
 
-<script src="app.js?v=2026-08-10.2"></script>
+<script src="app.js?v=2026-08-11.2"></script>
 </body>
 </html>

@@ -15,19 +15,32 @@ async function loadModule(url, key) {
   const src = await (await fetch(url)).text();
   const module = { exports: {} };
   const fn = new Function('module', 'exports', 'require', src);
-  fn(module, module.exports, (p) => loaded[p.replace('./', '')]);
+  // 상대 경로 표기는 무시하고 파일명으로만 찾는다. vision/ 에서는 '../rules.js' 로 부른다.
+  fn(module, module.exports, (p) => loaded[p.replace(/^(\.\.?\/)+/, '')]);
   loaded[key] = module.exports;
   return module.exports;
 }
 
 let rules = null;
 let solver = null;
+let interpret = null;
 const solutions = new Map(); // 목표+최대횟수 조합당 한 번만 푼다
 
 const ready = (async () => {
   rules = await loadModule('rules.js', 'rules.js');
   solver = await loadModule('solver.js', 'solver.js');
+  interpret = await loadModule('vision/interpret.js', 'interpret.js');
 })();
+
+/**
+ * 항목 이름을 게임 화면 표기로. "1번 효과 +1" 이 아니라 "공격력 Lv. 1 증가".
+ * 드롭다운과 결과 표가 같은 표기를 써야 화면과 대조할 수 있다.
+ */
+function screenLabel(o, slots) {
+  const s = interpret.toScreenText(o, slots);
+  if (!s) return o.label;
+  return s.value && s.value.text ? `${s.labelText} ${s.value.text}` : s.labelText;
+}
 
 function solutionFor(target, maxAttempts) {
   const key = JSON.stringify(target) + '|' + maxAttempts;
@@ -47,13 +60,18 @@ self.onmessage = async (e) => {
   try {
     if (type === 'outcomes') {
       // 지금 상태에서 화면에 뜰 수 있는 항목만 돌려준다. 선택 UI 를 채우는 데 쓴다.
+      // 이름은 게임 화면 그대로 보여준다 - "1번 효과 +1" 이 아니라 "공격력 Lv. 1 증가".
+      // 화면과 목록을 눈으로 대조해야 하는 작업이라 표기가 같아야 덜 헷갈린다.
       const outs = rules.availableOutcomes(payload.state);
-      self.postMessage({ id, ok: true, result: outs.map((o) => ({ id: o.id, label: o.label })) });
+      self.postMessage({
+        id, ok: true,
+        result: outs.map((o) => ({ id: o.id, label: screenLabel(o, payload.slots) })),
+      });
       return;
     }
 
     if (type === 'evaluate') {
-      const { state, target, maxAttempts, picks } = payload;
+      const { state, target, maxAttempts, picks, slots } = payload;
       const sol = solutionFor(target, maxAttempts);
 
       const result = {
@@ -70,7 +88,7 @@ self.onmessage = async (e) => {
           const next = rules.applyOutcome(state, o);
           if (o.kind === 'reroll') next.r = Math.min(solver.MAX_REROLL, state.r + o.gain);
           else next.r = state.r;
-          return { id: pid, label: o.label, value: sol.value(next) };
+          return { id: pid, label: screenLabel(o, slots), value: sol.value(next) };
         });
       }
       self.postMessage({ id, ok: true, result });

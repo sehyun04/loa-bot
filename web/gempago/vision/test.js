@@ -171,6 +171,88 @@ console.log('앵커가 없으면 못 찾았다고 말한다');
   check('엉뚱한 이미지는 거부한다', !r.ok, JSON.stringify(r.options && r.options[0]));
 }
 
+console.log('읽은 글자 -> 확률 표 항목 id');
+{
+  const interpret = require('./interpret.js');
+  const rules = require('../rules.js');
+
+  // 실제 캡처에 나온 젬. 1번/2번 효과 이름은 젬마다 다르므로 밖에서 알려줘야 한다.
+  const slots = { opt1: '공격력', opt2: '아군 피해 강화', point: '혼돈 포인트' };
+
+  // 27개 항목 전부: 화면 표기로 바꿨다가 다시 id 로 돌아오는지.
+  // 캡처가 없어도 이 왕복은 완전히 검증된다.
+  let round = 0;
+  const broken = [];
+  for (const o of rules.OUTCOMES) {
+    const screen = interpret.toScreenText(o, slots);
+    const back = interpret.toOutcomeId(screen, slots);
+    if (back.ok && back.id === o.id) round++;
+    else broken.push(o.id + ' -> ' + (back.id || back.reason));
+  }
+  check(`27개 항목 왕복 (${round}/${rules.OUTCOMES.length})`, round === rules.OUTCOMES.length,
+    broken.slice(0, 3).join(' | '));
+
+  // 실제 캡처에서 읽은 그대로.
+  const real = { labelText: '아군 피해 강화', value: { prefix: 'lv', digit: '1', suffix: '증가' } };
+  const r = interpret.toOutcomeId(real, slots);
+  check('아군 피해 강화 Lv. 1 증가 -> opt2+1', r.ok && r.id === 'opt2+1', JSON.stringify(r));
+
+  const pt = { labelText: '혼돈 포인트', value: { prefix: 'plus', digit: '2', suffix: '증가' } };
+  check('혼돈 포인트 +2 증가 -> point+2',
+    interpret.toOutcomeId(pt, slots).id === 'point+2');
+
+  // 질서 젬도 같은 자리를 쓴다.
+  check('질서 포인트도 point 로', interpret.resolveSlot('질서 포인트', slots) === 'point');
+
+  // 모르는 효과 이름은 조용히 넘기면 안 된다.
+  const unknown = interpret.toOutcomeId(
+    { labelText: '보스 피해', value: { prefix: 'lv', digit: '1', suffix: '증가' } }, slots);
+  check('모르는 효과 이름은 거부', !unknown.ok && /어느 수치인지/.test(unknown.reason), unknown.reason);
+
+  // 표기와 슬롯이 어긋나면 슬롯을 잘못 잡은 것이다.
+  const mismatch = interpret.toOutcomeId(
+    { labelText: '의지력 효율', value: { prefix: 'lv', digit: '1', suffix: '증가' } }, slots);
+  check('의지력인데 Lv. 표기면 거부', !mismatch.ok, JSON.stringify(mismatch));
+
+  // 확률 표에 없는 조합(포인트 -2 같은 것)은 막아야 한다.
+  const impossible = interpret.toOutcomeId(
+    { labelText: '혼돈 포인트', value: { prefix: 'plus', digit: '2', suffix: '감소' } }, slots);
+  check('확률 표에 없는 항목은 거부', !impossible.ok && /확률 표에 없는/.test(impossible.reason),
+    impossible.reason);
+
+  // 4개가 다 안 나오면 ids 를 주면 안 된다. 셋만 알고 판단할 수는 없다.
+  const partial = interpret.toPicks([real, pt, real, { labelText: '???' }], slots);
+  check('하나라도 실패하면 ids 는 null', partial.ids === null && partial.problems.length === 1);
+
+  const full = interpret.toPicks([real, pt, real, pt], slots);
+  check('4개 다 되면 ids 반환', full.ids && full.ids.length === 4, JSON.stringify(full.problems));
+}
+
+console.log('화면에서 읽어 솔버까지 (끝에서 끝까지)');
+{
+  const interpret = require('./interpret.js');
+  const solver = require('../solver.js');
+  const atlas = require('./atlas.js').load();
+  const img = png.loadGray(here('fixtures', 'options-roaring2.png'));
+
+  const read = reader.readOptions(img, atlas);
+  const slots = { opt1: '공격력', opt2: '아군 피해 강화', point: '혼돈 포인트' };
+  const picks = interpret.toPicks(read.options, slots);
+
+  check('캡처에서 4개 id 를 뽑았다', !!picks.ids, JSON.stringify(picks.problems));
+  check('id 가 기대와 일치',
+    JSON.stringify(picks.ids) === JSON.stringify(['opt2+1', 'point+2', 'point+1', 'opt2+2']),
+    JSON.stringify(picks.ids));
+
+  // 그 4개를 그대로 솔버에 넣는다. 이게 되면 화면 -> 판단 경로가 뚫린 것이다.
+  const sol = solver.solveFull(solver.thresholdTarget({ point: 5 }), 9);
+  const state = { will: 1, point: 1, opt1: 1, opt2: 1, n: 9, cost: 0, r: 2 };
+  const d = sol.decide(state, picks.ids);
+  check('솔버가 판단을 냈다', d.action === 'commit' || d.action === 'reroll',
+    JSON.stringify(d));
+  console.log(`  굴리기 ${(d.commit * 100).toFixed(2)}% · 리롤 ${(d.reroll * 100).toFixed(2)}% -> ${d.action}`);
+}
+
 console.log();
 console.log(`${pass} pass / ${fail} fail`);
 process.exit(fail ? 1 : 0);

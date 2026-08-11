@@ -30,7 +30,7 @@
     return p.toFixed(4) + '%p';
   }
 
-  const worker = new Worker('worker.js?v=2026-08-10.2');
+  const worker = new Worker('worker.js?v=2026-08-11.2');
   let seq = 0;
   const pending = new Map();
 
@@ -105,6 +105,26 @@
     return s;
   }
 
+  function readSlots() {
+    return {
+      opt1: $('name_opt1').value.trim() || '1번 효과',
+      opt2: $('name_opt2').value.trim() || '2번 효과',
+      point: $('gemType').value,
+    };
+  }
+
+  // 수치 입력칸 이름도 젬에 맞춰 바꾼다. 화면과 같은 단어를 봐야 헷갈리지 않는다.
+  function syncStatLabels() {
+    const s = readSlots();
+    const names = { will: '의지력 효율', point: s.point, opt1: s.opt1, opt2: s.opt2 };
+    for (const { key } of STATS) {
+      for (const prefix of ['cur', 'tgt']) {
+        const span = $(prefix + '_' + key).parentElement.querySelector('span');
+        span.textContent = names[key];
+      }
+    }
+  }
+
   function readTarget() {
     const t = {};
     for (const { key } of STATS) {
@@ -139,12 +159,13 @@
 
   // 남은 가공 횟수가 바뀌면 뜰 수 있는 항목도 바뀌므로 선택지를 다시 채운다.
   let lastOutcomeKey = '';
-  async function refreshOutcomes(state) {
-    const key = STATS.map((s) => state[s.key]).join(',') + '|' + (state.n <= 1) + '|' + state.cost;
+  async function refreshOutcomes(state, slots) {
+    const key = STATS.map((s) => state[s.key]).join(',') + '|' + (state.n <= 1) + '|' + state.cost
+      + '|' + slots.opt1 + '|' + slots.opt2 + '|' + slots.point;
     if (key === lastOutcomeKey) return;
     lastOutcomeKey = key;
 
-    const outs = await ask('outcomes', { state });
+    const outs = await ask('outcomes', { state, slots });
     for (const sel of picks) {
       const keep = sel.value;
       sel.innerHTML = '';
@@ -183,7 +204,8 @@
         state.n = maxAttempts;
       }
 
-      await refreshOutcomes(state);
+      syncStatLabels();
+      await refreshOutcomes(state, readSlots());
 
       if (!Object.keys(target).length) {
         $('result').hidden = true;
@@ -192,7 +214,9 @@
       }
 
       setNote('계산 중', '처음 한 번만 오래 걸립니다 (목표당 약 2초).');
-      const res = await ask('evaluate', { state, target, maxAttempts, picks: readPicks() });
+      const res = await ask('evaluate', {
+        state, target, maxAttempts, picks: readPicks(), slots: readSlots(),
+      });
       render(state, res);
     } catch (err) {
       setNote('계산 실패', err.message, true);
@@ -273,6 +297,14 @@
 
   document.addEventListener('change', (e) => {
     if (e.target.matches('select')) { syncPresetButtons(); refresh(); }
+  });
+  // 효과 이름은 타이핑 중에도 반영한다. change 는 포커스가 빠져야 오는데,
+  // 이름만 고치고 바로 항목을 고르는 흐름이라 그때는 이미 목록이 낡아 있다.
+  let nameTimer = null;
+  document.addEventListener('input', (e) => {
+    if (!e.target.matches('input[type="text"]')) return;
+    clearTimeout(nameTimer);
+    nameTimer = setTimeout(refresh, 250);
   });
 
   syncPresetButtons();
