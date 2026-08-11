@@ -24,11 +24,20 @@ async function loadModule(url, key) {
 let rules = null;
 let solver = null;
 let interpret = null;
+let reader = null;
 const solutions = new Map(); // 목표+최대횟수 조합당 한 번만 푼다
+
+// 화면 인식 템플릿. 메인 스레드가 canvas 로 디코딩해서 한 번 넘겨준다.
+let atlas = null;
+// 배율 탐색은 2초쯤 걸리는데 같은 화면에서는 변하지 않는다. 한 번 찾으면 재사용한다.
+let cachedScale = null;
 
 const ready = (async () => {
   rules = await loadModule('rules.js', 'rules.js');
   solver = await loadModule('solver.js', 'solver.js');
+  await loadModule('vision/ncc.js', 'ncc.js');
+  await loadModule('vision/layout.js', 'layout.js');
+  reader = await loadModule('vision/reader.js', 'reader.js');
   interpret = await loadModule('vision/interpret.js', 'interpret.js');
 })();
 
@@ -40,6 +49,32 @@ function screenLabel(o, slots) {
   const s = interpret.toScreenText(o, slots);
   if (!s) return o.label;
   return s.value && s.value.text ? `${s.labelText} ${s.value.text}` : s.labelText;
+}
+
+let lastRead = null;
+
+/**
+ * 판독 결과를 메인 스레드가 쓸 모양으로. origin.image 는 화면 전체라 크므로 뺀다.
+ * slot 을 같이 돌려주는 이유: 어느 옵션명이 이 젬의 수치로 매칭되지 않았는지
+ * 호출부가 알아야 "그 이름을 효과 이름 칸에 넣어라" 고 안내하거나 자동으로 채울 수 있다.
+ */
+function describe(options, slots) {
+  const picks = interpret.toPicks(options, slots);
+  return {
+    options: options.map((o) => ({
+      labelText: o.labelText,
+      valueText: o.value ? o.value.text : null,
+      confident: o.confident,
+      labelScore: o.labelScore,
+      labelMargin: o.labelMargin,
+      valueScore: o.value ? o.value.confidence : 0,
+      slot: interpret.resolveSlot(o.labelText, slots),
+      special: !!interpret.SPECIAL_LABELS[o.labelText],
+    })),
+    picks: picks.ids,
+    resolved: picks.resolved,
+    problems: picks.problems,
+  };
 }
 
 function solutionFor(target, maxAttempts) {
@@ -94,6 +129,53 @@ self.onmessage = async (e) => {
       self.postMessage({ id, ok: true, result });
       return;
     }
+
+    if (type === 'atlas') {
+      atlas = payload.atlas;
+      cachedScale = null;
+      self.postMessage({ id, ok: true, result: { keys: Object.keys(atlas.label).length } });
+      return;
+    }
+
+    if (type === 'read') {
+      if (!atlas) throw new Error('템플릿이 아직 안 올라왔습니다');
+      const { image, slots } = payload;
+
+      const t0 = Date.now();
+      const opts = {};
+      // 배율을 이미 아는 경우에만 건너뛴다. 창 크기가 바뀌면 호출부가 캐시를 비운다.
+      if (cachedScale != null) opts.scale = cachedScale;
+      let r = reader.readOptions(image, atlas, opts);
+
+      // 캐시한 배율로 실패하면 화면이 바뀐 것이다. 한 번은 다시 찾아본다.
+      if (!r.ok && cachedScale != null) {
+        cachedScale = null;
+        r = reader.readOptions(image, atlas, {});
+      }
+      if (!r.ok) { self.postMessage({ id, ok: true, result: { found: false, reason: r.reason } }); return; }
+      cachedScale = r.origin.scale;
+
+      lastRead = r.options;
+      self.postMessage({
+        id, ok: true,
+        result: Object.assign({
+          found: true,
+          ms: Date.now() - t0,
+          scale: r.origin.scale,
+          anchorScore: r.origin.score,
+        }, describe(r.options, slots)),
+      });
+      return;
+    }
+
+    // 효과 이름을 채워 넣은 뒤 같은 판독 결과를 다시 해석한다. 화면을 다시 읽을 필요가 없다.
+    if (type === 'resolve') {
+      if (!lastRead) throw new Error('아직 읽은 화면이 없습니다');
+      self.postMessage({ id, ok: true, result: Object.assign({ found: true }, describe(lastRead, payload.slots)) });
+      return;
+    }
+
+    if (type === 'forgetScale') { cachedScale = null; self.postMessage({ id, ok: true, result: true }); return; }
 
     throw new Error('알 수 없는 요청: ' + type);
   } catch (err) {

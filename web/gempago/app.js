@@ -30,7 +30,7 @@
     return p.toFixed(4) + '%p';
   }
 
-  const worker = new Worker('worker.js?v=2026-08-11.2');
+  const worker = new Worker('worker.js?v=2026-08-11.6');
   let seq = 0;
   const pending = new Map();
 
@@ -45,11 +45,11 @@
     setNote('계산기를 불러오지 못했습니다', e.message + ' - 로컬 서버로 열었는지 확인하세요.', true);
   };
 
-  function ask(type, payload) {
+  function ask(type, payload, transfer) {
     const id = ++seq;
     return new Promise((resolve, reject) => {
       pending.set(id, { resolve, reject });
-      worker.postMessage({ id, type, payload });
+      worker.postMessage({ id, type, payload }, transfer || []);
     });
   }
 
@@ -291,6 +291,242 @@
     $('meta').textContent =
       `남은 가공 ${state.n}회 · 리롤 ${state.r}회 · 이 목표 전체 풀이 ${res.ms}ms`;
   }
+
+  // ---- 화면에서 읽기 -------------------------------------------------------
+
+  const grabCanvas = document.createElement('canvas');
+  const grabCtx = grabCanvas.getContext('2d', { willReadFrequently: true });
+  let stream = null;
+  let autoTimer = null;
+  let atlasReady = false;
+  let reading = false;
+
+  function setCapture(text, kind) {
+    const el = $('captureStatus');
+    el.textContent = text;
+    el.className = 'capture-status' + (kind ? ' ' + kind : '');
+  }
+
+  /** 이미지/비디오 한 장을 회색조로. 워커로 넘길 수 있게 Float32Array 로 만든다. */
+  function toGray(source, w, h) {
+    grabCanvas.width = w;
+    grabCanvas.height = h;
+    grabCtx.drawImage(source, 0, 0, w, h);
+    const { data } = grabCtx.getImageData(0, 0, w, h);
+    const g = new Float32Array(w * h);
+    for (let i = 0, p = 0; i < g.length; i++, p += 4) {
+      g[i] = 0.299 * data[p] + 0.587 * data[p + 1] + 0.114 * data[p + 2];
+    }
+    return { width: w, height: h, data: g };
+  }
+
+  async function readImage(image, label) {
+    if (!atlasReady || reading) return;
+    reading = true;
+    try {
+      setCapture((label || '읽는 중') + '...');
+      // 회색조 버퍼는 수 MB 라 복사하지 않고 소유권을 넘긴다.
+      const res = await ask('read', { image, slots: readSlots() }, [image.data.buffer]);
+      await applyWithAutofill(res);
+    } catch (err) {
+      setCapture('읽기 실패: ' + err.message, 'bad');
+    } finally {
+      reading = false;
+    }
+  }
+
+  /**
+   * 화면에서 읽은 효과 이름을 비어 있는 "1번/2번 효과 이름" 칸에 넣는다.
+   * 어느 쪽이 1번인지는 옵션 목록만 봐서는 알 수 없다. 확률 표에서 두 효과는 완전히
+   * 대칭이라 바뀌어도 계산은 같지만, 목표를 1번/2번으로 나눠 잡을 때는 달라진다.
+   * 그래서 채워 넣되 바꿀 수 있게 알려준다.
+   * @returns {{slot:string,name:string}[]} 실제로 채운 것들
+   */
+  function autofillEffectNames(res) {
+    const known = new Set([$('name_opt1').value.trim(), $('name_opt2').value.trim()].filter(Boolean));
+    const found = [];
+    for (const o of res.options) {
+      if (!o.labelText || o.slot || o.special) continue; // 이미 아는 수치이거나 특수 항목
+      if (known.has(o.labelText) || found.includes(o.labelText)) continue;
+      found.push(o.labelText);
+    }
+    const filled = [];
+    for (const name of found) {
+      const empty = ['name_opt1', 'name_opt2'].find((id) => !$(id).value.trim());
+      if (!empty) break;
+      $(empty).value = name;
+      filled.push({ slot: empty === 'name_opt1' ? '1번' : '2번', name });
+    }
+    return filled;
+  }
+
+  function applyReading(res) {
+    if (!res.found) {
+      setCapture(res.reason + '\n가공 화면이 보이는 상태인지 확인하세요.', 'warn');
+      return;
+    }
+
+    const read = res.options.map((o, i) =>
+      `${i + 1} ${o.labelText || '?'} / ${o.valueText || '?'}${o.confident ? '' : ' (확인 필요)'}`);
+
+    if (res.picks) {
+      // 지금 입력한 젬 수치에서는 나올 수 없는 항목이면 목록에 아예 없다.
+      // 예를 들어 "의지력 효율 +4 증가" 는 의지력이 1 일 때만 뜬다. 이런 항목이 화면에
+      // 보인다는 건 화면과 입력한 수치가 어긋났다는 뜻이라 조용히 넘기면 안 된다.
+      const missing = [];
+      res.picks.forEach((id, i) => {
+        const opt = picks[i].querySelector(`option[value="${CSS.escape(id)}"]`);
+        if (opt) picks[i].value = id;
+        else missing.push(`열${i + 1} ${res.options[i].labelText} / ${res.options[i].valueText}`);
+      });
+
+      if (missing.length) {
+        $('pickStatus').hidden = false;
+        $('pickStatus').className = 'capture-status bad';
+        $('pickStatus').textContent =
+          '화면에 보이는데 지금 입력한 젬 상태에서는 나올 수 없는 항목이 있습니다.\n' +
+          missing.join('\n') +
+          '\n왼쪽 수치가 화면과 같은지 확인하세요 (예: "+4 증가" 는 그 수치가 1 일 때만 뜹니다).';
+      } else {
+        $('pickStatus').hidden = true;
+      }
+
+      setCapture(
+        `읽음 (배율 ${res.scale}, 앵커 ${res.anchorScore.toFixed(2)}, ${res.ms}ms)\n` + read.join('\n'),
+        missing.length ? 'warn' : 'ok'
+      );
+      refresh();
+      return;
+    }
+
+    // 4개를 다 알아내지 못했으면 아무것도 채우지 않는다. 셋만 넣으면 오히려 헷갈린다.
+    const names = res.problems.map((p) => `열${p.column}: ${p.reason}`);
+    $('pickStatus').hidden = false;
+    $('pickStatus').className = 'capture-status warn';
+    $('pickStatus').textContent =
+      '자동으로 못 채운 항목이 있어 그대로 뒀습니다.\n' + names.join('\n') +
+      '\n효과 이름이 안 맞으면 위 "1번/2번 효과 이름" 에 화면 그대로 넣어보세요.';
+    setCapture(`읽음 (배율 ${res.scale}, ${res.ms}ms)\n` + read.join('\n'), 'warn');
+  }
+
+  /** 읽고 -> 모르는 효과 이름이면 채우고 -> 같은 결과를 다시 해석한다. */
+  async function applyWithAutofill(res) {
+    applyReading(res);
+    if (!res.found || res.picks) return;
+
+    const filled = autofillEffectNames(res);
+    if (!filled.length) return;
+
+    syncStatLabels();
+    const again = await ask('resolve', { slots: readSlots() });
+    applyReading(Object.assign({ scale: res.scale, ms: res.ms, anchorScore: res.anchorScore }, again));
+    if (again.picks) {
+      $('pickStatus').hidden = false;
+      $('pickStatus').className = 'capture-status';
+      $('pickStatus').textContent =
+        '효과 이름을 화면에서 읽어 채웠습니다: ' +
+        filled.map((f) => `${f.slot} "${f.name}"`).join(', ') +
+        '\n어느 쪽이 1번인지는 옵션 목록만으로는 알 수 없습니다. 다르면 두 칸을 바꿔 주세요.';
+    }
+  }
+
+  async function grabAndRead(label) {
+    const v = $('preview');
+    if (!v.videoWidth) { setCapture('아직 영상이 안 들어왔습니다.', 'warn'); return; }
+    await readImage(toGray(v, v.videoWidth, v.videoHeight), label);
+  }
+
+  function stopShare() {
+    if (stream) stream.getTracks().forEach((t) => t.stop());
+    stream = null;
+    clearInterval(autoTimer);
+    autoTimer = null;
+    $('preview').hidden = true;
+    $('preview').srcObject = null;
+    $('shareBtn').textContent = '화면 공유 시작';
+    $('shareBtn').classList.remove('on');
+    $('readBtn').disabled = true;
+    $('autoRead').disabled = true;
+    $('autoRead').checked = false;
+  }
+
+  $('shareBtn').addEventListener('click', async () => {
+    if (stream) { stopShare(); setCapture('공유를 껐습니다.'); return; }
+    try {
+      // 30fps 로 받을 이유가 없다. 화면이 바뀔 때만 읽으면 되고 인식이 프레임당 수십 ms 다.
+      stream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 5 }, audio: false });
+      const v = $('preview');
+      v.srcObject = stream;
+      v.hidden = false;
+      await v.play();
+      // 사용자가 브라우저 UI 로 공유를 끄는 경우도 있다.
+      stream.getVideoTracks()[0].addEventListener('ended', () => { stopShare(); setCapture('공유가 끝났습니다.'); });
+
+      $('shareBtn').textContent = '공유 끄기';
+      $('shareBtn').classList.add('on');
+      $('readBtn').disabled = false;
+      $('autoRead').disabled = false;
+      // 창 크기가 바뀌면 배율도 바뀐다. 캐시를 비우고 처음부터 찾게 한다.
+      await ask('forgetScale', {});
+      setCapture('공유 중. 가공 화면을 띄우고 "지금 읽기" 를 누르세요.\n처음 한 번은 배율을 찾느라 2초쯤 걸립니다.');
+    } catch (err) {
+      stopShare();
+      setCapture(err.name === 'NotAllowedError' ? '공유를 취소했습니다.' : '공유 실패: ' + err.message,
+        err.name === 'NotAllowedError' ? null : 'bad');
+    }
+  });
+
+  $('readBtn').addEventListener('click', () => grabAndRead());
+
+  $('autoRead').addEventListener('change', (e) => {
+    clearInterval(autoTimer);
+    autoTimer = null;
+    if (!e.target.checked) return;
+    // 가공은 사람이 버튼을 눌러야 진행되므로 초당 몇 번씩 볼 이유가 없다.
+    autoTimer = setInterval(() => grabAndRead('자동 읽기'), 1500);
+  });
+
+  // 파일을 끌어다 놓아도 읽는다. 공유가 안 될 때 확인용으로도 쓴다.
+  let dragDepth = 0;
+  document.addEventListener('dragenter', (e) => {
+    if (!Array.from(e.dataTransfer.types).includes('Files')) return;
+    if (++dragDepth === 1) document.body.classList.add('dragging');
+  });
+  document.addEventListener('dragleave', () => {
+    if (--dragDepth <= 0) { dragDepth = 0; document.body.classList.remove('dragging'); }
+  });
+  document.addEventListener('dragover', (e) => e.preventDefault());
+  document.addEventListener('drop', async (e) => {
+    e.preventDefault();
+    dragDepth = 0;
+    document.body.classList.remove('dragging');
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (!file || !file.type.startsWith('image/')) return;
+
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    try {
+      await img.decode();
+      // 파일마다 해상도가 다를 수 있으므로 배율을 다시 찾게 한다.
+      await ask('forgetScale', {});
+      await readImage(toGray(img, img.naturalWidth, img.naturalHeight), file.name + ' 읽는 중');
+    } catch (err) {
+      setCapture('이미지를 열지 못했습니다: ' + err.message, 'bad');
+    } finally {
+      URL.revokeObjectURL(img.src);
+    }
+  });
+
+  (async () => {
+    try {
+      const atlas = await GempagoAtlasBrowser.load('vision/templates');
+      await ask('atlas', { atlas });
+      atlasReady = true;
+      setCapture('준비됨. 화면을 공유하거나 캡처 PNG 를 끌어다 놓으세요.');
+    } catch (err) {
+      setCapture('템플릿을 불러오지 못했습니다: ' + err.message, 'bad');
+    }
+  })();
 
   fillRange($('attempts'), 0, 9, 9);
   fillRange($('rerolls'), 0, 6, 2);
