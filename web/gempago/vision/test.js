@@ -173,6 +173,45 @@ console.log(`실제 캡처 ${groundTruth.captures.length}장을 끝까지 읽는
   console.log(`  (${groundTruth.captures.length}장 ${Date.now() - t0}ms)`);
 }
 
+console.log('게임 밝기 설정에 흔들리지 않는다');
+{
+  // NCC 는 평균을 빼고 표준편차로 나누므로 선형 밝기/대비 변화에는 원리상 무관하다.
+  // 게임 밝기 설정은 보통 감마(비선형)라 그건 따로 확인해야 한다.
+  // 정말로 깨지는 건 포화뿐이다 - 흰색으로 날아가면 정보 자체가 사라진다.
+  const imgs = groundTruth.captures.map((c) => ({ cap: c, img: png.loadGray(here('fixtures', c.file)) }));
+
+  function accuracy(fn) {
+    let ok = 0, total = 0;
+    for (const { cap, img } of imgs) {
+      const r = reader.readOptions(fn(img), atlas, { scale: cap.scale });
+      cap.options.forEach((w, i) => {
+        total++;
+        const o = r.ok && r.options[i];
+        if (o && o.labelText === w.label && o.value && o.value.text === w.value) ok++;
+      });
+    }
+    return ok + '/' + total;
+  }
+  const map = (img, f) => ({
+    width: img.width, height: img.height,
+    data: img.data.map((v) => Math.min(255, Math.max(0, f(v)))),
+  });
+  const gamma = (g) => (img) => map(img, (v) => 255 * Math.pow(v / 255, g));
+
+  const all = imgs.reduce((a, x) => a + x.cap.options.length, 0) + '/' +
+    imgs.reduce((a, x) => a + x.cap.options.length, 0);
+
+  check('감마 0.5 에서도 전부 정답', accuracy(gamma(0.5)) === all, accuracy(gamma(0.5)));
+  check('감마 2.0 에서도 전부 정답', accuracy(gamma(2.0)) === all, accuracy(gamma(2.0)));
+  check('대비 절반이어도 전부 정답', accuracy((i) => map(i, (v) => v * 0.5)) === all);
+  check('어둡고 밋밋해도 전부 정답', accuracy((i) => map(i, (v) => v * 0.35 + 140)) === all);
+
+  // 포화는 진짜로 깨진다. 한계를 알아야 사용자에게 뭘 조심하라고 말할 수 있다.
+  // 실측: 포화 픽셀 4.5% 까지는 전부 정답, 6.3% 에서 44/60, 9.5% 에서 16/60.
+  check('심하게 날아가면(포화 9%) 무너진다', accuracy((i) => map(i, (v) => v + 170)) !== all,
+    accuracy((i) => map(i, (v) => v + 170)));
+}
+
 console.log('다이아 4개의 자리를 잡는다 (읽기는 아직 안 한다)');
 {
   // 아직 다이아를 인식하지는 않는다. 하지만 기하 구조는 확정됐으므로 고정해 둔다.
