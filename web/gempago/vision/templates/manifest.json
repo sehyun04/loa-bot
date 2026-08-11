@@ -141,6 +141,84 @@
       "family": "cost"
     },
     {
+      "file": "label-gagong-biyong-2.png",
+      "group": "label",
+      "key": "gagong-biyong",
+      "text": "가공 비용",
+      "src": "cap23.png 열3",
+      "size": [
+        60,
+        14
+      ]
+    },
+    {
+      "file": "label-gonggyeok-1.png",
+      "group": "label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap22.png 열4",
+      "size": [
+        40,
+        14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-gonggyeok-2.png",
+      "group": "label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap24.png 열1",
+      "size": [
+        41,
+        14
+      ]
+    },
+    {
+      "file": "label-hondon-point-2.png",
+      "group": "label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap24.png 열4",
+      "size": [
+        74,
+        14
+      ]
+    },
+    {
+      "file": "label-agun-pihae-3.png",
+      "group": "label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap26.png 열1",
+      "size": [
+        95,
+        14
+      ]
+    },
+    {
+      "file": "label-uijiryeok-2.png",
+      "group": "label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap26.png 열2",
+      "size": [
+        75,
+        14
+      ]
+    },
+    {
+      "file": "label-chuga-pihae-2.png",
+      "group": "label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap26.png 열3",
+      "size": [
+        60,
+        14
+      ]
+    },
+    {
       "file": "whole-yuji-1.png",
       "group": "whole",
       "key": "yuji",
@@ -185,11 +263,44 @@
       ]
     },
     {
+      "file": "whole-change-3.png",
+      "group": "whole",
+      "key": "change",
+      "text": "효과 변경",
+      "src": "cap26.png 열3",
+      "size": [
+        60,
+        13
+      ]
+    },
+    {
       "file": "whole-cost-plus-1.png",
       "group": "whole",
       "key": "cost-plus",
       "text": "+100% 증가",
       "src": "cap20.png 열3",
+      "size": [
+        81,
+        13
+      ]
+    },
+    {
+      "file": "whole-cost-plus-2.png",
+      "group": "whole",
+      "key": "cost-plus",
+      "text": "+100% 증가",
+      "src": "cap23.png 열4",
+      "size": [
+        82,
+        13
+      ]
+    },
+    {
+      "file": "whole-cost-minus-1.png",
+      "group": "whole",
+      "key": "cost-minus",
+      "text": "-100% 감소",
+      "src": "cap23.png 열3",
       "size": [
         81,
         13
@@ -264,6 +375,28 @@
       ]
     },
     {
+      "file": "prefix-lv-4.png",
+      "group": "prefix",
+      "key": "lv",
+      "text": "Lv.",
+      "src": "cap26.png 열1",
+      "size": [
+        20,
+        13
+      ]
+    },
+    {
+      "file": "prefix-plus-4.png",
+      "group": "prefix",
+      "key": "plus",
+      "text": "+",
+      "src": "cap26.png 열2",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
       "file": "prefix-minus-1.png",
       "group": "prefix",
       "key": "minus",
@@ -280,7 +413,7 @@
       "group": "digit",
       "key": "1",
       "text": "1",
-      "src": "cap-roaring1.png 열1",
+      "src": "cap-roaring1.png 열1 덩어리 127..130",
       "size": [
         8,
         13
@@ -291,7 +424,7 @@
       "group": "digit",
       "key": "1",
       "text": "1",
-      "src": "cap17.png 열1",
+      "src": "cap17.png 열1 덩어리 120..124",
       "size": [
         8,
         13
@@ -302,7 +435,7 @@
       "group": "digit",
       "key": "1",
       "text": "1",
-      "src": "cap18.png 열2",
+      "src": "cap18.png 열2 덩어리 251..255",
       "size": [
         8,
         13
@@ -313,7 +446,7 @@
       "group": "digit",
       "key": "2",
       "text": "2",
-      "src": "cap-roaring1.png 열2",
+      "src": "cap-roaring1.png 열2 덩어리 242..249",
       "size": [
         8,
         13
@@ -324,7 +457,7 @@
       "group": "digit",
       "key": "2",
       "text": "2",
-      "src": "cap16.png 열2",
+      "src": "cap16.png 열2 덩어리 250..257",
       "size": [
         8,
         13
@@ -335,7 +468,29 @@
       "group": "digit",
       "key": "2",
       "text": "2",
-      "src": "cap21.png 열2",
+      "src": "cap21.png 열2 덩어리 243..249",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-2-4.png",
+      "group": "digit",
+      "key": "2",
+      "text": "2",
+      "src": "cap25.png 열3 덩어리 367..374",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-2-5.png",
+      "group": "digit",
+      "key": "2",
+      "text": "2",
+      "src": "cap26.png 열2 덩어리 241..249",
       "size": [
         8,
         13
@@ -346,7 +501,18 @@
       "group": "digit",
       "key": "3",
       "text": "3",
-      "src": "cap16.png 열3",
+      "src": "cap16.png 열3 덩어리 367..374",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-3-2.png",
+      "group": "digit",
+      "key": "3",
+      "text": "3",
+      "src": "cap26.png 열1 덩어리 124..131",
       "size": [
         8,
         13
@@ -357,7 +523,7 @@
       "group": "digit",
       "key": "4",
       "text": "4",
-      "src": "cap17.png 열4",
+      "src": "cap17.png 열4 덩어리 491..499",
       "size": [
         8,
         13
@@ -368,7 +534,18 @@
       "group": "digit",
       "key": "4",
       "text": "4",
-      "src": "cap21.png 열4",
+      "src": "cap21.png 열4 덩어리 499..506",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-4-3.png",
+      "group": "digit",
+      "key": "4",
+      "text": "4",
+      "src": "cap26.png 열4 덩어리 499..507",
       "size": [
         8,
         13
@@ -408,6 +585,17 @@
       ]
     },
     {
+      "file": "suffix-jeungga-4.png",
+      "group": "suffix",
+      "key": "jeungga",
+      "text": "증가",
+      "src": "cap26.png 열2",
+      "size": [
+        28,
+        13
+      ]
+    },
+    {
       "file": "suffix-gamso-1.png",
       "group": "suffix",
       "key": "gamso",
@@ -415,6 +603,17 @@
       "src": "cap14.png 열3",
       "size": [
         34,
+        13
+      ]
+    },
+    {
+      "file": "suffix-gamso-2.png",
+      "group": "suffix",
+      "key": "gamso",
+      "text": "감소",
+      "src": "cap24.png 열2",
+      "size": [
+        27,
         13
       ]
     },
@@ -429,6 +628,17 @@
         13
       ],
       "pattern": "{d}{s}"
+    },
+    {
+      "file": "suffix-hoi-jeungga-2.png",
+      "group": "suffix",
+      "key": "hoi-jeungga",
+      "text": "회 증가",
+      "src": "cap25.png 열3",
+      "size": [
+        47,
+        13
+      ]
     }
   ]
 }

@@ -144,7 +144,7 @@ console.log('템플릿끼리 서로 구분되는가 (이게 안 되면 나머지
     ncc.best(one('prefix', 'lv'), one('prefix', 'plus')).score < 0.7);
 }
 
-console.log('실제 캡처 10장을 끝까지 읽는다');
+console.log(`실제 캡처 ${groundTruth.captures.length}장을 끝까지 읽는다`);
 {
   let correct = 0, total = 0, flagged = 0;
   const t0 = Date.now();
@@ -169,23 +169,30 @@ console.log('실제 캡처 10장을 끝까지 읽는다');
   check(`옵션 ${total}개 전부 정답 (${correct}/${total})`, correct === total);
   // 의심 표시는 틀렸다는 뜻이 아니라 "사람이 확인하라"는 뜻이다. 지금 걸리는 건
   // "아군 피해 강화" 와 "아군 공격 강화" 처럼 한 글자만 다른 옵션명들이다(마진 0.10).
-  check(`의심 표시가 ${total} 개 중 5개 이하 (${flagged}개)`, flagged <= 5);
-  console.log(`  (10장 ${Date.now() - t0}ms)`);
+  check(`의심 표시가 ${total} 개 중 6개 이하 (${flagged}개)`, flagged <= 6);
+  console.log(`  (${groundTruth.captures.length}장 ${Date.now() - t0}ms)`);
 }
 
 console.log('배율이 달라도 찾는다');
 {
-  // 캐시본은 2048x1280 원본에서 2000x1250 으로 리샘플된 것이다(배율 0.9766).
-  // NCC 는 배율에 관대하지 않아서 이 2.3% 차이만으로 앵커 점수가 0.56 까지 떨어진다.
-  const resampled = png.loadGray(here('fixtures', 'cap17.png'));
-  const found = ncc.findScale(resampled, atlas.anchor, { min: 0.9, max: 1.1 });
-  check('리샘플 캡처의 배율을 0.98 로 잡는다 (' + found.scale + ')',
-    Math.abs(found.scale - 0.98) < 0.015, String(found.scale));
-  check('배율을 맞추면 앵커 점수가 0.85 이상 (' + found.score.toFixed(3) + ')', found.score > 0.85);
-
   const original = png.loadGray(here('fixtures', 'cap-roaring1.png'));
   const one = ncc.findScale(original, atlas.anchor, { min: 0.9, max: 1.1 });
-  check('원본 배율은 1.0 그대로 (' + one.scale + ')', one.scale === 1 && one.score > 0.99);
+  check('기준 캡처의 배율은 1.0 (' + one.scale + ')', one.scale === 1 && one.score > 0.99);
+
+  // 2048x1280 원본을 2000x1250 으로 리샘플한 캡처. NCC 는 배율에 관대하지 않아서
+  // 이 2.3% 차이만으로 앵커 점수가 0.56 까지 떨어진다.
+  const resampled = png.loadGray(here('fixtures', 'cap17.png'));
+  const r = ncc.findScale(resampled, atlas.anchor, { min: 0.9, max: 1.1 });
+  check('리샘플 캡처의 배율을 0.98 로 잡는다 (' + r.scale + ')', Math.abs(r.scale - 0.98) < 0.015);
+  check('배율을 맞추면 앵커 점수가 0.85 이상 (' + r.score.toFixed(3) + ')', r.score > 0.85);
+
+  // 이쪽이 진짜다. 게임이 1920x1080 으로 직접 렌더한 화면이라 글자 래스터 자체가 다르다.
+  // 1920/2048 = 0.9375 이고 실제로 그 근처를 찾아낸다.
+  const native = png.loadGray(here('fixtures', 'cap26.png'));
+  const n = ncc.findScale(native, atlas.anchor, { min: 0.85, max: 1.05 });
+  check('1920x1080 화면의 배율을 0.94 근처로 잡는다 (' + n.scale + ')',
+    Math.abs(n.scale - 0.9375) < 0.02, String(n.scale));
+  check('해상도가 달라도 앵커를 찾는다 (' + n.score.toFixed(3) + ')', n.score > 0.7);
 }
 
 console.log('앵커가 없으면 못 찾았다고 말한다');

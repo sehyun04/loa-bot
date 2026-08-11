@@ -121,6 +121,66 @@
         { "label": "추가 피해", "value": "효과 변경" },
         { "label": "아군 피해 강화", "value": "Lv. 4 증가" }
       ]
+    },
+    {
+      "file": "cap22.png",
+      "source": "2000x1250",
+      "gem": "질서의 젬 : 안정",
+      "scale": 0.98,
+      "options": [
+        { "label": "추가 피해", "value": "효과 변경" },
+        { "label": "질서 포인트", "value": "+1 증가" },
+        { "label": "질서 포인트", "value": "-1 감소" },
+        { "label": "공격력", "value": "Lv. 1 증가" }
+      ]
+    },
+    {
+      "file": "cap23.png",
+      "source": "2000x1250",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.98,
+      "options": [
+        { "label": "추가 피해", "value": "Lv. 1 증가" },
+        { "label": "추가 피해", "value": "Lv. 2 증가" },
+        { "label": "가공 비용", "value": "-100% 감소" },
+        { "label": "가공 비용", "value": "+100% 증가" }
+      ]
+    },
+    {
+      "file": "cap24.png",
+      "source": "2000x1250",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.98,
+      "options": [
+        { "label": "공격력", "value": "Lv. 1 증가" },
+        { "label": "아군 피해 강화", "value": "Lv. 1 감소" },
+        { "label": "의지력 효율", "value": "+1 증가" },
+        { "label": "혼돈 포인트", "value": "+1 증가" }
+      ]
+    },
+    {
+      "file": "cap25.png",
+      "source": "2000x1250",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.98,
+      "options": [
+        { "label": "의지력 효율", "value": "+1 증가" },
+        { "label": "가공 상태", "value": "유지" },
+        { "label": "다른 항목 보기", "value": "2회 증가" },
+        { "label": "혼돈 포인트", "value": "+2 증가" }
+      ]
+    },
+    {
+      "file": "cap26.png",
+      "source": "1920x1080 - 게임이 직접 이 크기로 렌더한 화면이다(리샘플 아님). 배율 검증용.",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        { "label": "아군 피해 강화", "value": "Lv. 3 증가" },
+        { "label": "의지력 효율", "value": "+2 증가" },
+        { "label": "추가 피해", "value": "효과 변경" },
+        { "label": "아군 피해 강화", "value": "Lv. 4 증가" }
+      ]
     }
   ]
 }

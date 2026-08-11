@@ -165,11 +165,10 @@
       return { labelText: nameOf(outcome.slot), value: { text: '효과 변경' } };
     }
     if (outcome.kind === 'cost') {
-      // "+100% 증가" 는 캡처로 확인했다. 감소 쪽은 아직 뜬 걸 못 봐서 접미를 모른다
-      // ("-100% 감소" 인지 그냥 "-100%" 인지). 파서는 부호만 보므로 읽는 데는 지장 없다.
+      // 둘 다 캡처로 확인한 표기다. 비용은 방향까지 접미로 찍는다.
       return {
         labelText: '가공 비용',
-        value: { text: outcome.costMod > 0 ? '+100% 증가' : '-100%' },
+        value: { text: outcome.costMod > 0 ? '+100% 증가' : '-100% 감소' },
       };
     }
     if (outcome.kind === 'keep') {
