@@ -173,6 +173,34 @@ console.log(`실제 캡처 ${groundTruth.captures.length}장을 끝까지 읽는
   console.log(`  (${groundTruth.captures.length}장 ${Date.now() - t0}ms)`);
 }
 
+console.log('다이아 4개의 자리를 잡는다 (읽기는 아직 안 한다)');
+{
+  // 아직 다이아를 인식하지는 않는다. 하지만 기하 구조는 확정됐으므로 고정해 둔다.
+  // 앵커에서의 상대 위치가 맞으면 각 띠 안에 글자가 들어 있어야 한다.
+  let allHaveText = true;
+  const detail = [];
+  for (const cap of groundTruth.captures) {
+    const img = png.loadGray(here('fixtures', cap.file));
+    const o = layout.locate(img, atlas.anchor, { scale: cap.scale });
+    const dia = layout.diamonds(o);
+    for (const pos of ['top', 'left', 'right', 'bottom']) {
+      for (const part of ['label', 'value']) {
+        // 장식 배경이 밝아서 덩어리 분할이 지저분하다. 여기서는 "글자가 있긴 한가"만 본다.
+        const spans = layout.glyphSpans(o.image, dia[pos][part], 3);
+        const width = spans.reduce((a, [x0, x1]) => a + (x1 - x0), 0);
+        if (width < 8) { allHaveText = false; detail.push(`${cap.file} ${pos}.${part}=${width}px`); }
+      }
+    }
+  }
+  check('15장 x 8개 띠에 전부 글자가 있다', allHaveText, detail.slice(0, 4).join(' '));
+
+  const one = layout.diamonds(layout.locate(
+    png.loadGray(here('fixtures', 'cap-roaring1.png')), atlas.anchor, { scale: 1 }));
+  check('위/아래는 의지력·포인트, 좌/우는 효과',
+    one.top.slot === 'will' && one.bottom.slot === 'point' &&
+    one.left.slot === 'opt1' && one.right.slot === 'opt2');
+}
+
 console.log('배율이 달라도 찾는다');
 {
   const original = png.loadGray(here('fixtures', 'cap-roaring1.png'));

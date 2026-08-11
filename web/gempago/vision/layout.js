@@ -26,7 +26,26 @@
     columnDx: [-79, 45, 170, 295],
     // 셀 반폭. 56 을 넘기면 4번 열이 오른쪽 "N회 가능" 리롤 버튼을 물어온다.
     cellHalf: 56,
+
+    /*
+     * 젬의 현재 수치를 보여주는 다이아 4개. 앵커보다 위에 있어서 dy 가 음수다.
+     * 위/아래는 의지력·포인트라 값이 숫자 하나("5")이고,
+     * 좌/우는 효과라 값이 "Lv. N" 이다.
+     *
+     * 배경이 옵션 행과 완전히 달라서(색깔 있는 다이아 + 원형 장식) 같은 글자여도
+     * 템플릿을 따로 떠야 한다 - 옵션 행에서 뜬 "Lv." 는 다이아 배경에서 0.44 밖에 안 나온다.
+     */
+    diamond: {
+      halfWidth: 80,
+      top:    { dx: 109, label: { dy: -228, h: 15 }, value: { dy: -208, h: 19 } },
+      left:   { dx: 27,  label: { dy: -161, h: 16 }, value: { dy: -142, h: 20 } },
+      right:  { dx: 200, label: { dy: -161, h: 16 }, value: { dy: -142, h: 20 } },
+      bottom: { dx: 109, label: { dy: -99,  h: 17 }, value: { dy: -75,  h: 20 } },
+    },
   };
+
+  /** 다이아 위치 이름과 그 자리가 뜻하는 수치. 좌/우가 1번/2번 효과인지는 화면만으로 알 수 없다. */
+  const DIAMOND_SLOTS = { top: 'will', left: 'opt1', right: 'opt2', bottom: 'point' };
 
   /**
    * 화면을 기준 배율로 맞추고 앵커로 원점을 잡는다.
@@ -114,5 +133,22 @@
     return out;
   }
 
-  return { REF, locate, cells, glyphSpans };
+  /** 다이아 4개의 옵션명/값 영역. 키는 top/left/right/bottom. */
+  function diamonds(origin) {
+    const half = REF.diamond.halfWidth;
+    const out = {};
+    for (const pos of Object.keys(DIAMOND_SLOTS)) {
+      const d = REF.diamond[pos];
+      const box = (band) => ({
+        x: Math.round(origin.x + d.dx - half),
+        y: Math.round(origin.y + band.dy),
+        w: half * 2,
+        h: band.h,
+      });
+      out[pos] = { slot: DIAMOND_SLOTS[pos], label: box(d.label), value: box(d.value) };
+    }
+    return out;
+  }
+
+  return { REF, DIAMOND_SLOTS, locate, cells, diamonds, glyphSpans };
 });
