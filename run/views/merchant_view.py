@@ -11,7 +11,9 @@ from run.views import common
 _GROUP_LABEL = {1: "1그룹", 2: "2그룹", 3: "3그룹"}
 # kloa.gg 원본 등급 스케일은 0부터 시작하는 5단계다: 일반·고급·희귀·영웅·전설.
 # 1부터 시작한다고 잘못 가정하면 전설(4)이 영웅색으로, 나머지도 한 칸씩 밀려 보인다.
-_GRADE_DOT = {0: "⚪", 1: "🟢", 2: "🔵", 3: "🟣", 4: "🟡"}
+# 아이콘을 못 쓸 때(업로드 전이거나 길이 초과로 아이콘을 끈 경우) 대신 붙이는 글자.
+_GRADE_LABEL = {0: "일반", 1: "고급", 2: "희귀", 3: "영웅", 4: "전설"}
+# 위 스케일과 같은 순서. 박스 accent 색에 쓴다.
 _GRADE_COLOR = {
     0: common.MUTED,
     1: discord.Color(0x1EB854),
@@ -28,13 +30,23 @@ def _groups_text(groups: tuple[int, ...]) -> str:
     return " · ".join(_GROUP_LABEL.get(g, f"{g}그룹") for g in sorted(groups))
 
 
+def _pin() -> str:
+    """지역 표시 아이콘. 업로드 전이면 아무것도 안 붙이고 지역명만 남긴다."""
+    icon = common.ui_emoji("pin")
+    return f"{icon} " if icon else ""
+
+
 def _tagged(item: sch.Item, with_icon: bool) -> str:
-    # 희귀도 점(색) + 실제 아이템 아이콘(이모지 크기) + 이름
+    # 등급 아이콘(색) + 실제 아이템 아이콘(이모지 크기) + 이름
     # 길이가 넘치면(build_merchant_view의 content_length 체크) with_icon 자체를
     # 꺼서 전부 텍스트로 되돌리므로, 여기서는 타입으로 따로 거르지 않는다.
-    dot = _GRADE_DOT.get(item.grade, "⚪")
+    # 등급도 아이템과 같이 꺼야 한다 — 커스텀 이모지 태그는 한 개당 20자가 넘어서,
+    # 등급을 남겨두면 아이템 아이콘만 빼는 걸로는 한도를 못 맞춘다.
+    grade = common.ui_emoji(f"grade{item.grade}") if with_icon else ""
+    if not grade:
+        grade = _GRADE_LABEL.get(item.grade, "")
     icon = item.emoji if with_icon else ""
-    return f"{dot} {icon} {item.name}" if icon else f"{dot} {item.name}"
+    return " ".join(p for p in (grade, icon, item.name) if p)
 
 
 def _grades_of(sighting: Sighting) -> list[int]:
@@ -52,22 +64,22 @@ def _card_first(items: list[sch.Item]) -> list[sch.Item]:
 
 def _region_text(region: sch.Region, seen: dict[str, Sighting], with_icon: bool) -> str:
     found = seen.get(region.id)
-    header = f"📍 **{region.name}** · {region.npc}"
+    header = f"{_pin()}**{region.name}** · {region.npc}"
     if found:
         by_name = {i.name: i for i in region.items}
         items = _card_first([by_name[n] for n in found.items if n in by_name])
-        rows = [f"`└` {_tagged(i, with_icon)}" for i in items]
+        rows = [_tagged(i, with_icon) for i in items]
     elif seen:
         # 다른 지역은 제보가 들어왔는데 이 지역만 비었다 — 후보를 섞으면 사실과 헷갈린다
-        rows = ["`└` 제보 대기"]
+        rows = ["제보 대기"]
     else:
         cards = [i for i in region.items_of("card") if not i.hidden]
         if not cards:
-            rows = ["`└` 카드 없음"]
+            rows = ["카드 없음"]
         else:
-            rows = [f"`└` {_tagged(i, with_icon)}" for i in cards[:4]]
+            rows = [_tagged(i, with_icon) for i in cards[:4]]
             if len(cards) > 4:
-                rows.append(f"`└` ⋯ 외 {len(cards) - 4}종")
+                rows.append(f"⋯ 외 {len(cards) - 4}종")
     # 줄 사이를 살짝 띄운다. 빈 줄(\n\n)은 일반 문단 간격이라 너무 벌어져 보이길래,
     # 대신 작은 글씨(-#) 한 줄을 끼워 넣는다 - 폰트가 작아서 일반 빈 줄보다 좁게 벌어진다.
     return header + "\n\n" + f"\n{_ROW_GAP}\n".join(rows)
@@ -249,7 +261,7 @@ def upcoming_view(
         f"{timez.to_discord_timestamp(window.start, 'R')} 등장 "
         f"({window.start.strftime('%H:%M')} ~ {window.end.strftime('%H:%M')})"
     )
-    region_lines = f"\n{_ROW_GAP}\n".join(f"📍 {r.name} · {r.npc}" for r in regions)
+    region_lines = f"\n{_ROW_GAP}\n".join(f"{_pin()}{r.name} · {r.npc}" for r in regions)
     footer = f"-# {server} · 발견하면 /떠상제보 로 공유해주세요" if server else "-# 발견하면 /떠상제보 로 공유해주세요"
 
     c = discord.ui.Container(accent_colour=common.BRAND)
