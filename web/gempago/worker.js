@@ -155,6 +155,9 @@ self.onmessage = async (e) => {
       if (!r.ok) { self.postMessage({ id, ok: true, result: { found: false, reason: r.reason } }); return; }
       cachedScale = r.origin.scale;
 
+      // 옵션 4개와 함께 다이아(젬의 현재 수치)도 읽는다. 원점은 이미 잡았으니 재탐색 없음.
+      const dia = reader.readDiamonds(null, atlas, { origin: r.origin });
+
       lastRead = r.options;
       self.postMessage({
         id, ok: true,
@@ -163,6 +166,7 @@ self.onmessage = async (e) => {
           ms: Date.now() - t0,
           scale: r.origin.scale,
           anchorScore: r.origin.score,
+          gem: dia.ok ? dia.gem : null,
         }, describe(r.options, slots)),
       });
       return;

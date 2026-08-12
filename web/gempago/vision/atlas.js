@@ -10,7 +10,7 @@ const fs = require('fs');
 const png = require('./png.js');
 
 const DIR = path.join(__dirname, 'templates');
-const GROUPS = ['label', 'whole', 'prefix', 'suffix', 'digit'];
+const GROUPS = ['label', 'whole', 'prefix', 'suffix', 'digit', 'dia-label', 'dia-digit'];
 
 /**
  * 같은 key 에 템플릿이 여러 개일 수 있다. 출처(선명한 원본 / 리샘플된 캡처)가 다르면
@@ -27,15 +27,27 @@ function load(dir) {
     atlas.text[g] = {};
   }
 
+  atlas.diaBg = {};
+
   for (const item of manifest.items) {
     if (item.group === 'anchor') {
       atlas.anchor = png.loadGray(path.join(base, item.file));
       continue;
     }
+    // 다이아 값 배경판. z 값(실수)을 0..255 로 펴서 저장했으므로 range 로 되돌린다.
+    if (item.group === 'dia-bg') {
+      const img = png.loadGray(path.join(base, item.file));
+      const [lo, hi] = item.range;
+      for (let i = 0; i < img.data.length; i++) img.data[i] = lo + (img.data[i] / 255) * (hi - lo);
+      (atlas.diaBg[item.key] || (atlas.diaBg[item.key] = [])).push(img);
+      continue;
+    }
     if (!GROUPS.includes(item.group)) continue;
 
     const bucket = atlas[item.group];
-    (bucket[item.key] || (bucket[item.key] = [])).push(png.loadGray(path.join(base, item.file)));
+    const img = png.loadGray(path.join(base, item.file));
+    img.src = item.src; // 테스트가 leave-one-out 을 하려면 출처를 알아야 한다
+    (bucket[item.key] || (bucket[item.key] = [])).push(img);
     atlas.text[item.group][item.key] = item.text;
     if (item.pattern) atlas.pattern[item.key] = item.pattern;
     if (item.family) atlas.family[item.key] = item.family;

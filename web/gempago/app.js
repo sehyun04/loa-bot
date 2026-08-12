@@ -30,7 +30,7 @@
     return p.toFixed(4) + '%p';
   }
 
-  const worker = new Worker('worker.js?v=2026-08-11.6');
+  const worker = new Worker('worker.js?v=2026-08-12.1');
   let seq = 0;
   const pending = new Map();
 
@@ -360,6 +360,61 @@
     return filled;
   }
 
+  const POS_KO = { top: '의지력', left: '왼쪽 효과', right: '오른쪽 효과', bottom: '포인트' };
+
+  /**
+   * 다이아에서 읽은 현재 수치를 입력칸에 넣는다. 의심 표시된 자리는 건드리지 않는다 -
+   * 조용히 틀린 값을 넣는 것보다 사람이 한 번 보는 게 낫다.
+   *
+   * 좌/우 효과는 이름으로 칸을 고른다. 사용자가 1번/2번 이름을 바꿔 넣어 뒀으면
+   * 화면의 왼쪽 다이아가 2번 효과일 수 있기 때문이다. 이름이 어느 칸과도 안 맞으면
+   * 그 자리는 채우지 않는다.
+   */
+  function applyGemState(res) {
+    const out = { filled: [], skipped: [], slotsChanged: false };
+    if (!res.found || !res.gem) return out;
+
+    const optTarget = (g) => {
+      const n1 = $('name_opt1').value.trim(), n2 = $('name_opt2').value.trim();
+      if (g.labelText === n1) return 'opt1';
+      if (g.labelText === n2) return 'opt2';
+      if (g.slot === 'opt1' && !n1) return 'opt1';
+      if (g.slot === 'opt2' && !n2) return 'opt2';
+      return null;
+    };
+
+    for (const pos of ['top', 'left', 'right', 'bottom']) {
+      const g = res.gem[pos];
+      if (!g || !g.slot) continue;
+      if (!g.confident) { out.skipped.push(`${POS_KO[pos]} (확실치 않음)`); continue; }
+
+      let slot = g.slot;
+      if (slot === 'opt1' || slot === 'opt2') {
+        slot = optTarget(g);
+        if (!slot) { out.skipped.push(`${POS_KO[pos]} "${g.labelText}" (이름 칸과 안 맞음)`); continue; }
+        const input = $('name_' + slot);
+        if (!input.value.trim()) { input.value = g.labelText; out.slotsChanged = true; }
+      }
+      // 아래 다이아의 이름이 젬 계열(혼돈/질서)을 알려준다.
+      if (slot === 'point' && g.labelText && $('gemType').value !== g.labelText) {
+        $('gemType').value = g.labelText;
+        out.slotsChanged = true;
+      }
+      $('cur_' + slot).value = String(g.value);
+      out.filled.push(`${g.labelText} ${g.value}`);
+    }
+    return out;
+  }
+
+  /** 자동 입력 결과를 읽기 상태줄 밑에 덧붙인다. */
+  function noteGemState(gem) {
+    if (!gem.filled.length && !gem.skipped.length) return;
+    const lines = [];
+    if (gem.filled.length) lines.push('현재 수치 자동 입력: ' + gem.filled.join(' · '));
+    if (gem.skipped.length) lines.push('그대로 둠: ' + gem.skipped.join(', '));
+    $('captureStatus').textContent += '\n' + lines.join('\n');
+  }
+
   function applyReading(res) {
     if (!res.found) {
       setCapture(res.reason + '\n가공 화면이 보이는 상태인지 확인하세요.', 'warn');
@@ -409,10 +464,23 @@
     setCapture(`읽음 (배율 ${res.scale}, ${res.ms}ms)\n` + read.join('\n'), 'warn');
   }
 
-  /** 읽고 -> 모르는 효과 이름이면 채우고 -> 같은 결과를 다시 해석한다. */
+  /** 읽고 -> 다이아로 현재 수치·이름을 채우고 -> 모르는 효과 이름이면 채우고 -> 다시 해석한다. */
   async function applyWithAutofill(res) {
+    if (!res.found) { applyReading(res); return; }
+
+    // 다이아가 젬 계열이나 효과 이름을 바꿨으면 옵션 4개를 그 이름으로 다시 해석한다.
+    const gem = applyGemState(res);
+    if (gem.slotsChanged) {
+      syncStatLabels();
+      res = Object.assign(
+        { scale: res.scale, ms: res.ms, anchorScore: res.anchorScore, gem: res.gem },
+        await ask('resolve', { slots: readSlots() })
+      );
+    }
+
     applyReading(res);
-    if (!res.found || res.picks) return;
+    noteGemState(gem);
+    if (res.picks) return;
 
     const filled = autofillEffectNames(res);
     if (!filled.length) return;
@@ -420,6 +488,7 @@
     syncStatLabels();
     const again = await ask('resolve', { slots: readSlots() });
     applyReading(Object.assign({ scale: res.scale, ms: res.ms, anchorScore: res.anchorScore }, again));
+    noteGemState(gem);
     if (again.picks) {
       $('pickStatus').hidden = false;
       $('pickStatus').className = 'capture-status';

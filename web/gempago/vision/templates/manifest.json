@@ -861,6 +861,1202 @@
       "key": "hoi-jeungga",
       "text": "회 증가",
       "src": "cap28.png 열1"
+    },
+    {
+      "file": "dia-bg-top-1.png",
+      "group": "dia-bg",
+      "key": "top",
+      "range": [
+        -1.31,
+        3.9268
+      ],
+      "src": "혼돈의-x1 4장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-top-2.png",
+      "group": "dia-bg",
+      "key": "top",
+      "range": [
+        -1.3387,
+        3.8021
+      ],
+      "src": "질서의-x0.98 8장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-top-3.png",
+      "group": "dia-bg",
+      "key": "top",
+      "range": [
+        -1.3365,
+        3.813
+      ],
+      "src": "혼돈의-x0.98 4장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-top-4.png",
+      "group": "dia-bg",
+      "key": "top",
+      "range": [
+        -1.2539,
+        3.4983
+      ],
+      "src": "혼돈의-x0.935 12장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-left-1.png",
+      "group": "dia-bg",
+      "key": "left",
+      "range": [
+        -1.4265,
+        3
+      ],
+      "src": "혼돈의-x1 4장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-left-2.png",
+      "group": "dia-bg",
+      "key": "left",
+      "range": [
+        -1.4761,
+        3.0405
+      ],
+      "src": "질서의-x0.98 8장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-left-3.png",
+      "group": "dia-bg",
+      "key": "left",
+      "range": [
+        -1.4703,
+        3.0371
+      ],
+      "src": "혼돈의-x0.98 4장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-left-4.png",
+      "group": "dia-bg",
+      "key": "left",
+      "range": [
+        -1.3594,
+        2.9933
+      ],
+      "src": "혼돈의-x0.935 12장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-right-1.png",
+      "group": "dia-bg",
+      "key": "right",
+      "range": [
+        -1.5239,
+        3.3999
+      ],
+      "src": "혼돈의-x1 4장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-right-2.png",
+      "group": "dia-bg",
+      "key": "right",
+      "range": [
+        -1.581,
+        3.2655
+      ],
+      "src": "질서의-x0.98 8장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-right-3.png",
+      "group": "dia-bg",
+      "key": "right",
+      "range": [
+        -1.5466,
+        3.287
+      ],
+      "src": "혼돈의-x0.98 4장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-right-4.png",
+      "group": "dia-bg",
+      "key": "right",
+      "range": [
+        -1.525,
+        3.0368
+      ],
+      "src": "혼돈의-x0.935 12장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-bottom-1.png",
+      "group": "dia-bg",
+      "key": "bottom",
+      "range": [
+        -1.387,
+        2.3643
+      ],
+      "src": "혼돈의-x1 4장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-bottom-2.png",
+      "group": "dia-bg",
+      "key": "bottom",
+      "range": [
+        -1.4474,
+        2.4114
+      ],
+      "src": "질서의-x0.98 8장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-bottom-3.png",
+      "group": "dia-bg",
+      "key": "bottom",
+      "range": [
+        -1.404,
+        2.3898
+      ],
+      "src": "혼돈의-x0.98 4장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-bottom-4.png",
+      "group": "dia-bg",
+      "key": "bottom",
+      "range": [
+        -1.3527,
+        2.3861
+      ],
+      "src": "혼돈의-x0.935 12장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-label-uijiryeok-1.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap-roaring1.png top"
+    },
+    {
+      "file": "dia-label-uijiryeok-2.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap-roaring2.png top"
+    },
+    {
+      "file": "dia-label-uijiryeok-3.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap27.png top"
+    },
+    {
+      "file": "dia-label-uijiryeok-4.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap14.png top"
+    },
+    {
+      "file": "dia-label-uijiryeok-5.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap15.png top"
+    },
+    {
+      "file": "dia-label-uijiryeok-6.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap16.png top"
+    },
+    {
+      "file": "dia-label-uijiryeok-7.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap26.png top"
+    },
+    {
+      "file": "dia-label-uijiryeok-8.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap29.png top"
+    },
+    {
+      "file": "dia-label-uijiryeok-9.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap30.png top"
+    },
+    {
+      "file": "dia-label-gonggyeok-1.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap-roaring1.png left"
+    },
+    {
+      "file": "dia-label-gonggyeok-2.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap-roaring2.png left"
+    },
+    {
+      "file": "dia-label-gonggyeok-3.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap28.png left"
+    },
+    {
+      "file": "dia-label-gonggyeok-4.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap20.png left"
+    },
+    {
+      "file": "dia-label-gonggyeok-5.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap22.png left"
+    },
+    {
+      "file": "dia-label-gonggyeok-6.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap24.png left"
+    },
+    {
+      "file": "dia-label-agun-pihae-1.png",
+      "group": "dia-label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap-roaring1.png right"
+    },
+    {
+      "file": "dia-label-agun-pihae-2.png",
+      "group": "dia-label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap-roaring2.png right"
+    },
+    {
+      "file": "dia-label-agun-pihae-3.png",
+      "group": "dia-label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap14.png right"
+    },
+    {
+      "file": "dia-label-agun-pihae-4.png",
+      "group": "dia-label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap15.png right"
+    },
+    {
+      "file": "dia-label-agun-pihae-5.png",
+      "group": "dia-label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap16.png right"
+    },
+    {
+      "file": "dia-label-agun-pihae-6.png",
+      "group": "dia-label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap26.png right"
+    },
+    {
+      "file": "dia-label-agun-pihae-7.png",
+      "group": "dia-label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap29.png right"
+    },
+    {
+      "file": "dia-label-agun-pihae-8.png",
+      "group": "dia-label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap30.png right"
+    },
+    {
+      "file": "dia-label-hondon-point-1.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap-roaring1.png bottom"
+    },
+    {
+      "file": "dia-label-hondon-point-2.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap-roaring2.png bottom"
+    },
+    {
+      "file": "dia-label-hondon-point-3.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap27.png bottom"
+    },
+    {
+      "file": "dia-label-hondon-point-4.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap21.png bottom"
+    },
+    {
+      "file": "dia-label-hondon-point-5.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap23.png bottom"
+    },
+    {
+      "file": "dia-label-hondon-point-6.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap24.png bottom"
+    },
+    {
+      "file": "dia-label-hondon-point-7.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap26.png bottom"
+    },
+    {
+      "file": "dia-label-hondon-point-8.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap29.png bottom"
+    },
+    {
+      "file": "dia-label-hondon-point-9.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap30.png bottom"
+    },
+    {
+      "file": "dia-label-boss-pihae-1.png",
+      "group": "dia-label",
+      "key": "boss-pihae",
+      "text": "보스 피해",
+      "src": "cap14.png left"
+    },
+    {
+      "file": "dia-label-boss-pihae-2.png",
+      "group": "dia-label",
+      "key": "boss-pihae",
+      "text": "보스 피해",
+      "src": "cap15.png left"
+    },
+    {
+      "file": "dia-label-boss-pihae-3.png",
+      "group": "dia-label",
+      "key": "boss-pihae",
+      "text": "보스 피해",
+      "src": "cap16.png left"
+    },
+    {
+      "file": "dia-label-jilseo-point-1.png",
+      "group": "dia-label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap14.png bottom"
+    },
+    {
+      "file": "dia-label-jilseo-point-2.png",
+      "group": "dia-label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap15.png bottom"
+    },
+    {
+      "file": "dia-label-jilseo-point-3.png",
+      "group": "dia-label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap16.png bottom"
+    },
+    {
+      "file": "dia-label-agun-gonggyeok-1.png",
+      "group": "dia-label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap18.png left"
+    },
+    {
+      "file": "dia-label-agun-gonggyeok-2.png",
+      "group": "dia-label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap19.png left"
+    },
+    {
+      "file": "dia-label-agun-gonggyeok-3.png",
+      "group": "dia-label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap20.png right"
+    },
+    {
+      "file": "dia-label-chuga-pihae-1.png",
+      "group": "dia-label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap27.png right"
+    },
+    {
+      "file": "dia-label-chuga-pihae-2.png",
+      "group": "dia-label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap21.png left"
+    },
+    {
+      "file": "dia-label-chuga-pihae-3.png",
+      "group": "dia-label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap22.png right"
+    },
+    {
+      "file": "dia-label-chuga-pihae-4.png",
+      "group": "dia-label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap23.png left"
+    },
+    {
+      "file": "dia-label-chuga-pihae-5.png",
+      "group": "dia-label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap26.png left"
+    },
+    {
+      "file": "dia-label-chuga-pihae-6.png",
+      "group": "dia-label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap35.png left"
+    },
+    {
+      "file": "dia-label-chuga-pihae-7.png",
+      "group": "dia-label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap36.png left"
+    },
+    {
+      "file": "dia-label-nagin-1.png",
+      "group": "dia-label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap27.png left"
+    },
+    {
+      "file": "dia-label-nagin-2.png",
+      "group": "dia-label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap28.png right"
+    },
+    {
+      "file": "dia-label-nagin-3.png",
+      "group": "dia-label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap29.png left"
+    },
+    {
+      "file": "dia-label-nagin-4.png",
+      "group": "dia-label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap30.png left"
+    },
+    {
+      "file": "dia-label-nagin-5.png",
+      "group": "dia-label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap31.png left"
+    },
+    {
+      "file": "dia-digit-top-1-1.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap-roaring1.png top"
+    },
+    {
+      "file": "dia-digit-top-1-2.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap-roaring2.png top"
+    },
+    {
+      "file": "dia-digit-top-1-3.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap27.png top"
+    },
+    {
+      "file": "dia-digit-top-1-4.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap28.png top"
+    },
+    {
+      "file": "dia-digit-top-1-5.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap19.png top"
+    },
+    {
+      "file": "dia-digit-top-1-6.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap21.png top"
+    },
+    {
+      "file": "dia-digit-top-1-7.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap26.png top"
+    },
+    {
+      "file": "dia-digit-top-1-8.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap29.png top"
+    },
+    {
+      "file": "dia-digit-top-1-9.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap30.png top"
+    },
+    {
+      "file": "dia-digit-top-1-10.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap31.png top"
+    },
+    {
+      "file": "dia-digit-left-1-1.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap-roaring1.png left"
+    },
+    {
+      "file": "dia-digit-left-1-2.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap-roaring2.png left"
+    },
+    {
+      "file": "dia-digit-left-1-3.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap14.png left"
+    },
+    {
+      "file": "dia-digit-left-1-4.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap18.png left"
+    },
+    {
+      "file": "dia-digit-left-1-5.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap23.png left"
+    },
+    {
+      "file": "dia-digit-left-1-6.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap24.png left"
+    },
+    {
+      "file": "dia-digit-left-1-7.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap29.png left"
+    },
+    {
+      "file": "dia-digit-left-1-8.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap30.png left"
+    },
+    {
+      "file": "dia-digit-left-1-9.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap31.png left"
+    },
+    {
+      "file": "dia-digit-left-1-10.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap35.png left"
+    },
+    {
+      "file": "dia-digit-right-1-1.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap-roaring1.png right"
+    },
+    {
+      "file": "dia-digit-right-1-2.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap-roaring2.png right"
+    },
+    {
+      "file": "dia-digit-right-1-3.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap27.png right"
+    },
+    {
+      "file": "dia-digit-right-1-4.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap28.png right"
+    },
+    {
+      "file": "dia-digit-right-1-5.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap14.png right"
+    },
+    {
+      "file": "dia-digit-right-1-6.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap15.png right"
+    },
+    {
+      "file": "dia-digit-right-1-7.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap16.png right"
+    },
+    {
+      "file": "dia-digit-right-1-8.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap18.png right"
+    },
+    {
+      "file": "dia-digit-right-1-9.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap26.png right"
+    },
+    {
+      "file": "dia-digit-right-1-10.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap29.png right"
+    },
+    {
+      "file": "dia-digit-right-1-11.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap35.png right"
+    },
+    {
+      "file": "dia-digit-right-1-12.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap36.png right"
+    },
+    {
+      "file": "dia-digit-bottom-1-1.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap-roaring1.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-2.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap-roaring2.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-3.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap27.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-4.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap14.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-5.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap16.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-6.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap17.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-7.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap18.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-8.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap29.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-9.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap30.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-10.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap31.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-11.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap32.png bottom"
+    },
+    {
+      "file": "dia-digit-top-4-1.png",
+      "group": "dia-digit",
+      "key": "top:4",
+      "text": "top:4",
+      "src": "cap14.png top"
+    },
+    {
+      "file": "dia-digit-top-4-2.png",
+      "group": "dia-digit",
+      "key": "top:4",
+      "text": "top:4",
+      "src": "cap18.png top"
+    },
+    {
+      "file": "dia-digit-top-4-3.png",
+      "group": "dia-digit",
+      "key": "top:4",
+      "text": "top:4",
+      "src": "cap38.png top"
+    },
+    {
+      "file": "dia-digit-top-4-4.png",
+      "group": "dia-digit",
+      "key": "top:4",
+      "text": "top:4",
+      "src": "cap39.png top"
+    },
+    {
+      "file": "dia-digit-top-5-1.png",
+      "group": "dia-digit",
+      "key": "top:5",
+      "text": "top:5",
+      "src": "cap15.png top"
+    },
+    {
+      "file": "dia-digit-top-5-2.png",
+      "group": "dia-digit",
+      "key": "top:5",
+      "text": "top:5",
+      "src": "cap16.png top"
+    },
+    {
+      "file": "dia-digit-top-5-3.png",
+      "group": "dia-digit",
+      "key": "top:5",
+      "text": "top:5",
+      "src": "cap17.png top"
+    },
+    {
+      "file": "dia-digit-top-5-4.png",
+      "group": "dia-digit",
+      "key": "top:5",
+      "text": "top:5",
+      "src": "cap20.png top"
+    },
+    {
+      "file": "dia-digit-left-3-1.png",
+      "group": "dia-digit",
+      "key": "left:3",
+      "text": "left:3",
+      "src": "cap28.png left"
+    },
+    {
+      "file": "dia-digit-left-3-2.png",
+      "group": "dia-digit",
+      "key": "left:3",
+      "text": "left:3",
+      "src": "cap15.png left"
+    },
+    {
+      "file": "dia-digit-left-3-3.png",
+      "group": "dia-digit",
+      "key": "left:3",
+      "text": "left:3",
+      "src": "cap19.png left"
+    },
+    {
+      "file": "dia-digit-left-3-4.png",
+      "group": "dia-digit",
+      "key": "left:3",
+      "text": "left:3",
+      "src": "cap22.png left"
+    },
+    {
+      "file": "dia-digit-bottom-4-1.png",
+      "group": "dia-digit",
+      "key": "bottom:4",
+      "text": "bottom:4",
+      "src": "cap15.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-4-2.png",
+      "group": "dia-digit",
+      "key": "bottom:4",
+      "text": "bottom:4",
+      "src": "cap22.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-4-3.png",
+      "group": "dia-digit",
+      "key": "bottom:4",
+      "text": "bottom:4",
+      "src": "cap24.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-4-4.png",
+      "group": "dia-digit",
+      "key": "bottom:4",
+      "text": "bottom:4",
+      "src": "cap34.png bottom"
+    },
+    {
+      "file": "dia-digit-left-4-1.png",
+      "group": "dia-digit",
+      "key": "left:4",
+      "text": "left:4",
+      "src": "cap16.png left"
+    },
+    {
+      "file": "dia-digit-left-4-2.png",
+      "group": "dia-digit",
+      "key": "left:4",
+      "text": "left:4",
+      "src": "cap20.png left"
+    },
+    {
+      "file": "dia-digit-left-5-1.png",
+      "group": "dia-digit",
+      "key": "left:5",
+      "text": "left:5",
+      "src": "cap17.png left"
+    },
+    {
+      "file": "dia-digit-left-5-2.png",
+      "group": "dia-digit",
+      "key": "left:5",
+      "text": "left:5",
+      "src": "cap21.png left"
+    },
+    {
+      "file": "dia-digit-left-5-3.png",
+      "group": "dia-digit",
+      "key": "left:5",
+      "text": "left:5",
+      "src": "cap25.png left"
+    },
+    {
+      "file": "dia-digit-left-5-4.png",
+      "group": "dia-digit",
+      "key": "left:5",
+      "text": "left:5",
+      "src": "cap26.png left"
+    },
+    {
+      "file": "dia-digit-right-3-1.png",
+      "group": "dia-digit",
+      "key": "right:3",
+      "text": "right:3",
+      "src": "cap17.png right"
+    },
+    {
+      "file": "dia-digit-right-3-2.png",
+      "group": "dia-digit",
+      "key": "right:3",
+      "text": "right:3",
+      "src": "cap30.png right"
+    },
+    {
+      "file": "dia-digit-right-2-1.png",
+      "group": "dia-digit",
+      "key": "right:2",
+      "text": "right:2",
+      "src": "cap19.png right"
+    },
+    {
+      "file": "dia-digit-right-2-2.png",
+      "group": "dia-digit",
+      "key": "right:2",
+      "text": "right:2",
+      "src": "cap25.png right"
+    },
+    {
+      "file": "dia-digit-bottom-5-1.png",
+      "group": "dia-digit",
+      "key": "bottom:5",
+      "text": "bottom:5",
+      "src": "cap21.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-5-2.png",
+      "group": "dia-digit",
+      "key": "bottom:5",
+      "text": "bottom:5",
+      "src": "cap26.png bottom"
+    },
+    {
+      "file": "dia-digit-right-5-1.png",
+      "group": "dia-digit",
+      "key": "right:5",
+      "text": "right:5",
+      "src": "cap22.png right"
+    },
+    {
+      "file": "dia-digit-right-5-2.png",
+      "group": "dia-digit",
+      "key": "right:5",
+      "text": "right:5",
+      "src": "cap24.png right"
+    },
+    {
+      "file": "dia-digit-top-2-1.png",
+      "group": "dia-digit",
+      "key": "top:2",
+      "text": "top:2",
+      "src": "cap23.png top"
+    },
+    {
+      "file": "dia-digit-top-2-2.png",
+      "group": "dia-digit",
+      "key": "top:2",
+      "text": "top:2",
+      "src": "cap24.png top"
+    },
+    {
+      "file": "dia-digit-right-4-1.png",
+      "group": "dia-digit",
+      "key": "right:4",
+      "text": "right:4",
+      "src": "cap23.png right"
+    },
+    {
+      "file": "dia-digit-right-4-2.png",
+      "group": "dia-digit",
+      "key": "right:4",
+      "text": "right:4",
+      "src": "cap31.png right"
+    },
+    {
+      "file": "dia-digit-right-4-3.png",
+      "group": "dia-digit",
+      "key": "right:4",
+      "text": "right:4",
+      "src": "cap32.png right"
+    },
+    {
+      "file": "dia-digit-right-4-4.png",
+      "group": "dia-digit",
+      "key": "right:4",
+      "text": "right:4",
+      "src": "cap33.png right"
+    },
+    {
+      "file": "dia-digit-right-4-5.png",
+      "group": "dia-digit",
+      "key": "right:4",
+      "text": "right:4",
+      "src": "cap34.png right"
+    },
+    {
+      "file": "dia-digit-bottom-2-1.png",
+      "group": "dia-digit",
+      "key": "bottom:2",
+      "text": "bottom:2",
+      "src": "cap23.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-2-2.png",
+      "group": "dia-digit",
+      "key": "bottom:2",
+      "text": "bottom:2",
+      "src": "cap35.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-2-3.png",
+      "group": "dia-digit",
+      "key": "bottom:2",
+      "text": "bottom:2",
+      "src": "cap36.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-2-4.png",
+      "group": "dia-digit",
+      "key": "bottom:2",
+      "text": "bottom:2",
+      "src": "cap37.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-2-5.png",
+      "group": "dia-digit",
+      "key": "bottom:2",
+      "text": "bottom:2",
+      "src": "cap38.png bottom"
+    },
+    {
+      "file": "dia-digit-top-3-1.png",
+      "group": "dia-digit",
+      "key": "top:3",
+      "text": "top:3",
+      "src": "cap25.png top"
+    },
+    {
+      "file": "dia-digit-top-3-2.png",
+      "group": "dia-digit",
+      "key": "top:3",
+      "text": "top:3",
+      "src": "cap36.png top"
+    },
+    {
+      "file": "dia-digit-top-3-3.png",
+      "group": "dia-digit",
+      "key": "top:3",
+      "text": "top:3",
+      "src": "cap37.png top"
+    },
+    {
+      "file": "dia-digit-left-2-1.png",
+      "group": "dia-digit",
+      "key": "left:2",
+      "text": "left:2",
+      "src": "cap27.png left"
+    },
+    {
+      "file": "dia-digit-left-2-2.png",
+      "group": "dia-digit",
+      "key": "left:2",
+      "text": "left:2",
+      "src": "cap32.png left"
+    },
+    {
+      "file": "dia-digit-left-2-3.png",
+      "group": "dia-digit",
+      "key": "left:2",
+      "text": "left:2",
+      "src": "cap33.png left"
+    },
+    {
+      "file": "dia-digit-left-2-4.png",
+      "group": "dia-digit",
+      "key": "left:2",
+      "text": "left:2",
+      "src": "cap34.png left"
+    },
+    {
+      "file": "dia-digit-left-2-5.png",
+      "group": "dia-digit",
+      "key": "left:2",
+      "text": "left:2",
+      "src": "cap39.png left"
+    },
+    {
+      "file": "dia-digit-bottom-3-1.png",
+      "group": "dia-digit",
+      "key": "bottom:3",
+      "text": "bottom:3",
+      "src": "cap28.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-3-2.png",
+      "group": "dia-digit",
+      "key": "bottom:3",
+      "text": "bottom:3",
+      "src": "cap33.png bottom"
     }
   ]
 }

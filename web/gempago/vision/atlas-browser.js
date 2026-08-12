@@ -15,7 +15,7 @@
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
 
-  const GROUPS = ['label', 'whole', 'prefix', 'suffix', 'digit'];
+  const GROUPS = ['label', 'whole', 'prefix', 'suffix', 'digit', 'dia-label', 'dia-digit'];
 
   function toGray(canvas, ctx) {
     const { width, height } = canvas;
@@ -47,7 +47,7 @@
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-    const atlas = { manifest, text: {}, pattern: {}, family: {} };
+    const atlas = { manifest, text: {}, pattern: {}, family: {}, diaBg: {} };
     for (const g of GROUPS) { atlas[g] = {}; atlas.text[g] = {}; }
 
     for (const item of manifest.items) {
@@ -58,6 +58,13 @@
       const gray = toGray(canvas, ctx);
 
       if (item.group === 'anchor') { atlas.anchor = gray; continue; }
+      // 다이아 값 배경판. z 값(실수)을 0..255 로 펴서 저장했으므로 range 로 되돌린다.
+      if (item.group === 'dia-bg') {
+        const [lo, hi] = item.range;
+        for (let i = 0; i < gray.data.length; i++) gray.data[i] = lo + (gray.data[i] / 255) * (hi - lo);
+        (atlas.diaBg[item.key] || (atlas.diaBg[item.key] = [])).push(gray);
+        continue;
+      }
       if (!GROUPS.includes(item.group)) continue;
 
       const bucket = atlas[item.group];

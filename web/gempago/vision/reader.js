@@ -129,6 +129,206 @@
     return change.confidence > delta.confidence ? change : delta;
   }
 
+  /*
+   * ---- 다이아 (젬의 현재 수치) ----
+   *
+   * 옵션 행과 달리 원형 장식 배경이 밝고 복잡해서 옵션 행 방식이 그대로 안 통한다.
+   * 실측으로 확정한 방식 (README "다이아" 절, 측정은 make-diamond-templates.js):
+   *
+   * - 이름: 띠보다 좌우 8px 좁게 뜬 템플릿을 띠 안에서 미끄러뜨린다.
+   *   좌/우 자리는 템플릿을 공유해도 된다 (leave-one-out 112/112).
+   * - 숫자: 값 띠는 160px 인데 글자가 3~12px 라 배경이 점수를 다 먹는다.
+   *   배경은 (젬 종류 x 배율) 조합 안에서는 동일한 UI 아트라서 빼버린다 -
+   *   띠를 z 정규화한 뒤(밝기를 먼저 없애야 한다) 배경판(atlas.diaBg)을 뺀
+   *   잔차에서 숫자 덩어리만 맞춘다. 숫자 템플릿은 자리마다 따로 둔다.
+   */
+
+  /** 띠를 잘라 z 정규화한다. */
+  function zBand(img, r) {
+    const data = new Float32Array(r.w * r.h);
+    let sum = 0;
+    for (let y = 0; y < r.h; y++) {
+      for (let x = 0; x < r.w; x++) {
+        const v = img.data[(r.y + y) * img.width + (r.x + x)];
+        data[y * r.w + x] = v;
+        sum += v;
+      }
+    }
+    const mean = sum / data.length;
+    let ss = 0;
+    for (let i = 0; i < data.length; i++) { const d = data[i] - mean; ss += d * d; }
+    const sd = Math.sqrt(ss / data.length) || 1;
+    for (let i = 0; i < data.length; i++) data[i] = (data[i] - mean) / sd;
+    return { width: r.w, height: r.h, data };
+  }
+
+  /** z 정규화한 띠에서 배경판을 뺀 잔차. 글자만 남는다. */
+  function subtractBg(band, bg) {
+    const data = new Float32Array(band.data.length);
+    for (let i = 0; i < data.length; i++) data[i] = band.data[i] - bg.data[i];
+    return { width: band.width, height: band.height, data };
+  }
+
+  /**
+   * 잔차에서 글자 덩어리의 x 구간.
+   *
+   * 글자는 배경보다 밝아지기만 하므로 잔차가 양수뿐이다. 반면 다이아의 대각선 장식은
+   * 캡처마다 1px 씩 어긋나서 같은 열에 +/- 쌍의 유령 줄무늬를 남긴다(실측: 유령이
+   * 글자만큼 밝아서 양수 최대값만 보면 띠 전체가 덩어리 투성이가 된다).
+   * 그래서 열 점수를 "양수 최대 - 음수 최대" 로 잡는다 - 유령은 상쇄되고 글자만 남는다.
+   *
+   * 임계값은 최대값에 상대적으로 잡는다 - z 단위 절대값으로 박으면
+   * 캡처 출처(원본/리샘플/네이티브)에 따라 흔들린다.
+   */
+  function residualSpans(res, minGap) {
+    const peak = new Float32Array(res.width);
+    let max = 0;
+    for (let x = 0; x < res.width; x++) {
+      let pos = 0, neg = 0;
+      for (let y = 0; y < res.height; y++) {
+        const v = res.data[y * res.width + x];
+        if (v > pos) pos = v;
+        if (-v > neg) neg = -v;
+      }
+      peak[x] = Math.max(0, pos - neg);
+      max = Math.max(max, peak[x]);
+    }
+    // 이 정도도 안 튀면 글자가 없는 것이다 (노이즈는 z 단위 0.3 근처).
+    if (max < 1.0) return [];
+    const thr = max * 0.35;
+
+    const gapLimit = minGap == null ? 2 : minGap;
+    const out = [];
+    let start = -1, gap = 0;
+    for (let x = 0; x < res.width; x++) {
+      if (peak[x] > thr) { if (start < 0) start = x; gap = 0; }
+      else if (start >= 0 && ++gap >= gapLimit) {
+        out.push([start, x - gap + 1]);
+        start = -1; gap = 0;
+      }
+    }
+    if (start >= 0) out.push([start, res.width]);
+    return out;
+  }
+
+  const DIA_VALUE_SLACK = 4;
+  // 숫자 안쪽의 골(예: "4" 의 사선과 세로획 사이)이 2~3px 라 간격을 좁게 잡으면
+  // 글자가 두 덩어리로 갈라지고, "Lv." 와 숫자 사이가 5px 라 넓게 잡으면 통째로
+  // 붙는다. 4 가 둘 사이의 유일한 값이다.
+  const DIA_GLYPH_GAP = 5;
+
+  /**
+   * 배경판은 하나가 아니다. 다이아 아트가 젬 종류(혼돈/질서)와 캡처 출처(배율)에 따라
+   * 픽셀 수준에서 달라서(실측: 한 판으로 빼면 잔차 노이즈 0.3+, 같은 조합끼리는 0.02~0.11),
+   * 조합별 판을 전부 빼보고 잔차가 가장 조용한 판을 고른다. 맞는 판이면 글자만 남고
+   * 틀린 판이면 배경 무늬가 남으므로 자기 선택이 된다.
+   */
+  function bestResidual(band, variants) {
+    const all = [];
+    for (const bg of variants) {
+      if (bg.width !== band.width || bg.height !== band.height) continue;
+      const res = subtractBg(band, bg);
+      const abs = Float32Array.from(res.data, Math.abs).sort();
+      all.push({ res, noise: abs[Math.floor(abs.length * 0.9)] });
+    }
+    return all.sort((a, b) => a.noise - b.noise);
+  }
+
+  /** 다이아 값 하나(숫자 1~5)를 읽는다. */
+  function readDiamondValue(img, band, atlas, pos) {
+    const variants = atlas.diaBg && atlas.diaBg[pos];
+    if (!variants || !variants.length) return null;
+
+    // 조용한 판부터 시도한다. 가장 조용한 판에서 글자가 안 나오면 그 판이 이 숫자를
+    // 흡수한 것이다(조합의 모든 캡처가 같은 숫자면 배경판에 숫자가 박힌다) - 다음 판은
+    // 다른 조합이라 무늬 노이즈는 있어도 글자는 살아 있다.
+    let res = null, spans = null;
+    for (const cand of bestResidual(zBand(img, band), variants)) {
+      const s = residualSpans(cand.res, DIA_GLYPH_GAP);
+      if (s.length) { res = cand.res; spans = s; break; }
+    }
+    if (!spans) return null;
+
+    // 숫자는 항상 마지막 덩어리다. 좌/우 값("Lv. N")은 잔차에 "Lv." 잔재가 앞에 남는다 -
+    // 배경판의 "Lv." 는 캡처마다 숫자 폭만큼 어긋난 위치라 완전히 지워지지 않는다.
+    const [x0, x1] = spans[spans.length - 1];
+    const region = {
+      x: Math.max(0, x0 - DIA_VALUE_SLACK),
+      y: 0,
+      w: Math.min(res.width - Math.max(0, x0 - DIA_VALUE_SLACK), (x1 - x0) + DIA_VALUE_SLACK * 2),
+      h: res.height,
+    };
+    // 숫자 템플릿은 자리끼리만 맞춘다. 네 자리의 숫자 폰트 크기가 전부 조금씩 달라서
+    // (실측: 위 "1" 7x12, 아래 "1" 6x11, 좌 "1" 12x16 - 교차 점수가 0.4~0.6 대로
+    // 떨어진다) 자리를 섞으면 같은 숫자끼리도 진다. README 의 "네 자리 공유" 는
+    // 15장 기준 측정이 틀렸던 것이다.
+    const names = Object.keys(atlas['dia-digit']).filter((k) => k.indexOf(pos + ':') === 0);
+    const digit = pick(res, region, atlas['dia-digit'], names);
+    if (!digit) return null;
+    return {
+      digit: digit.name.split(':')[1],
+      score: digit.score, margin: digit.margin,
+      runnerUp: digit.runnerUp ? digit.runnerUp.split(':')[1] : null,
+    };
+  }
+
+
+  /** 자리마다 나올 수 있는 이름이 정해져 있다. 위는 의지력, 아래는 포인트, 좌/우는 효과. */
+  function diaCandidates(atlas, pos) {
+    const texts = atlas.text['dia-label'];
+    const keys = Object.keys(atlas['dia-label']);
+    const isWill = (k) => texts[k] === '의지력 효율';
+    const isPoint = (k) => /포인트$/.test(texts[k]);
+    if (pos === 'top') return keys.filter(isWill);
+    if (pos === 'bottom') return keys.filter(isPoint);
+    return keys.filter((k) => !isWill(k) && !isPoint(k));
+  }
+
+  /**
+   * 다이아 4개(젬의 현재 수치)를 읽는다.
+   * @param {object} [opts.origin] readOptions 가 이미 잡은 원점. 있으면 앵커 탐색을 건너뛴다.
+   */
+  function readDiamonds(img, atlas, opts) {
+    const o = opts || {};
+    const minScore = o.minScore == null ? 0.8 : o.minScore;
+    const minMargin = o.minMargin == null ? 0.1 : o.minMargin;
+    // 숫자는 5지선다라 점수가 높아도 2등과 붙어 있으면 믿으면 안 된다
+    // (실측: 배경판이 숫자를 흡수한 캡처가 0.845 점으로 틀리는데 마진이 0.008 이었다).
+    const valueMinMargin = o.valueMinMargin == null ? 0.05 : o.valueMinMargin;
+
+    let origin = o.origin;
+    if (!origin) {
+      origin = layout.locate(img, atlas.anchor, o);
+      if (!origin) return { ok: false, reason: '가공 화면을 찾지 못했습니다 (앵커 불일치)' };
+    }
+    const image = origin.image;
+
+    const dia = layout.diamonds(origin);
+    const gem = {};
+    for (const pos of Object.keys(dia)) {
+      const label = pick(image, dia[pos].label, atlas['dia-label'], diaCandidates(atlas, pos));
+      const value = readDiamondValue(image, dia[pos].value, atlas, pos);
+      gem[pos] = {
+        slot: dia[pos].slot,
+        label: label ? label.name : null,
+        labelText: label ? atlas.text['dia-label'][label.name] : null,
+        value: value ? +value.digit : null,
+        scores: {
+          label: label ? label.score : 0,
+          labelMargin: label ? label.margin : 0,
+          value: value ? value.score : 0,
+          valueMargin: value ? value.margin : 0,
+        },
+        // 위/아래는 이름 후보가 1~2개뿐이라 이름 마진이 의미 없다. 점수만 본다.
+        confident: !!(label && value &&
+          label.score >= minScore &&
+          value.score >= minScore && value.margin >= valueMinMargin &&
+          (pos === 'top' || pos === 'bottom' || label.margin >= minMargin)),
+      };
+    }
+    return { ok: true, origin, gem };
+  }
+
   /**
    * 화면 전체에서 4개 항목을 읽는다.
    * @param {{width,height,data:Float32Array}} img 그레이 이미지
@@ -165,5 +365,8 @@
     return { ok: true, origin, options };
   }
 
-  return { readOptions, readValue, pick, DIGIT_WINDOW };
+  return {
+    readOptions, readValue, pick, DIGIT_WINDOW,
+    readDiamonds, zBand, subtractBg, residualSpans, bestResidual,
+  };
 });

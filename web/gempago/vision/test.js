@@ -212,32 +212,52 @@ console.log('게임 밝기 설정에 흔들리지 않는다');
     accuracy((i) => map(i, (v) => v + 170)));
 }
 
-console.log('다이아 4개의 자리를 잡는다 (읽기는 아직 안 한다)');
+console.log('다이아 4개(젬의 현재 수치)를 읽는다');
 {
-  // 아직 다이아를 인식하지는 않는다. 하지만 기하 구조는 확정됐으므로 고정해 둔다.
-  // 앵커에서의 상대 위치가 맞으면 각 띠 안에 글자가 들어 있어야 한다.
-  let allHaveText = true;
-  const detail = [];
-  for (const cap of groundTruth.captures) {
-    const img = png.loadGray(here('fixtures', cap.file));
-    const o = layout.locate(img, atlas.anchor, { scale: cap.scale });
-    const dia = layout.diamonds(o);
-    for (const pos of ['top', 'left', 'right', 'bottom']) {
-      for (const part of ['label', 'value']) {
-        // 장식 배경이 밝아서 덩어리 분할이 지저분하다. 여기서는 "글자가 있긴 한가"만 본다.
-        const spans = layout.glyphSpans(o.image, dia[pos][part], 3);
-        const width = spans.reduce((a, [x0, x1]) => a + (x1 - x0), 0);
-        if (width < 8) { allHaveText = false; detail.push(`${cap.file} ${pos}.${part}=${width}px`); }
-      }
-    }
-  }
-  check('15장 x 8개 띠에 전부 글자가 있다', allHaveText, detail.slice(0, 4).join(' '));
-
   const one = layout.diamonds(layout.locate(
     png.loadGray(here('fixtures', 'cap-roaring1.png')), atlas.anchor, { scale: 1 }));
   check('위/아래는 의지력·포인트, 좌/우는 효과',
     one.top.slot === 'will' && one.bottom.slot === 'point' &&
     one.left.slot === 'opt1' && one.right.slot === 'opt2');
+
+  // 자기 캡처에서 뜬 템플릿은 빼고 읽는다(leave-one-out). 안 빼면 자기 템플릿이
+  // 무조건 이겨서 테스트가 아무것도 못 잡는다. 배경판은 전체로 만든 것이라 못 빼지만
+  // 캡처 하나의 영향이 1/N 이라 무시할 수 있다.
+  // 실측 기대값은 make-diamond-templates.js 와 같다: 이름 112/112, 값 105/112.
+  // 값 오답 7개는 전부 "그 (자리x배율) 조합에 그 숫자 표본이 하나뿐"인 경우고,
+  // 전부 의심으로 표시된다 - 조용히 틀리는 것이 0 이어야 한다는 게 핵심 성질이다.
+  const without = (file) => {
+    const filtered = Object.assign({}, atlas);
+    for (const g of ['dia-label', 'dia-digit']) {
+      filtered[g] = {};
+      for (const key of Object.keys(atlas[g])) {
+        const vs = atlas[g][key].filter((t) => !(t.src && t.src.indexOf(file) === 0));
+        if (vs.length) filtered[g][key] = vs;
+      }
+    }
+    return filtered;
+  };
+
+  let labelOk = 0, valueOk = 0, total = 0, silentWrong = 0;
+  const t0 = Date.now();
+  for (const cap of groundTruth.captures) {
+    const img = png.loadGray(here('fixtures', cap.file));
+    const r = reader.readDiamonds(img, without(cap.file), { scale: cap.scale });
+    if (!r.ok) { check(cap.file + ' 다이아 인식', false, r.reason); total += 4; continue; }
+    for (const pos of ['top', 'left', 'right', 'bottom']) {
+      const got = r.gem[pos];
+      const want = cap.gemState[pos];
+      total++;
+      if (got.labelText === want.label) labelOk++;
+      const valueRight = got.value === want.value;
+      if (valueRight) valueOk++;
+      if (!valueRight && got.confident) silentWrong++;
+    }
+  }
+  check(`이름 ${total}개 전부 정답 (${labelOk}/${total})`, labelOk === total);
+  check(`값 정답이 105개 이상 (${valueOk}/${total})`, valueOk >= 105);
+  check(`자신 있게 틀린 값이 없다 (${silentWrong}개)`, silentWrong === 0);
+  console.log(`  (${groundTruth.captures.length}장 ${Date.now() - t0}ms)`);
 }
 
 console.log('배율이 달라도 찾는다');
