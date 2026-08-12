@@ -260,29 +260,37 @@ console.log('다이아 4개(젬의 현재 수치)를 읽는다');
   console.log(`  (${groundTruth.captures.length}장 ${Date.now() - t0}ms)`);
 }
 
-console.log('리롤/가공 횟수를 읽는다');
+const gemSum = (cap) =>
+  ['top', 'left', 'right', 'bottom'].reduce((a, p) => a + cap.gemState[p].value, 0);
+
+/** 이 캡처에서 뜬 템플릿을 전부 뺀 아틀라스 (leave-one-out). */
+function atlasWithout(file, groups) {
+  const filtered = Object.assign({}, atlas);
+  for (const g of groups) {
+    filtered[g] = {};
+    for (const key of Object.keys(atlas[g])) {
+      const vs = atlas[g][key].filter((t) => !(t.src && t.src.indexOf(file) === 0));
+      if (vs.length) filtered[g][key] = vs;
+    }
+  }
+  return filtered;
+}
+
+console.log('리롤/가공 횟수/젬 포인트를 읽는다');
 {
   // 다이아와 같은 leave-one-out. 오답은 전부 "그 (부류x배율)에 그 숫자 표본이
-  // 하나뿐"인 경우고 전부 의심으로 표시된다 (실측 82/87, make-meta-templates.js).
-  const without = (file) => {
-    const filtered = Object.assign({}, atlas);
-    filtered['meta-digit'] = {};
-    for (const key of Object.keys(atlas['meta-digit'])) {
-      const vs = atlas['meta-digit'][key].filter((t) => !(t.src && t.src.indexOf(file) === 0));
-      if (vs.length) filtered['meta-digit'][key] = vs;
-    }
-    return filtered;
-  };
-
+  // 하나뿐"인 경우고 전부 의심으로 표시된다 (실측 106/111, make-meta-templates.js).
   let ok = 0, total = 0, silentWrong = 0;
   for (const cap of groundTruth.captures) {
     if (!cap.ui) continue;
     const img = png.loadGray(here('fixtures', cap.file));
-    const r = reader.readMeta(img, without(cap.file), { scale: cap.scale });
+    const r = reader.readMeta(img, atlasWithout(cap.file, ['meta-digit', 'meta-label']), { scale: cap.scale });
     const want = [
       [r.reroll, cap.ui.reroll],
       [r.attemptsLeft, cap.ui.attempts && cap.ui.attempts[0]],
       [r.attemptsMax, cap.ui.attempts && cap.ui.attempts[1]],
+      // 젬 포인트 정답은 네 수치의 합이다. 버튼이 보이는 캡처에만 이 줄도 보인다.
+      [r.gemPoint, cap.ui.attempts ? gemSum(cap) : null],
     ];
     for (const [got, truth] of want) {
       if (truth == null) continue;
@@ -291,8 +299,38 @@ console.log('리롤/가공 횟수를 읽는다');
       else if (got && got.confident) silentWrong++;
     }
   }
-  check(`횟수 정답이 82개 이상 (${ok}/${total})`, ok >= 82);
+  check(`횟수·젬 포인트 정답이 106개 이상 (${ok}/${total})`, ok >= 106);
   check(`자신 있게 틀린 횟수가 없다 (${silentWrong}개)`, silentWrong === 0);
+}
+
+console.log('젬 포인트 합으로 다이아를 검산한다');
+{
+  // 젬 포인트 = 네 수치의 합. 넷 중 하나만 애매하면 그 자리는 계산으로 복구되고,
+  // 넷 다 확실한데 합이 안 맞으면 전부 의심으로 내려간다.
+  const groups = ['dia-label', 'dia-digit', 'meta-digit', 'meta-label'];
+  let valueOk = 0, total = 0, silentWrong = 0, recovered = 0, recoveredWrong = 0, mismatch = 0;
+  for (const cap of groundTruth.captures) {
+    const img = png.loadGray(here('fixtures', cap.file));
+    const a = atlasWithout(cap.file, groups);
+    const d = reader.readDiamonds(img, a, { scale: cap.scale });
+    const m = reader.readMeta(null, a, { origin: d.origin });
+    const s = reader.reconcileGem(d.gem, m.gemPoint);
+    if (s.status === 'recovered') {
+      recovered++;
+      if (d.gem[s.pos].value !== cap.gemState[s.pos].value) recoveredWrong++;
+    }
+    if (s.status === 'mismatch') mismatch++;
+    for (const pos of ['top', 'left', 'right', 'bottom']) {
+      total++;
+      const right = d.gem[pos].value === cap.gemState[pos].value;
+      if (right) valueOk++;
+      else if (d.gem[pos].confident) silentWrong++;
+    }
+  }
+  check(`검산이 ${recovered}건 복구, 틀리게 복구한 적 없음 (${recoveredWrong}건)`, recoveredWrong === 0);
+  check(`검산 후에도 자신 있게 틀린 값이 없다 (${silentWrong}개)`, silentWrong === 0);
+  check(`검산 후 값 정답이 늘었다 (${valueOk}/${total}, 검산 전 147)`, valueOk >= 150);
+  console.log(`  (복구 ${recovered} · 합 불일치 ${mismatch})`);
 }
 
 console.log('배율이 달라도 찾는다');

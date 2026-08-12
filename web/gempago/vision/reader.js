@@ -368,7 +368,79 @@
       reroll: read(bands.reroll, 'reroll'),
       attemptsLeft: read(bands.attemptsN, 'attempt'),
       attemptsMax: read(bands.attemptsM, 'attempt'),
+      gemPoint: readGemPoint(image, atlas, bands.gemPoint, minScore, minMargin),
     };
+  }
+
+  /**
+   * "젬 포인트 N" 을 읽는다. 줄이 가운데 정렬이라 자릿수에 따라 밀리므로
+   * "젬 포인트" 이름을 템플릿으로 찾아 앵커로 쓰고, 그 오른쪽 창의 글자 덩어리를
+   * 숫자로 읽는다. 두 자리(10~20)면 덩어리가 2개다. "?" 아이콘은 창 밖이다.
+   */
+  // "젬 포인트" 이름 시작에서 숫자까지의 고정 간격. 이름 끝(x + 템플릿 폭)을 쓰면
+  // 안 된다 - 템플릿 변형마다 잘린 폭이 1~3px 달라서 창이 그만큼 밀린다(실측).
+  const GEM_POINT_DIGIT_DX = 66;
+
+  function readGemPoint(image, atlas, band, minScore, minMargin) {
+    if (!band || !atlas['meta-label'] || !atlas['meta-label']['gem-point']) return null;
+    const label = pick(image, band, atlas['meta-label'], ['gem-point']);
+    if (!label || label.score < 0.7) return null;
+
+    const region = { x: label.x + GEM_POINT_DIGIT_DX, y: band.y, w: 24, h: band.h };
+    const spans = layout.glyphSpans(image, region, 2).filter(([a, b]) => b - a >= 2);
+    if (!spans.length || spans.length > 2) return null;
+
+    const names = Object.keys(atlas['meta-digit']).filter((k) => k.indexOf('point:') === 0);
+    const digits = [];
+    let worst = 1, worstMargin = 1;
+    for (const [x0] of spans) {
+      const r = { x: Math.max(region.x, x0 - 2), y: band.y, w: 12, h: band.h };
+      const d = pick(image, r, atlas['meta-digit'], names);
+      if (!d) return null;
+      digits.push(+d.name.split(':')[1]);
+      worst = Math.min(worst, d.score);
+      worstMargin = Math.min(worstMargin, d.margin);
+    }
+    const value = digits.length === 2 ? digits[0] * 10 + digits[1] : digits[0];
+    // 젬 포인트는 수치 4개(각 1~5)의 합이라 4~20 이다. 두 자리면 첫 숫자는 1~2.
+    const sane = value >= 4 && value <= 20 && (digits.length === 1 || digits[0] <= 2);
+    return {
+      value,
+      score: worst,
+      margin: worstMargin,
+      confident: sane && label.score >= minScore && worst >= minScore && worstMargin >= minMargin,
+    };
+  }
+
+  /**
+   * 검산: 젬 포인트 = 네 수치의 합 (실측: 캡처 39장 전부에서 성립).
+   * - 넷 다 확실한데 합이 안 맞으면 어디가 틀렸는지 모르므로 전부 의심으로 내린다.
+   * - 하나만 애매하면 그 자리는 계산으로 나온다 - 템플릿이 없어 못 읽던 숫자도 복구된다.
+   * @returns {{status: 'ok'|'recovered'|'mismatch'|'unknown', pos?: string, value?: number}}
+   */
+  function reconcileGem(gem, gemPoint) {
+    if (!gem || !gemPoint || !gemPoint.confident) return { status: 'unknown' };
+    const POS = ['top', 'left', 'right', 'bottom'];
+    const unsure = POS.filter((p) => !gem[p].confident || gem[p].value == null);
+    const sum = (ps) => ps.reduce((a, p) => a + gem[p].value, 0);
+
+    if (!unsure.length) {
+      if (sum(POS) === gemPoint.value) return { status: 'ok' };
+      for (const p of POS) gem[p].confident = false;
+      return { status: 'mismatch' };
+    }
+    if (unsure.length === 1) {
+      const p = unsure[0];
+      const v = gemPoint.value - sum(POS.filter((q) => q !== p));
+      if (v >= 1 && v <= 5) {
+        gem[p].value = v;
+        gem[p].confident = true;
+        gem[p].recovered = true;
+        return { status: 'recovered', pos: p, value: v };
+      }
+      return { status: 'mismatch' };
+    }
+    return { status: 'unknown' };
   }
 
   /**
@@ -409,6 +481,7 @@
 
   return {
     readOptions, readValue, pick, DIGIT_WINDOW,
-    readDiamonds, readMeta, zBand, subtractBg, residualSpans, bestResidual,
+    readDiamonds, readMeta, reconcileGem,
+    zBand, subtractBg, residualSpans, bestResidual,
   };
 });

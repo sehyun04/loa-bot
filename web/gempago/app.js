@@ -30,7 +30,7 @@
     return p.toFixed(4) + '%p';
   }
 
-  const worker = new Worker('worker.js?v=2026-08-12.2');
+  const worker = new Worker('worker.js?v=2026-08-13.1');
   let seq = 0;
   const pending = new Map();
 
@@ -508,6 +508,13 @@
     const meta = applyMeta(res);
     gem.filled.push.apply(gem.filled, meta.filled);
     gem.skipped.push.apply(gem.skipped, meta.skipped);
+    // 젬 포인트 검산 결과. 복구된 값은 이미 confident 로 채워져 있다.
+    if (res.sumCheck && res.sumCheck.status === 'recovered') {
+      gem.filled.push(`(${POS_KO[res.sumCheck.pos]}는 젬 포인트 합으로 보정)`);
+    }
+    if (res.sumCheck && res.sumCheck.status === 'mismatch') {
+      gem.skipped.push('수치 합이 젬 포인트와 안 맞음 - 네 수치를 직접 확인하세요');
+    }
     if (gem.slotsChanged) {
       syncStatLabels();
       res = Object.assign(

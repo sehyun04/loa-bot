@@ -2428,6 +2428,27 @@
       "src": "cap31.png"
     },
     {
+      "file": "meta-point-5-1.png",
+      "group": "meta-digit",
+      "key": "point:5",
+      "text": "5",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-point-5-2.png",
+      "group": "meta-digit",
+      "key": "point:5",
+      "text": "5",
+      "src": "cap35.png"
+    },
+    {
+      "file": "meta-point-5-3.png",
+      "group": "meta-digit",
+      "key": "point:5",
+      "text": "5",
+      "src": "cap48.png"
+    },
+    {
       "file": "meta-attempt-5-1.png",
       "group": "meta-digit",
       "key": "attempt:5",
@@ -2456,6 +2477,62 @@
       "src": "cap49.png"
     },
     {
+      "file": "meta-point-8-1.png",
+      "group": "meta-digit",
+      "key": "point:8",
+      "text": "8",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-point-8-2.png",
+      "group": "meta-digit",
+      "key": "point:8",
+      "text": "8",
+      "src": "cap32.png"
+    },
+    {
+      "file": "meta-point-8-3.png",
+      "group": "meta-digit",
+      "key": "point:8",
+      "text": "8",
+      "src": "cap38.png"
+    },
+    {
+      "file": "meta-point-4-1.png",
+      "group": "meta-digit",
+      "key": "point:4",
+      "text": "4",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-point-4-2.png",
+      "group": "meta-digit",
+      "key": "point:4",
+      "text": "4",
+      "src": "cap40.png"
+    },
+    {
+      "file": "meta-point-4-3.png",
+      "group": "meta-digit",
+      "key": "point:4",
+      "text": "4",
+      "src": "cap41.png"
+    },
+    {
+      "file": "meta-point-6-1.png",
+      "group": "meta-digit",
+      "key": "point:6",
+      "text": "6",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-point-6-2.png",
+      "group": "meta-digit",
+      "key": "point:6",
+      "text": "6",
+      "src": "cap49.png"
+    },
+    {
       "file": "meta-attempt-4-1.png",
       "group": "meta-digit",
       "key": "attempt:4",
@@ -2467,6 +2544,27 @@
       "group": "meta-digit",
       "key": "attempt:4",
       "text": "4",
+      "src": "cap37.png"
+    },
+    {
+      "file": "meta-point-7-1.png",
+      "group": "meta-digit",
+      "key": "point:7",
+      "text": "7",
+      "src": "cap31.png"
+    },
+    {
+      "file": "meta-point-7-2.png",
+      "group": "meta-digit",
+      "key": "point:7",
+      "text": "7",
+      "src": "cap36.png"
+    },
+    {
+      "file": "meta-point-7-3.png",
+      "group": "meta-digit",
+      "key": "point:7",
+      "text": "7",
       "src": "cap37.png"
     },
     {
@@ -2505,6 +2603,41 @@
       "src": "cap39.png"
     },
     {
+      "file": "meta-point-1-1.png",
+      "group": "meta-digit",
+      "key": "point:1",
+      "text": "1",
+      "src": "cap33.png"
+    },
+    {
+      "file": "meta-point-1-2.png",
+      "group": "meta-digit",
+      "key": "point:1",
+      "text": "1",
+      "src": "cap34.png"
+    },
+    {
+      "file": "meta-point-1-3.png",
+      "group": "meta-digit",
+      "key": "point:1",
+      "text": "1",
+      "src": "cap43.png"
+    },
+    {
+      "file": "meta-point-0-1.png",
+      "group": "meta-digit",
+      "key": "point:0",
+      "text": "0",
+      "src": "cap33.png"
+    },
+    {
+      "file": "meta-point-0-2.png",
+      "group": "meta-digit",
+      "key": "point:0",
+      "text": "0",
+      "src": "cap43.png"
+    },
+    {
       "file": "meta-attempt-1-1.png",
       "group": "meta-digit",
       "key": "attempt:1",
@@ -2516,6 +2649,20 @@
       "group": "meta-digit",
       "key": "attempt:1",
       "text": "1",
+      "src": "cap50.png"
+    },
+    {
+      "file": "meta-point-9-1.png",
+      "group": "meta-digit",
+      "key": "point:9",
+      "text": "9",
+      "src": "cap39.png"
+    },
+    {
+      "file": "meta-point-9-2.png",
+      "group": "meta-digit",
+      "key": "point:9",
+      "text": "9",
       "src": "cap50.png"
     },
     {
@@ -2531,6 +2678,41 @@
       "key": "reroll:0",
       "text": "0",
       "src": "cap50.png"
+    },
+    {
+      "file": "meta-label-gem-point-1.png",
+      "group": "meta-label",
+      "key": "gem-point",
+      "text": "젬 포인트",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-label-gem-point-2.png",
+      "group": "meta-label",
+      "key": "gem-point",
+      "text": "젬 포인트",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-label-gem-point-3.png",
+      "group": "meta-label",
+      "key": "gem-point",
+      "text": "젬 포인트",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-label-gem-point-4.png",
+      "group": "meta-label",
+      "key": "gem-point",
+      "text": "젬 포인트",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-label-gem-point-5.png",
+      "group": "meta-label",
+      "key": "gem-point",
+      "text": "젬 포인트",
+      "src": "cap31.png"
     }
   ]
 }

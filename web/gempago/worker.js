@@ -159,6 +159,11 @@ self.onmessage = async (e) => {
       // 원점은 이미 잡았으니 재탐색 없음.
       const dia = reader.readDiamonds(null, atlas, { origin: r.origin });
       const meta = reader.readMeta(null, atlas, { origin: r.origin });
+      // 검산: 젬 포인트 = 네 수치의 합. 애매한 자리 하나는 계산으로 복구되고,
+      // 합이 안 맞으면 네 자리 전부 의심으로 내려간다.
+      const sumCheck = dia.ok && meta.ok
+        ? reader.reconcileGem(dia.gem, meta.gemPoint)
+        : { status: 'unknown' };
 
       lastRead = r.options;
       self.postMessage({
@@ -170,6 +175,7 @@ self.onmessage = async (e) => {
           anchorScore: r.origin.score,
           gem: dia.ok ? dia.gem : null,
           meta: meta.ok ? { reroll: meta.reroll, attemptsLeft: meta.attemptsLeft, attemptsMax: meta.attemptsMax } : null,
+          sumCheck,
         }, describe(r.options, slots)),
       });
       return;
