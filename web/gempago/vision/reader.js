@@ -330,6 +330,48 @@
   }
 
   /**
+   * 리롤 횟수("N회 가능")와 남은/전체 가공 횟수("가공 하기 (N/M)")를 읽는다.
+   * 배경이 민무늬 버튼이라 옵션 행과 같은 방식(고정 창 + 미끄러뜨리기)이면 된다.
+   * 창이 화면(크롭) 밖이거나 그 숫자의 템플릿이 없으면 해당 값은 null 이다.
+   * @param {object} [opts.origin] readOptions 가 이미 잡은 원점
+   */
+  function readMeta(img, atlas, opts) {
+    const o = opts || {};
+    const minScore = o.minScore == null ? 0.8 : o.minScore;
+    const minMargin = o.minMargin == null ? 0.05 : o.minMargin;
+
+    let origin = o.origin;
+    if (!origin) {
+      origin = layout.locate(img, atlas.anchor, o);
+      if (!origin) return { ok: false, reason: '가공 화면을 찾지 못했습니다 (앵커 불일치)' };
+    }
+    const image = origin.image;
+    const bands = layout.metaBands(origin);
+
+    // 리롤과 버튼의 숫자는 폰트 크기가 달라서 부류를 나눈다 (다이아와 같은 이유).
+    const read = (band, cls) => {
+      if (!band || !atlas['meta-digit']) return null;
+      const names = Object.keys(atlas['meta-digit']).filter((k) => k.indexOf(cls + ':') === 0);
+      const d = pick(image, band, atlas['meta-digit'], names);
+      if (!d) return null;
+      return {
+        value: +d.name.split(':')[1],
+        score: d.score,
+        margin: d.margin,
+        confident: d.score >= minScore && d.margin >= minMargin,
+      };
+    };
+
+    return {
+      ok: true,
+      origin,
+      reroll: read(bands.reroll, 'reroll'),
+      attemptsLeft: read(bands.attemptsN, 'attempt'),
+      attemptsMax: read(bands.attemptsM, 'attempt'),
+    };
+  }
+
+  /**
    * 화면 전체에서 4개 항목을 읽는다.
    * @param {{width,height,data:Float32Array}} img 그레이 이미지
    * @param {object} atlas atlas.js 가 만든 템플릿 묶음
@@ -367,6 +409,6 @@
 
   return {
     readOptions, readValue, pick, DIGIT_WINDOW,
-    readDiamonds, zBand, subtractBg, residualSpans, bestResidual,
+    readDiamonds, readMeta, zBand, subtractBg, residualSpans, bestResidual,
   };
 });

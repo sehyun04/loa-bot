@@ -155,8 +155,10 @@ self.onmessage = async (e) => {
       if (!r.ok) { self.postMessage({ id, ok: true, result: { found: false, reason: r.reason } }); return; }
       cachedScale = r.origin.scale;
 
-      // 옵션 4개와 함께 다이아(젬의 현재 수치)도 읽는다. 원점은 이미 잡았으니 재탐색 없음.
+      // 옵션 4개와 함께 다이아(현재 수치)와 리롤/가공 횟수도 읽는다.
+      // 원점은 이미 잡았으니 재탐색 없음.
       const dia = reader.readDiamonds(null, atlas, { origin: r.origin });
+      const meta = reader.readMeta(null, atlas, { origin: r.origin });
 
       lastRead = r.options;
       self.postMessage({
@@ -167,6 +169,7 @@ self.onmessage = async (e) => {
           scale: r.origin.scale,
           anchorScore: r.origin.score,
           gem: dia.ok ? dia.gem : null,
+          meta: meta.ok ? { reroll: meta.reroll, attemptsLeft: meta.attemptsLeft, attemptsMax: meta.attemptsMax } : null,
         }, describe(r.options, slots)),
       });
       return;

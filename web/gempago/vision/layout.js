@@ -42,6 +42,21 @@
       right:  { dx: 200, label: { dy: -161, h: 16 }, value: { dy: -142, h: 20 } },
       bottom: { dx: 109, label: { dy: -99,  h: 17 }, value: { dy: -75,  h: 20 } },
     },
+
+    /*
+     * 리롤 버튼("N회 가능")과 가공하기 버튼("가공 하기 (N/M)")의 숫자 창.
+     * 실측(39장): 리롤 숫자는 아이콘 뒤 dx 406 에서 시작하고, 버튼의 (N/M) 은
+     * 텍스트가 버튼 중앙 정렬인데도 N·M 이 항상 한 자리라 ±2px 로 고정이다.
+     * 창은 글자보다 넉넉히 잡고 템플릿을 안에서 미끄러뜨린다.
+     */
+    meta: {
+      // 띠는 이웃 글자("(", "/")를 일부러 포함한다. 어차피 모든 캡처에서 같은 글자라
+      // 창에 같이 들어가도 해가 없고, 숫자만 노리고 좁히면 템플릿을 뜬 위치가 띠
+      // 시작보다 왼쪽이 되어 실행 시 슬라이드로 제 위치에 못 맞는 일이 생긴다(실측).
+      reroll:    { dx: 402, dy: 44, w: 17, h: 22 },
+      attemptsN: { dx: 248, dy: 225, w: 22, h: 26 },
+      attemptsM: { dx: 271, dy: 225, w: 19, h: 26 },
+    },
   };
 
   /** 다이아 위치 이름과 그 자리가 뜻하는 수치. 좌/우가 1번/2번 효과인지는 화면만으로 알 수 없다. */
@@ -133,6 +148,18 @@
     return out;
   }
 
+  /** 리롤/가공 횟수 숫자 창. 화면(크롭) 밖이면 그 창은 뺀다. */
+  function metaBands(origin) {
+    const img = origin.image;
+    const out = {};
+    for (const key of Object.keys(REF.meta)) {
+      const m = REF.meta[key];
+      const r = { x: Math.round(origin.x + m.dx), y: Math.round(origin.y + m.dy), w: m.w, h: m.h };
+      if (r.x >= 0 && r.y >= 0 && r.x + r.w <= img.width && r.y + r.h <= img.height) out[key] = r;
+    }
+    return out;
+  }
+
   /** 다이아 4개의 옵션명/값 영역. 키는 top/left/right/bottom. */
   function diamonds(origin) {
     const half = REF.diamond.halfWidth;
@@ -150,5 +177,5 @@
     return out;
   }
 
-  return { REF, DIAMOND_SLOTS, locate, cells, diamonds, glyphSpans };
+  return { REF, DIAMOND_SLOTS, locate, cells, diamonds, metaBands, glyphSpans };
 });

@@ -15,7 +15,7 @@
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
 
-  const GROUPS = ['label', 'whole', 'prefix', 'suffix', 'digit', 'dia-label', 'dia-digit'];
+  const GROUPS = ['label', 'whole', 'prefix', 'suffix', 'digit', 'dia-label', 'dia-digit', 'meta-digit'];
 
   function toGray(canvas, ctx) {
     const { width, height } = canvas;

@@ -30,7 +30,7 @@
     return p.toFixed(4) + '%p';
   }
 
-  const worker = new Worker('worker.js?v=2026-08-12.1');
+  const worker = new Worker('worker.js?v=2026-08-12.2');
   let seq = 0;
   const pending = new Map();
 
@@ -406,6 +406,41 @@
     return out;
   }
 
+  /**
+   * 리롤/가공 횟수를 입력칸에 넣는다. 전체 횟수(M)가 등급을 알려주므로 등급까지 맞춘다.
+   * 다이아처럼 의심 표시된 값은 건드리지 않는다.
+   */
+  function applyMeta(res) {
+    const out = { filled: [], skipped: [] };
+    if (!res.found || !res.meta) return out;
+    const m = res.meta;
+
+    if (m.attemptsMax && m.attemptsMax.confident && ['5', '7', '9'].includes(String(m.attemptsMax.value))) {
+      const grade = String(m.attemptsMax.value);
+      if ($('grade').value !== grade) {
+        $('grade').value = grade;
+        fillRange($('attempts'), 0, +grade, +grade);
+      }
+    } else if (m.attemptsMax) {
+      out.skipped.push('등급 (확실치 않음)');
+    }
+
+    if (m.attemptsLeft && m.attemptsLeft.confident && m.attemptsLeft.value <= +$('grade').value) {
+      $('attempts').value = String(m.attemptsLeft.value);
+      out.filled.push(`남은 가공 ${m.attemptsLeft.value}회`);
+    } else if (m.attemptsLeft) {
+      out.skipped.push('남은 가공 (확실치 않음)');
+    }
+
+    if (m.reroll && m.reroll.confident) {
+      $('rerolls').value = String(m.reroll.value);
+      out.filled.push(`리롤 ${m.reroll.value}회`);
+    } else if (m.reroll) {
+      out.skipped.push('리롤 (확실치 않음)');
+    }
+    return out;
+  }
+
   /** 자동 입력 결과를 읽기 상태줄 밑에 덧붙인다. */
   function noteGemState(gem) {
     if (!gem.filled.length && !gem.skipped.length) return;
@@ -470,6 +505,9 @@
 
     // 다이아가 젬 계열이나 효과 이름을 바꿨으면 옵션 4개를 그 이름으로 다시 해석한다.
     const gem = applyGemState(res);
+    const meta = applyMeta(res);
+    gem.filled.push.apply(gem.filled, meta.filled);
+    gem.skipped.push.apply(gem.skipped, meta.skipped);
     if (gem.slotsChanged) {
       syncStatLabels();
       res = Object.assign(

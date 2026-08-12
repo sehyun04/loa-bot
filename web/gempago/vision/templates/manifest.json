@@ -2265,6 +2265,272 @@
       "key": "bottom:3",
       "text": "bottom:3",
       "src": "cap33.png bottom"
+    },
+    {
+      "file": "meta-reroll-2-1.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap-roaring1.png"
+    },
+    {
+      "file": "meta-reroll-2-2.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap-roaring2.png"
+    },
+    {
+      "file": "meta-reroll-2-3.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap14.png"
+    },
+    {
+      "file": "meta-reroll-2-4.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap16.png"
+    },
+    {
+      "file": "meta-reroll-2-5.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap18.png"
+    },
+    {
+      "file": "meta-reroll-2-6.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap44.png"
+    },
+    {
+      "file": "meta-reroll-1-1.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-reroll-1-2.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-reroll-1-3.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap15.png"
+    },
+    {
+      "file": "meta-reroll-1-4.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap17.png"
+    },
+    {
+      "file": "meta-reroll-1-5.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap20.png"
+    },
+    {
+      "file": "meta-reroll-1-6.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap26.png"
+    },
+    {
+      "file": "meta-reroll-1-7.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-reroll-1-8.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-attempt-6-1.png",
+      "group": "meta-digit",
+      "key": "attempt:6",
+      "text": "6",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-attempt-6-2.png",
+      "group": "meta-digit",
+      "key": "attempt:6",
+      "text": "6",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-attempt-6-3.png",
+      "group": "meta-digit",
+      "key": "attempt:6",
+      "text": "6",
+      "src": "cap35.png"
+    },
+    {
+      "file": "meta-attempt-6-4.png",
+      "group": "meta-digit",
+      "key": "attempt:6",
+      "text": "6",
+      "src": "cap48.png"
+    },
+    {
+      "file": "meta-attempt-7-1.png",
+      "group": "meta-digit",
+      "key": "attempt:7",
+      "text": "7",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-attempt-7-2.png",
+      "group": "meta-digit",
+      "key": "attempt:7",
+      "text": "7",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-attempt-7-3.png",
+      "group": "meta-digit",
+      "key": "attempt:7",
+      "text": "7",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-attempt-7-4.png",
+      "group": "meta-digit",
+      "key": "attempt:7",
+      "text": "7",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-attempt-7-5.png",
+      "group": "meta-digit",
+      "key": "attempt:7",
+      "text": "7",
+      "src": "cap31.png"
+    },
+    {
+      "file": "meta-attempt-5-1.png",
+      "group": "meta-digit",
+      "key": "attempt:5",
+      "text": "5",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-attempt-5-2.png",
+      "group": "meta-digit",
+      "key": "attempt:5",
+      "text": "5",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-attempt-5-3.png",
+      "group": "meta-digit",
+      "key": "attempt:5",
+      "text": "5",
+      "src": "cap36.png"
+    },
+    {
+      "file": "meta-attempt-5-4.png",
+      "group": "meta-digit",
+      "key": "attempt:5",
+      "text": "5",
+      "src": "cap49.png"
+    },
+    {
+      "file": "meta-attempt-4-1.png",
+      "group": "meta-digit",
+      "key": "attempt:4",
+      "text": "4",
+      "src": "cap31.png"
+    },
+    {
+      "file": "meta-attempt-4-2.png",
+      "group": "meta-digit",
+      "key": "attempt:4",
+      "text": "4",
+      "src": "cap37.png"
+    },
+    {
+      "file": "meta-attempt-3-1.png",
+      "group": "meta-digit",
+      "key": "attempt:3",
+      "text": "3",
+      "src": "cap32.png"
+    },
+    {
+      "file": "meta-attempt-3-2.png",
+      "group": "meta-digit",
+      "key": "attempt:3",
+      "text": "3",
+      "src": "cap38.png"
+    },
+    {
+      "file": "meta-attempt-3-3.png",
+      "group": "meta-digit",
+      "key": "attempt:3",
+      "text": "3",
+      "src": "cap43.png"
+    },
+    {
+      "file": "meta-attempt-2-1.png",
+      "group": "meta-digit",
+      "key": "attempt:2",
+      "text": "2",
+      "src": "cap33.png"
+    },
+    {
+      "file": "meta-attempt-2-2.png",
+      "group": "meta-digit",
+      "key": "attempt:2",
+      "text": "2",
+      "src": "cap39.png"
+    },
+    {
+      "file": "meta-attempt-1-1.png",
+      "group": "meta-digit",
+      "key": "attempt:1",
+      "text": "1",
+      "src": "cap34.png"
+    },
+    {
+      "file": "meta-attempt-1-2.png",
+      "group": "meta-digit",
+      "key": "attempt:1",
+      "text": "1",
+      "src": "cap50.png"
+    },
+    {
+      "file": "meta-attempt-9-1.png",
+      "group": "meta-digit",
+      "key": "attempt:9",
+      "text": "9",
+      "src": "cap44.png"
+    },
+    {
+      "file": "meta-reroll-0-1.png",
+      "group": "meta-digit",
+      "key": "reroll:0",
+      "text": "0",
+      "src": "cap50.png"
     }
   ]
 }

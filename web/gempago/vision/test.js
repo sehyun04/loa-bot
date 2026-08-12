@@ -260,6 +260,41 @@ console.log('다이아 4개(젬의 현재 수치)를 읽는다');
   console.log(`  (${groundTruth.captures.length}장 ${Date.now() - t0}ms)`);
 }
 
+console.log('리롤/가공 횟수를 읽는다');
+{
+  // 다이아와 같은 leave-one-out. 오답은 전부 "그 (부류x배율)에 그 숫자 표본이
+  // 하나뿐"인 경우고 전부 의심으로 표시된다 (실측 82/87, make-meta-templates.js).
+  const without = (file) => {
+    const filtered = Object.assign({}, atlas);
+    filtered['meta-digit'] = {};
+    for (const key of Object.keys(atlas['meta-digit'])) {
+      const vs = atlas['meta-digit'][key].filter((t) => !(t.src && t.src.indexOf(file) === 0));
+      if (vs.length) filtered['meta-digit'][key] = vs;
+    }
+    return filtered;
+  };
+
+  let ok = 0, total = 0, silentWrong = 0;
+  for (const cap of groundTruth.captures) {
+    if (!cap.ui) continue;
+    const img = png.loadGray(here('fixtures', cap.file));
+    const r = reader.readMeta(img, without(cap.file), { scale: cap.scale });
+    const want = [
+      [r.reroll, cap.ui.reroll],
+      [r.attemptsLeft, cap.ui.attempts && cap.ui.attempts[0]],
+      [r.attemptsMax, cap.ui.attempts && cap.ui.attempts[1]],
+    ];
+    for (const [got, truth] of want) {
+      if (truth == null) continue;
+      total++;
+      if (got && got.value === truth) ok++;
+      else if (got && got.confident) silentWrong++;
+    }
+  }
+  check(`횟수 정답이 82개 이상 (${ok}/${total})`, ok >= 82);
+  check(`자신 있게 틀린 횟수가 없다 (${silentWrong}개)`, silentWrong === 0);
+}
+
 console.log('배율이 달라도 찾는다');
 {
   const original = png.loadGray(here('fixtures', 'cap-roaring1.png'));
