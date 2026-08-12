@@ -276,15 +276,16 @@ function atlasWithout(file, groups) {
   return filtered;
 }
 
-console.log('리롤/가공 횟수/젬 포인트를 읽는다');
+console.log('리롤/가공 횟수/젬 포인트/가공 비용을 읽는다');
 {
-  // 다이아와 같은 leave-one-out. 오답은 전부 "그 (부류x배율)에 그 숫자 표본이
-  // 하나뿐"인 경우고 전부 의심으로 표시된다 (실측 106/111, make-meta-templates.js).
-  let ok = 0, total = 0, silentWrong = 0;
+  // 다이아와 같은 leave-one-out. 오답은 전부 "그 숫자 표본이 자기 하나뿐"인 경우고
+  // (9/9 한 장, 리롤 0회 한 장) 전부 의심으로 표시된다 (실측 132/135).
+  const groups = ['meta-digit', 'meta-label', 'meta-cost'];
+  let ok = 0, total = 0, silentWrong = 0, costOk = 0, costTotal = 0;
   for (const cap of groundTruth.captures) {
     if (!cap.ui) continue;
     const img = png.loadGray(here('fixtures', cap.file));
-    const r = reader.readMeta(img, atlasWithout(cap.file, ['meta-digit', 'meta-label']), { scale: cap.scale });
+    const r = reader.readMeta(img, atlasWithout(cap.file, groups), { scale: cap.scale });
     const want = [
       [r.reroll, cap.ui.reroll],
       [r.attemptsLeft, cap.ui.attempts && cap.ui.attempts[0]],
@@ -298,9 +299,21 @@ console.log('리롤/가공 횟수/젬 포인트를 읽는다');
       if (got && got.value === truth) ok++;
       else if (got && got.confident) silentWrong++;
     }
+
+    if (cap.ui.costGold == null) continue;
+    costTotal++;
+    if (r.cost && r.cost.gold === cap.ui.costGold) costOk++;
+    else if (r.cost && r.cost.confident) silentWrong++;
   }
-  check(`횟수·젬 포인트 정답이 106개 이상 (${ok}/${total})`, ok >= 106);
-  check(`자신 있게 틀린 횟수가 없다 (${silentWrong}개)`, silentWrong === 0);
+  check(`횟수·젬 포인트 정답이 108개 이상 (${ok}/${total})`, ok >= 108);
+  check(`가공 비용 전부 정답 (${costOk}/${costTotal})`, costOk === costTotal);
+  check(`자신 있게 틀린 값이 없다 (${silentWrong}개)`, silentWrong === 0);
+
+  // 금액 -> 배율 뒤집기. 0 골드는 -100%, 기준 900 은 기본이다.
+  const img = png.loadGray(here('fixtures', 'cap29.png'));
+  const minus = reader.readMeta(img, atlasWithout('cap29.png', groups), { scale: 0.935 });
+  check('0 골드는 -100% 로 읽는다', minus.cost && minus.cost.mod === -1,
+    JSON.stringify(minus.cost));
 }
 
 console.log('젬 포인트 합으로 다이아를 검산한다');

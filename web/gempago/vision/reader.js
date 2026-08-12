@@ -369,6 +369,30 @@
       attemptsLeft: read(bands.attemptsN, 'attempt'),
       attemptsMax: read(bands.attemptsM, 'attempt'),
       gemPoint: readGemPoint(image, atlas, bands.gemPoint, minScore, minMargin),
+      cost: readCost(image, atlas, bands.costAmount, minScore, minMargin),
+    };
+  }
+
+  /*
+   * 화면은 가공 비용을 배율이 아니라 금액으로 보여주므로 기준 금액과 대조해 뒤집는다.
+   * 실측 표본의 기준은 희귀(7회)·영웅(9회) 모두 900 이었다. 등급이 더 있거나 기준이
+   * 다른 경우를 알 수 없으므로, 아는 금액이 아니면 null 을 돌려 호출부가 손대지 않게 한다.
+   * +100%(1,800) 는 아직 표본이 없어 템플릿도 없다 - 그 화면은 조용히 넘어간다.
+   */
+  const COST_MOD_BY_GOLD = { 0: -1, 900: 0, 1800: 1 };
+
+  function readCost(image, atlas, band, minScore, minMargin) {
+    if (!band || !atlas['meta-cost']) return null;
+    const c = pick(image, band, atlas['meta-cost']);
+    if (!c) return null;
+    const mod = COST_MOD_BY_GOLD[c.name];
+    if (mod == null) return null;
+    return {
+      gold: +c.name,
+      mod,
+      score: c.score,
+      margin: c.margin,
+      confident: c.score >= minScore && c.margin >= minMargin,
     };
   }
 

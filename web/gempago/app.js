@@ -30,7 +30,7 @@
     return p.toFixed(4) + '%p';
   }
 
-  const worker = new Worker('worker.js?v=2026-08-13.1');
+  const worker = new Worker('worker.js?v=2026-08-13.2');
   let seq = 0;
   const pending = new Map();
 
@@ -437,6 +437,16 @@
       out.filled.push(`리롤 ${m.reroll.value}회`);
     } else if (m.reroll) {
       out.skipped.push('리롤 (확실치 않음)');
+    }
+
+    // 비용은 화면의 금액을 배율로 뒤집은 값이다. 아는 금액이 아니면 reader 가 null 을
+    // 주므로(예: 아직 표본이 없는 +100%) 그때는 조용히 손대지 않는다.
+    if (m.cost && m.cost.confident) {
+      const COST_KO = { '-1': '-100%', 0: '기본', 1: '+100%' };
+      $('cost').value = String(m.cost.mod);
+      out.filled.push(`가공 비용 ${COST_KO[m.cost.mod]}`);
+    } else if (m.cost) {
+      out.skipped.push('가공 비용 (확실치 않음)');
     }
     return out;
   }

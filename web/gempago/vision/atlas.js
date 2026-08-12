@@ -10,7 +10,7 @@ const fs = require('fs');
 const png = require('./png.js');
 
 const DIR = path.join(__dirname, 'templates');
-const GROUPS = ['label', 'whole', 'prefix', 'suffix', 'digit', 'dia-label', 'dia-digit', 'meta-digit', 'meta-label'];
+const GROUPS = ['label', 'whole', 'prefix', 'suffix', 'digit', 'dia-label', 'dia-digit', 'meta-digit', 'meta-label', 'meta-cost'];
 
 /**
  * 같은 key 에 템플릿이 여러 개일 수 있다. 출처(선명한 원본 / 리샘플된 캡처)가 다르면

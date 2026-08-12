@@ -35,11 +35,18 @@ for (const cap of gt.captures) {
 }
 console.log(`캡처 ${caps.length}장 정렬 완료 (가공 횟수 표본 ${caps.filter((c) => c.ui.attempts).length}장)`);
 
-/* ---- 템플릿 뜨기: 첫 글자 덩어리에 고정폭 창 ----
- * 가공 횟수 창은 "(" 와 숫자를 같이 담을 만큼 넓어야 한다. "6" 처럼 슬래시와 붙어
- * 한 덩어리가 되는 숫자가 있어서, 숫자만 노린 좁은 창은 잘린 위치가 숫자마다 달라진다. */
+/* ---- 템플릿 뜨기 ----
+ * 리롤·젬 포인트는 첫 글자 덩어리를 찾아 고정폭 창을 씌운다.
+ *
+ * 가공 횟수 "(N/M)" 만 덩어리를 안 쓰고 띠 기준 고정 위치로 자른다. 이유가 둘이다.
+ * 첫째, "6" 처럼 슬래시와 붙어 한 덩어리가 되는 숫자가 있어 덩어리 기준 잘림 위치가
+ * 숫자마다 달라진다. 둘째, 슬래시가 창에 들어오면 모든 후보가 공유하는 획이라
+ * 점수 차이를 묻어버린다 - 실측으로 "(7/7)" 의 정답 마진이 0.032 뿐이라 늘 의심으로
+ * 빠졌다. N·M 이 항상 한 자리라 위치가 고정이므로 고정 크롭이 가능하다. */
 
-const WINDOWS = { reroll: 12, attempt: 16, point: 12 };
+const WINDOWS = { reroll: 12, attempt: 11, point: 12 };
+// 띠 안에서 숫자가 시작하는 위치. N 앞에는 "(", M 앞에는 "/" 가 있어 값이 다르다.
+const ATTEMPT_INSET = { attemptsN: 5, attemptsM: 1 };
 
 function crop(img, x, y, w, h) {
   const data = new Float32Array(w * h);
@@ -85,6 +92,7 @@ function cutDigit(image, band, window) {
 
 const pool = {}; // 'reroll:1' / 'attempt:7' / 'point:4' -> [{img, src, scale}]
 const labelPool = []; // "젬 포인트" 이름 변형
+const costPool = {}; // '0' / '900' -> [{img, src, scale}] (금액 통짜)
 for (const c of caps) {
   const put = (band, cls, truth) => {
     if (!band || truth == null) return;
@@ -93,9 +101,29 @@ for (const c of caps) {
     const key = `${cls}:${truth}`;
     (pool[key] || (pool[key] = [])).push({ img, text: String(truth), src: c.file, scale: c.scale });
   };
+  const putFixed = (bandKey, truth) => {
+    const band = c.bands[bandKey];
+    if (!band || truth == null) return;
+    const img = cutAt(c.origin.image, band, band.x + ATTEMPT_INSET[bandKey], WINDOWS.attempt);
+    if (!img) { console.error(`글자가 없다: ${c.file} ${bandKey}`); return; }
+    const key = `attempt:${truth}`;
+    (pool[key] || (pool[key] = [])).push({ img, text: String(truth), src: c.file, scale: c.scale });
+  };
+
   put(c.bands.reroll, 'reroll', c.ui.reroll);
-  put(c.bands.attemptsN, 'attempt', c.ui.attempts && c.ui.attempts[0]);
-  put(c.bands.attemptsM, 'attempt', c.ui.attempts && c.ui.attempts[1]);
+  putFixed('attemptsN', c.ui.attempts && c.ui.attempts[0]);
+  putFixed('attemptsM', c.ui.attempts && c.ui.attempts[1]);
+
+  // 가공 비용 금액: 오른쪽 정렬이라 창 안 위치가 고정이다. 통짜로 뜨되 좌우 3px 을
+  // 남겨 미끄러질 자리를 준다 (숫자별로 쪼개면 "900" 의 끝 0 이 "0" 으로 읽힌다).
+  if (c.bands.costAmount && c.ui.costGold != null) {
+    const b = c.bands.costAmount;
+    const img = cutAt(c.origin.image, b, b.x + 3, b.w - 6);
+    if (img) {
+      const key = String(c.ui.costGold);
+      (costPool[key] || (costPool[key] = [])).push({ img, text: key, src: c.file, scale: c.scale });
+    }
+  }
 
   // "젬 포인트 N": 이름은 앞 덩어리들(폭이 일정해서 시작 +64 안에 끝나는 것들),
   // 숫자는 이름 오른쪽 창의 덩어리들. 자릿수는 정답에서 안다.
@@ -126,7 +154,8 @@ for (const c of caps) {
   });
 }
 console.log('표본:', Object.keys(pool).sort().map((k) => `${k}(${pool[k].length})`).join(' '),
-  `젬포인트이름(${labelPool.length})`);
+  `젬포인트이름(${labelPool.length})`,
+  '비용', Object.keys(costPool).sort().map((k) => `${k}골드(${costPool[k].length})`).join(' '));
 
 /* ---- 선택: 배율당 최대 3개, 출처 파일 중복 없이 ---- */
 
@@ -149,6 +178,8 @@ function select(list) {
 const sel = {};
 for (const key of Object.keys(pool)) sel[key] = select(pool[key]);
 const labelSel = select(labelPool);
+const costSel = {};
+for (const key of Object.keys(costPool)) costSel[key] = select(costPool[key]);
 
 /* ---- leave-one-out 측정 ---- */
 
@@ -160,6 +191,11 @@ function atlasFor(excludeFile) {
   }
   const ls = labelSel.filter((v) => v.src !== excludeFile);
   if (ls.length) mem['meta-label']['gem-point'] = ls.map((v) => v.img);
+  mem['meta-cost'] = {};
+  for (const key of Object.keys(costSel)) {
+    const vs = costSel[key].filter((v) => v.src !== excludeFile);
+    if (vs.length) mem['meta-cost'][key] = vs.map((v) => v.img);
+  }
   return mem;
 }
 
@@ -173,6 +209,8 @@ for (const c of caps) {
     ['가공N', r.attemptsLeft, c.ui.attempts && c.ui.attempts[0]],
     ['가공M', r.attemptsMax, c.ui.attempts && c.ui.attempts[1]],
     ['젬포인트', r.gemPoint, c.bands.gemPoint ? c.gemSum : null],
+    ['비용', r.cost && { value: r.cost.gold, score: r.cost.score, margin: r.cost.margin, confident: r.cost.confident },
+      c.bands.costAmount ? c.ui.costGold : null],
   ];
   for (const [name, got, truth] of want) {
     if (truth == null) continue;
@@ -206,9 +244,16 @@ if (WRITE) {
     fs.writeFileSync(path.join(dir, file), png.encodeGray(v.img));
     items.push({ file, group: 'meta-label', key: 'gem-point', text: v.text, src: v.src });
   });
+  for (const key of Object.keys(costSel)) {
+    costSel[key].forEach((v, i) => {
+      const file = `meta-cost-${key}-${i + 1}.png`;
+      fs.writeFileSync(path.join(dir, file), png.encodeGray(v.img));
+      items.push({ file, group: 'meta-cost', key, text: v.text, src: v.src });
+    });
+  }
   const manifestPath = path.join(dir, 'manifest.json');
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-  const kept = manifest.items.filter((i) => i.group !== 'meta-digit' && i.group !== 'meta-label');
+  const kept = manifest.items.filter((i) => !String(i.group).startsWith('meta-'));
   const removed = manifest.items.length - kept.length;
   manifest.items = kept.concat(items);
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');

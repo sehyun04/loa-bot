@@ -174,7 +174,9 @@ self.onmessage = async (e) => {
           scale: r.origin.scale,
           anchorScore: r.origin.score,
           gem: dia.ok ? dia.gem : null,
-          meta: meta.ok ? { reroll: meta.reroll, attemptsLeft: meta.attemptsLeft, attemptsMax: meta.attemptsMax } : null,
+          meta: meta.ok
+            ? { reroll: meta.reroll, attemptsLeft: meta.attemptsLeft, attemptsMax: meta.attemptsMax, cost: meta.cost }
+            : null,
           sumCheck,
         }, describe(r.options, slots)),
       });

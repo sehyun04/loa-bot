@@ -2713,6 +2713,62 @@
       "key": "gem-point",
       "text": "젬 포인트",
       "src": "cap31.png"
+    },
+    {
+      "file": "meta-cost-0-1.png",
+      "group": "meta-cost",
+      "key": "0",
+      "text": "0",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-cost-0-2.png",
+      "group": "meta-cost",
+      "key": "0",
+      "text": "0",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-cost-0-3.png",
+      "group": "meta-cost",
+      "key": "0",
+      "text": "0",
+      "src": "cap31.png"
+    },
+    {
+      "file": "meta-cost-900-1.png",
+      "group": "meta-cost",
+      "key": "900",
+      "text": "900",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-cost-900-2.png",
+      "group": "meta-cost",
+      "key": "900",
+      "text": "900",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-cost-900-3.png",
+      "group": "meta-cost",
+      "key": "900",
+      "text": "900",
+      "src": "cap35.png"
+    },
+    {
+      "file": "meta-cost-900-4.png",
+      "group": "meta-cost",
+      "key": "900",
+      "text": "900",
+      "src": "cap36.png"
+    },
+    {
+      "file": "meta-cost-900-5.png",
+      "group": "meta-cost",
+      "key": "900",
+      "text": "900",
+      "src": "cap37.png"
     }
   ]
 }
