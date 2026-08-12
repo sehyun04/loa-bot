@@ -1,5 +1,5 @@
 {
-  "note": "실제 게임 캡처의 정답표. 눈으로 읽어서 적었다. 이미지는 앵커 주변만 잘라 저장했다(원본은 4.5MB).",
+  "note": "실제 게임 캡처의 정답표. 눈으로 읽어서 적었다. cap27 이후는 게임 스크린샷 폴더의 원본 JPG(1920x1080 11장, 2048x1280 2장)이고 나머지는 앵커 주변만 잘라 저장했다.",
   "crop": {
     "x": 690,
     "y": 400,
@@ -634,6 +634,552 @@
         "bottom": {
           "label": "혼돈 포인트",
           "value": 5
+        }
+      }
+    },
+    {
+      "file": "cap27.png",
+      "source": "Screenshot_260812_194008.jpg 2048x1280",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 1,
+      "options": [
+        {
+          "label": "가공 상태",
+          "value": "유지"
+        },
+        {
+          "label": "낙인력",
+          "value": "효과 변경"
+        },
+        {
+          "label": "의지력 효율",
+          "value": "+1 증가"
+        },
+        {
+          "label": "낙인력",
+          "value": "Lv. 3 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 1
+        },
+        "left": {
+          "label": "낙인력",
+          "value": 2
+        },
+        "right": {
+          "label": "추가 피해",
+          "value": 1
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 1
+        }
+      }
+    },
+    {
+      "file": "cap28.png",
+      "source": "Screenshot_260812_194604.jpg 2048x1280",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 1,
+      "options": [
+        {
+          "label": "다른 항목 보기",
+          "value": "2회 증가"
+        },
+        {
+          "label": "의지력 효율",
+          "value": "+1 증가"
+        },
+        {
+          "label": "혼돈 포인트",
+          "value": "+1 증가"
+        },
+        {
+          "label": "낙인력",
+          "value": "Lv. 2 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 1
+        },
+        "left": {
+          "label": "공격력",
+          "value": 3
+        },
+        "right": {
+          "label": "낙인력",
+          "value": 1
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 3
+        }
+      }
+    },
+    {
+      "file": "cap29.png",
+      "source": "Screenshot_260812_195011.jpg 1920x1080",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "아군 피해 강화",
+          "value": "Lv. 1 증가"
+        },
+        {
+          "label": "아군 피해 강화",
+          "value": "Lv. 2 증가"
+        },
+        {
+          "label": "혼돈 포인트",
+          "value": "+2 증가"
+        },
+        {
+          "label": "가공 상태",
+          "value": "유지"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 1
+        },
+        "left": {
+          "label": "낙인력",
+          "value": 1
+        },
+        "right": {
+          "label": "아군 피해 강화",
+          "value": 1
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 1
+        }
+      }
+    },
+    {
+      "file": "cap30.png",
+      "source": "Screenshot_260812_195014.jpg 1920x1080",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "의지력 효율",
+          "value": "+1 증가"
+        },
+        {
+          "label": "낙인력",
+          "value": "효과 변경"
+        },
+        {
+          "label": "아군 피해 강화",
+          "value": "Lv. 1 증가"
+        },
+        {
+          "label": "혼돈 포인트",
+          "value": "+3 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 1
+        },
+        "left": {
+          "label": "낙인력",
+          "value": 1
+        },
+        "right": {
+          "label": "아군 피해 강화",
+          "value": 3
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 1
+        }
+      }
+    },
+    {
+      "file": "cap31.png",
+      "source": "Screenshot_260812_195018.jpg 1920x1080",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "혼돈 포인트",
+          "value": "+1 증가"
+        },
+        {
+          "label": "낙인력",
+          "value": "Lv. 1 증가"
+        },
+        {
+          "label": "낙인력",
+          "value": "효과 변경"
+        },
+        {
+          "label": "의지력 효율",
+          "value": "+3 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 1
+        },
+        "left": {
+          "label": "낙인력",
+          "value": 1
+        },
+        "right": {
+          "label": "아군 피해 강화",
+          "value": 4
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 1
+        }
+      }
+    },
+    {
+      "file": "cap32.png",
+      "source": "Screenshot_260812_195021.jpg 1920x1080",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "혼돈 포인트",
+          "value": "+2 증가"
+        },
+        {
+          "label": "혼돈 포인트",
+          "value": "+1 증가"
+        },
+        {
+          "label": "낙인력",
+          "value": "Lv. 1 감소"
+        },
+        {
+          "label": "의지력 효율",
+          "value": "+1 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 1
+        },
+        "left": {
+          "label": "낙인력",
+          "value": 2
+        },
+        "right": {
+          "label": "아군 피해 강화",
+          "value": 4
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 1
+        }
+      }
+    },
+    {
+      "file": "cap33.png",
+      "source": "Screenshot_260812_195025.jpg 1920x1080",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "가공 비용",
+          "value": "+100% 증가"
+        },
+        {
+          "label": "의지력 효율",
+          "value": "+3 증가"
+        },
+        {
+          "label": "혼돈 포인트",
+          "value": "+1 증가"
+        },
+        {
+          "label": "혼돈 포인트",
+          "value": "+2 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 1
+        },
+        "left": {
+          "label": "낙인력",
+          "value": 2
+        },
+        "right": {
+          "label": "아군 피해 강화",
+          "value": 4
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 3
+        }
+      }
+    },
+    {
+      "file": "cap34.png",
+      "source": "Screenshot_260812_195028.jpg 1920x1080",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "혼돈 포인트",
+          "value": "+1 증가"
+        },
+        {
+          "label": "의지력 효율",
+          "value": "+1 증가"
+        },
+        {
+          "label": "아군 피해 강화",
+          "value": "Lv. 1 증가"
+        },
+        {
+          "label": "가공 상태",
+          "value": "유지"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 1
+        },
+        "left": {
+          "label": "낙인력",
+          "value": 2
+        },
+        "right": {
+          "label": "아군 피해 강화",
+          "value": 4
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 4
+        }
+      }
+    },
+    {
+      "file": "cap35.png",
+      "source": "Screenshot_260812_195039.jpg 1920x1080",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "의지력 효율",
+          "value": "+2 증가"
+        },
+        {
+          "label": "낙인력",
+          "value": "Lv. 1 증가"
+        },
+        {
+          "label": "추가 피해",
+          "value": "효과 변경"
+        },
+        {
+          "label": "혼돈 포인트",
+          "value": "+2 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 1
+        },
+        "left": {
+          "label": "추가 피해",
+          "value": 1
+        },
+        "right": {
+          "label": "낙인력",
+          "value": 1
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 2
+        }
+      }
+    },
+    {
+      "file": "cap36.png",
+      "source": "Screenshot_260812_195042.jpg 1920x1080",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "의지력 효율",
+          "value": "+1 증가"
+        },
+        {
+          "label": "추가 피해",
+          "value": "효과 변경"
+        },
+        {
+          "label": "혼돈 포인트",
+          "value": "+2 증가"
+        },
+        {
+          "label": "낙인력",
+          "value": "Lv. 2 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 3
+        },
+        "left": {
+          "label": "추가 피해",
+          "value": 1
+        },
+        "right": {
+          "label": "낙인력",
+          "value": 1
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 2
+        }
+      }
+    },
+    {
+      "file": "cap37.png",
+      "source": "Screenshot_260812_195045.jpg 1920x1080",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "혼돈 포인트",
+          "value": "-1 감소"
+        },
+        {
+          "label": "의지력 효율",
+          "value": "+1 증가"
+        },
+        {
+          "label": "낙인력",
+          "value": "Lv. 1 증가"
+        },
+        {
+          "label": "가공 비용",
+          "value": "-100% 감소"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 3
+        },
+        "left": {
+          "label": "아군 피해 강화",
+          "value": 1
+        },
+        "right": {
+          "label": "낙인력",
+          "value": 1
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 2
+        }
+      }
+    },
+    {
+      "file": "cap38.png",
+      "source": "Screenshot_260812_195048.jpg 1920x1080",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "낙인력",
+          "value": "Lv. 1 증가"
+        },
+        {
+          "label": "혼돈 포인트",
+          "value": "+3 증가"
+        },
+        {
+          "label": "혼돈 포인트",
+          "value": "+1 증가"
+        },
+        {
+          "label": "아군 피해 강화",
+          "value": "Lv. 1 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 4
+        },
+        "left": {
+          "label": "아군 피해 강화",
+          "value": 1
+        },
+        "right": {
+          "label": "낙인력",
+          "value": 1
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 2
+        }
+      }
+    },
+    {
+      "file": "cap39.png",
+      "source": "Screenshot_260812_195052.jpg 1920x1080",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "아군 피해 강화",
+          "value": "Lv. 1 증가"
+        },
+        {
+          "label": "가공 비용",
+          "value": "-100% 감소"
+        },
+        {
+          "label": "혼돈 포인트",
+          "value": "+1 증가"
+        },
+        {
+          "label": "낙인력",
+          "value": "Lv. 2 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 4
+        },
+        "left": {
+          "label": "아군 피해 강화",
+          "value": 2
+        },
+        "right": {
+          "label": "낙인력",
+          "value": 1
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 2
         }
       }
     }

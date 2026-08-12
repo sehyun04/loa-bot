@@ -117,6 +117,17 @@
       "family": "keep"
     },
     {
+      "file": "label-gagong-sangtae-2.png",
+      "group": "label",
+      "key": "gagong-sangtae",
+      "text": "가공 상태",
+      "src": "cap29.png 열4",
+      "size": [
+        60,
+        14
+      ]
+    },
+    {
       "file": "label-dareun-hangmok-1.png",
       "group": "label",
       "key": "dareun-hangmok",
@@ -152,6 +163,28 @@
       ]
     },
     {
+      "file": "label-gagong-biyong-4.png",
+      "group": "label",
+      "key": "gagong-biyong",
+      "text": "가공 비용",
+      "src": "cap37.png 열4",
+      "size": [
+        61,
+        14
+      ]
+    },
+    {
+      "file": "label-gagong-biyong-3.png",
+      "group": "label",
+      "key": "gagong-biyong",
+      "text": "가공 비용",
+      "src": "cap33.png 열1",
+      "size": [
+        61,
+        14
+      ]
+    },
+    {
       "file": "label-gonggyeok-1.png",
       "group": "label",
       "key": "gonggyeok",
@@ -175,6 +208,51 @@
       ]
     },
     {
+      "file": "label-nagin-1.png",
+      "group": "label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap27.png 열4",
+      "size": [
+        39,
+        14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-nagin-2.png",
+      "group": "label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap31.png 열2",
+      "size": [
+        41,
+        14
+      ]
+    },
+    {
+      "file": "label-nagin-3.png",
+      "group": "label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap38.png 열1",
+      "size": [
+        41,
+        14
+      ]
+    },
+    {
+      "file": "label-nagin-4.png",
+      "group": "label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap28.png 열4",
+      "size": [
+        39,
+        14
+      ]
+    },
+    {
       "file": "label-hondon-point-2.png",
       "group": "label",
       "key": "hondon-point",
@@ -186,11 +264,66 @@
       ]
     },
     {
+      "file": "label-hondon-point-5.png",
+      "group": "label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap38.png 열2",
+      "size": [
+        76,
+        14
+      ]
+    },
+    {
+      "file": "label-hondon-point-4.png",
+      "group": "label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap33.png 열3",
+      "size": [
+        76,
+        14
+      ]
+    },
+    {
+      "file": "label-hondon-point-3.png",
+      "group": "label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap29.png 열3",
+      "size": [
+        76,
+        14
+      ]
+    },
+    {
       "file": "label-agun-pihae-3.png",
       "group": "label",
       "key": "agun-pihae",
       "text": "아군 피해 강화",
       "src": "cap26.png 열1",
+      "size": [
+        95,
+        14
+      ]
+    },
+    {
+      "file": "label-agun-pihae-5.png",
+      "group": "label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap39.png 열1",
+      "size": [
+        95,
+        14
+      ]
+    },
+    {
+      "file": "label-agun-pihae-4.png",
+      "group": "label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap29.png 열1",
       "size": [
         95,
         14
@@ -208,11 +341,44 @@
       ]
     },
     {
+      "file": "label-uijiryeok-4.png",
+      "group": "label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap33.png 열2",
+      "size": [
+        75,
+        14
+      ]
+    },
+    {
+      "file": "label-uijiryeok-3.png",
+      "group": "label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap30.png 열1",
+      "size": [
+        75,
+        14
+      ]
+    },
+    {
       "file": "label-chuga-pihae-2.png",
       "group": "label",
       "key": "chuga-pihae",
       "text": "추가 피해",
       "src": "cap26.png 열3",
+      "size": [
+        60,
+        14
+      ]
+    },
+    {
+      "file": "label-chuga-pihae-3.png",
+      "group": "label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap35.png 열3",
       "size": [
         60,
         14
