@@ -407,6 +407,20 @@
       ]
     },
     {
+      "file": "whole-yuji-4.png",
+      "group": "whole",
+      "key": "yuji",
+      "text": "유지",
+      "src": "cap34.png 열4"
+    },
+    {
+      "file": "whole-yuji-3.png",
+      "group": "whole",
+      "key": "yuji",
+      "text": "유지",
+      "src": "cap29.png 열4"
+    },
+    {
       "file": "whole-change-1.png",
       "group": "whole",
       "key": "change",
@@ -762,6 +776,27 @@
       ]
     },
     {
+      "file": "suffix-jeungga-7.png",
+      "group": "suffix",
+      "key": "jeungga",
+      "text": "증가",
+      "src": "cap38.png 열2"
+    },
+    {
+      "file": "suffix-jeungga-6.png",
+      "group": "suffix",
+      "key": "jeungga",
+      "text": "증가",
+      "src": "cap33.png 열2"
+    },
+    {
+      "file": "suffix-jeungga-5.png",
+      "group": "suffix",
+      "key": "jeungga",
+      "text": "증가",
+      "src": "cap29.png 열3"
+    },
+    {
       "file": "suffix-gamso-1.png",
       "group": "suffix",
       "key": "gamso",
@@ -782,6 +817,20 @@
         27,
         13
       ]
+    },
+    {
+      "file": "suffix-gamso-4.png",
+      "group": "suffix",
+      "key": "gamso",
+      "text": "감소",
+      "src": "cap32.png 열3"
+    },
+    {
+      "file": "suffix-gamso-3.png",
+      "group": "suffix",
+      "key": "gamso",
+      "text": "감소",
+      "src": "cap37.png 열1"
     },
     {
       "file": "suffix-hoi-jeungga-1.png",
@@ -805,6 +854,13 @@
         47,
         13
       ]
+    },
+    {
+      "file": "suffix-hoi-jeungga-3.png",
+      "group": "suffix",
+      "key": "hoi-jeungga",
+      "text": "회 증가",
+      "src": "cap28.png 열1"
     }
   ]
 }
