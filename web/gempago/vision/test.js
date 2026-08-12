@@ -223,8 +223,8 @@ console.log('다이아 4개(젬의 현재 수치)를 읽는다');
   // 자기 캡처에서 뜬 템플릿은 빼고 읽는다(leave-one-out). 안 빼면 자기 템플릿이
   // 무조건 이겨서 테스트가 아무것도 못 잡는다. 배경판은 전체로 만든 것이라 못 빼지만
   // 캡처 하나의 영향이 1/N 이라 무시할 수 있다.
-  // 실측 기대값은 make-diamond-templates.js 와 같다: 이름 112/112, 값 105/112.
-  // 값 오답 7개는 전부 "그 (자리x배율) 조합에 그 숫자 표본이 하나뿐"인 경우고,
+  // 실측 기대값은 make-diamond-templates.js 와 같다: 이름 156/156, 값 147/156.
+  // 값 오답은 전부 "그 (자리x배율) 조합에 그 숫자 표본이 하나뿐"인 경우고,
   // 전부 의심으로 표시된다 - 조용히 틀리는 것이 0 이어야 한다는 게 핵심 성질이다.
   const without = (file) => {
     const filtered = Object.assign({}, atlas);
@@ -255,7 +255,7 @@ console.log('다이아 4개(젬의 현재 수치)를 읽는다');
     }
   }
   check(`이름 ${total}개 전부 정답 (${labelOk}/${total})`, labelOk === total);
-  check(`값 정답이 105개 이상 (${valueOk}/${total})`, valueOk >= 105);
+  check(`값 정답이 147개 이상 (${valueOk}/${total})`, valueOk >= 147);
   check(`자신 있게 틀린 값이 없다 (${silentWrong}개)`, silentWrong === 0);
   console.log(`  (${groundTruth.captures.length}장 ${Date.now() - t0}ms)`);
 }

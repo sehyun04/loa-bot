@@ -81,6 +81,20 @@
       "family": "stat"
     },
     {
+      "file": "label-jilseo-point-3.png",
+      "group": "label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap48.png 열4"
+    },
+    {
+      "file": "label-jilseo-point-2.png",
+      "group": "label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap42.png 열1"
+    },
+    {
       "file": "label-agun-gonggyeok-1.png",
       "group": "label",
       "key": "agun-gonggyeok",
@@ -91,6 +105,20 @@
         14
       ],
       "family": "stat"
+    },
+    {
+      "file": "label-agun-gonggyeok-2.png",
+      "group": "label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap46.png 열2"
+    },
+    {
+      "file": "label-agun-gonggyeok-3.png",
+      "group": "label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap47.png 열3"
     },
     {
       "file": "label-chuga-pihae-1.png",
@@ -138,6 +166,13 @@
         14
       ],
       "family": "reroll"
+    },
+    {
+      "file": "label-dareun-hangmok-2.png",
+      "group": "label",
+      "key": "dareun-hangmok",
+      "text": "다른 항목 보기",
+      "src": "cap44.png 열3"
     },
     {
       "file": "label-gagong-biyong-1.png",
@@ -195,6 +230,20 @@
         14
       ],
       "family": "stat"
+    },
+    {
+      "file": "label-gonggyeok-4.png",
+      "group": "label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap41.png 열3"
+    },
+    {
+      "file": "label-gonggyeok-3.png",
+      "group": "label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap40.png 열1"
     },
     {
       "file": "label-gonggyeok-2.png",
@@ -903,6 +952,16 @@
       "src": "혼돈의-x0.935 12장 z 정규화 배경판"
     },
     {
+      "file": "dia-bg-top-5.png",
+      "group": "dia-bg",
+      "key": "top",
+      "range": [
+        -1.3048,
+        3.7703
+      ],
+      "src": "질서의-x0.935 11장 z 정규화 배경판"
+    },
+    {
       "file": "dia-bg-left-1.png",
       "group": "dia-bg",
       "key": "left",
@@ -941,6 +1000,16 @@
         2.9933
       ],
       "src": "혼돈의-x0.935 12장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-left-5.png",
+      "group": "dia-bg",
+      "key": "left",
+      "range": [
+        -1.4214,
+        3.1085
+      ],
+      "src": "질서의-x0.935 11장 z 정규화 배경판"
     },
     {
       "file": "dia-bg-right-1.png",
@@ -983,6 +1052,16 @@
       "src": "혼돈의-x0.935 12장 z 정규화 배경판"
     },
     {
+      "file": "dia-bg-right-5.png",
+      "group": "dia-bg",
+      "key": "right",
+      "range": [
+        -1.507,
+        3.0106
+      ],
+      "src": "질서의-x0.935 11장 z 정규화 배경판"
+    },
+    {
       "file": "dia-bg-bottom-1.png",
       "group": "dia-bg",
       "key": "bottom",
@@ -1021,6 +1100,16 @@
         2.3861
       ],
       "src": "혼돈의-x0.935 12장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-bottom-5.png",
+      "group": "dia-bg",
+      "key": "bottom",
+      "range": [
+        -1.3811,
+        2.3576
+      ],
+      "src": "질서의-x0.935 11장 z 정규화 배경판"
     },
     {
       "file": "dia-label-uijiryeok-1.png",
@@ -1126,6 +1215,27 @@
       "key": "gonggyeok",
       "text": "공격력",
       "src": "cap24.png left"
+    },
+    {
+      "file": "dia-label-gonggyeok-7.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap40.png left"
+    },
+    {
+      "file": "dia-label-gonggyeok-8.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap41.png left"
+    },
+    {
+      "file": "dia-label-gonggyeok-9.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap44.png left"
     },
     {
       "file": "dia-label-agun-pihae-1.png",
@@ -1268,6 +1378,20 @@
       "src": "cap16.png left"
     },
     {
+      "file": "dia-label-boss-pihae-4.png",
+      "group": "dia-label",
+      "key": "boss-pihae",
+      "text": "보스 피해",
+      "src": "cap45.png left"
+    },
+    {
+      "file": "dia-label-boss-pihae-5.png",
+      "group": "dia-label",
+      "key": "boss-pihae",
+      "text": "보스 피해",
+      "src": "cap47.png left"
+    },
+    {
       "file": "dia-label-jilseo-point-1.png",
       "group": "dia-label",
       "key": "jilseo-point",
@@ -1289,6 +1413,27 @@
       "src": "cap16.png bottom"
     },
     {
+      "file": "dia-label-jilseo-point-4.png",
+      "group": "dia-label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap40.png bottom"
+    },
+    {
+      "file": "dia-label-jilseo-point-5.png",
+      "group": "dia-label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap41.png bottom"
+    },
+    {
+      "file": "dia-label-jilseo-point-6.png",
+      "group": "dia-label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap42.png bottom"
+    },
+    {
       "file": "dia-label-agun-gonggyeok-1.png",
       "group": "dia-label",
       "key": "agun-gonggyeok",
@@ -1308,6 +1453,27 @@
       "key": "agun-gonggyeok",
       "text": "아군 공격 강화",
       "src": "cap20.png right"
+    },
+    {
+      "file": "dia-label-agun-gonggyeok-4.png",
+      "group": "dia-label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap45.png right"
+    },
+    {
+      "file": "dia-label-agun-gonggyeok-5.png",
+      "group": "dia-label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap46.png right"
+    },
+    {
+      "file": "dia-label-agun-gonggyeok-6.png",
+      "group": "dia-label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap47.png right"
     },
     {
       "file": "dia-label-chuga-pihae-1.png",
@@ -1723,6 +1889,13 @@
       "src": "cap39.png top"
     },
     {
+      "file": "dia-digit-top-4-5.png",
+      "group": "dia-digit",
+      "key": "top:4",
+      "text": "top:4",
+      "src": "cap50.png top"
+    },
+    {
       "file": "dia-digit-top-5-1.png",
       "group": "dia-digit",
       "key": "top:5",
@@ -1807,6 +1980,13 @@
       "src": "cap34.png bottom"
     },
     {
+      "file": "dia-digit-bottom-4-5.png",
+      "group": "dia-digit",
+      "key": "bottom:4",
+      "text": "bottom:4",
+      "src": "cap43.png bottom"
+    },
+    {
       "file": "dia-digit-left-4-1.png",
       "group": "dia-digit",
       "key": "left:4",
@@ -1877,6 +2057,13 @@
       "src": "cap25.png right"
     },
     {
+      "file": "dia-digit-right-2-3.png",
+      "group": "dia-digit",
+      "key": "right:2",
+      "text": "right:2",
+      "src": "cap50.png right"
+    },
+    {
       "file": "dia-digit-bottom-5-1.png",
       "group": "dia-digit",
       "key": "bottom:5",
@@ -1917,6 +2104,20 @@
       "key": "top:2",
       "text": "top:2",
       "src": "cap24.png top"
+    },
+    {
+      "file": "dia-digit-top-2-3.png",
+      "group": "dia-digit",
+      "key": "top:2",
+      "text": "top:2",
+      "src": "cap48.png top"
+    },
+    {
+      "file": "dia-digit-top-2-4.png",
+      "group": "dia-digit",
+      "key": "top:2",
+      "text": "top:2",
+      "src": "cap49.png top"
     },
     {
       "file": "dia-digit-right-4-1.png",
@@ -2008,6 +2209,13 @@
       "key": "top:3",
       "text": "top:3",
       "src": "cap37.png top"
+    },
+    {
+      "file": "dia-digit-top-3-4.png",
+      "group": "dia-digit",
+      "key": "top:3",
+      "text": "top:3",
+      "src": "cap43.png top"
     },
     {
       "file": "dia-digit-left-2-1.png",
