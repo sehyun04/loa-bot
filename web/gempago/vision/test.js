@@ -255,7 +255,7 @@ console.log('다이아 4개(젬의 현재 수치)를 읽는다');
     }
   }
   check(`이름 ${total}개 전부 정답 (${labelOk}/${total})`, labelOk === total);
-  check(`값 정답이 147개 이상 (${valueOk}/${total})`, valueOk >= 147);
+  check(`값 정답이 187개 이상 (${valueOk}/${total})`, valueOk >= 187);
   check(`자신 있게 틀린 값이 없다 (${silentWrong}개)`, silentWrong === 0);
   console.log(`  (${groundTruth.captures.length}장 ${Date.now() - t0}ms)`);
 }
@@ -305,15 +305,56 @@ console.log('리롤/가공 횟수/젬 포인트/가공 비용을 읽는다');
     if (r.cost && r.cost.gold === cap.ui.costGold) costOk++;
     else if (r.cost && r.cost.confident) silentWrong++;
   }
-  check(`횟수·젬 포인트 정답이 108개 이상 (${ok}/${total})`, ok >= 108);
-  check(`가공 비용 전부 정답 (${costOk}/${costTotal})`, costOk === costTotal);
+  check(`횟수·젬 포인트 정답이 149개 이상 (${ok}/${total})`, ok >= 149);
+  // 1,800 골드(+100%)는 표본이 한 장뿐이라 leave-one-out 에서는 자기 템플릿이 빠져
+  // 읽을 수가 없다. 실사용(전체 아틀라스)에서는 맞는다 - 아래에서 따로 확인한다.
+  check(`가공 비용이 하나만 빠지고 전부 정답 (${costOk}/${costTotal})`, costOk >= costTotal - 1);
   check(`자신 있게 틀린 값이 없다 (${silentWrong}개)`, silentWrong === 0);
 
-  // 금액 -> 배율 뒤집기. 0 골드는 -100%, 기준 900 은 기본이다.
-  const img = png.loadGray(here('fixtures', 'cap29.png'));
-  const minus = reader.readMeta(img, atlasWithout('cap29.png', groups), { scale: 0.935 });
-  check('0 골드는 -100% 로 읽는다', minus.cost && minus.cost.mod === -1,
-    JSON.stringify(minus.cost));
+  // 금액 -> 배율 뒤집기. 0 은 -100%, 900 은 기본, 1,800 은 +100% 다.
+  // +100% 는 표본이 하나뿐이라 여기서만 전체 아틀라스로 확인한다.
+  const mods = { 'cap29.png': -1, 'cap45.png': 0, 'cap60.png': 1 };
+  for (const file of Object.keys(mods)) {
+    const r = reader.readMeta(png.loadGray(here('fixtures', file)), atlas, { scale: 0.935 });
+    check(`${file} 비용 배율 ${mods[file] > 0 ? '+' : ''}${mods[file] * 100}%`,
+      r.cost && r.cost.mod === mods[file] && r.cost.confident, JSON.stringify(r.cost));
+  }
+}
+
+console.log('실사용 조건(전체 아틀라스)에서는 조용한 오답이 0 이어야 한다');
+{
+  // leave-one-out 은 "처음 보는 화면" 을 흉내내는 비관적 측정이고, 실제로는 아틀라스
+  // 전체가 있다. 이 조건에서 한 칸이라도 조용히 틀리면 사용자가 잘못된 판단을 받는다.
+  let wrong = 0, cells = 0;
+  const detail = [];
+  for (const cap of groundTruth.captures) {
+    const img = png.loadGray(here('fixtures', cap.file));
+    const r = reader.readOptions(img, atlas, { scale: cap.scale });
+    const d = reader.readDiamonds(null, atlas, { origin: r.origin });
+    const m = reader.readMeta(null, atlas, { origin: r.origin });
+    reader.reconcileGem(d.gem, m.gemPoint);
+
+    for (const pos of ['top', 'left', 'right', 'bottom']) {
+      cells++;
+      if (d.gem[pos].value !== cap.gemState[pos].value) { wrong++; detail.push(`${cap.file} ${pos}`); }
+    }
+    if (!cap.ui) continue;
+    const want = [
+      [m.attemptsLeft, cap.ui.attempts && cap.ui.attempts[0], 'N'],
+      [m.attemptsMax, cap.ui.attempts && cap.ui.attempts[1], 'M'],
+      [m.reroll, cap.ui.reroll, '리롤'],
+    ];
+    for (const [got, truth, name] of want) {
+      if (truth == null) continue;
+      cells++;
+      if (!got || got.value !== truth) { wrong++; detail.push(`${cap.file} ${name}`); }
+    }
+    if (cap.ui.costGold != null) {
+      cells++;
+      if (!m.cost || m.cost.gold !== cap.ui.costGold) { wrong++; detail.push(`${cap.file} 비용`); }
+    }
+  }
+  check(`${cells}칸 전부 정답 (오답 ${wrong})`, wrong === 0, detail.slice(0, 5).join(' '));
 }
 
 console.log('젬 포인트 합으로 다이아를 검산한다');
@@ -342,7 +383,7 @@ console.log('젬 포인트 합으로 다이아를 검산한다');
   }
   check(`검산이 ${recovered}건 복구, 틀리게 복구한 적 없음 (${recoveredWrong}건)`, recoveredWrong === 0);
   check(`검산 후에도 자신 있게 틀린 값이 없다 (${silentWrong}개)`, silentWrong === 0);
-  check(`검산 후 값 정답이 늘었다 (${valueOk}/${total}, 검산 전 147)`, valueOk >= 150);
+  check(`검산 후 값 정답이 늘었다 (${valueOk}/${total}, 검산 전 188)`, valueOk >= 192);
   console.log(`  (복구 ${recovered} · 합 불일치 ${mismatch})`);
 }
 
