@@ -75,6 +75,14 @@
     }
 
     if (!atlas.anchor) throw new Error('anchor 템플릿이 manifest 에 없습니다');
+
+    // 다이아 숫자 분류기 (24KB). 가중치만 실어 보내고 워커가 펼친다 - 메인 스레드에
+     // digit-cnn.js 를 로드할 이유가 없다. 없으면 reader 가 옛 템플릿 경로로 돌아간다.
+    try {
+      atlas.digitCNNJson = await (await fetch(dir + '/digit-cnn.json')).json();
+    } catch (e) {
+      console.warn('숫자 분류기를 못 불러왔습니다:', e.message);
+    }
     return atlas;
   }
 

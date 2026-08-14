@@ -238,6 +238,9 @@ console.log('다이아 4개(젬의 현재 수치)를 읽는다');
     return filtered;
   };
 
+  // 숫자는 이제 분류기가 읽는다(digit-cnn.js). 학습에서 뺀 조건은 train-digit-cnn.js 의
+  // 파일 단위 5-fold 가 재고(196/196), 여기서는 이름 leave-one-out 과 "조용히 틀리지
+  // 않는다" 를 지킨다.
   let labelOk = 0, valueOk = 0, total = 0, silentWrong = 0;
   const t0 = Date.now();
   for (const cap of groundTruth.captures) {
@@ -255,7 +258,7 @@ console.log('다이아 4개(젬의 현재 수치)를 읽는다');
     }
   }
   check(`이름 ${total}개 전부 정답 (${labelOk}/${total})`, labelOk === total);
-  check(`값 정답이 187개 이상 (${valueOk}/${total})`, valueOk >= 187);
+  check(`값 전부 정답 (${valueOk}/${total})`, valueOk === total);
   check(`자신 있게 틀린 값이 없다 (${silentWrong}개)`, silentWrong === 0);
   console.log(`  (${groundTruth.captures.length}장 ${Date.now() - t0}ms)`);
 }
@@ -383,7 +386,7 @@ console.log('젬 포인트 합으로 다이아를 검산한다');
   }
   check(`검산이 ${recovered}건 복구, 틀리게 복구한 적 없음 (${recoveredWrong}건)`, recoveredWrong === 0);
   check(`검산 후에도 자신 있게 틀린 값이 없다 (${silentWrong}개)`, silentWrong === 0);
-  check(`검산 후 값 정답이 늘었다 (${valueOk}/${total}, 검산 전 188)`, valueOk >= 192);
+  check(`검산 후에도 값 전부 정답 (${valueOk}/${total})`, valueOk === total);
   console.log(`  (복구 ${recovered} · 합 불일치 ${mismatch})`);
 }
 

@@ -22,11 +22,12 @@
   const isNode = typeof require === 'function' && typeof module !== 'undefined';
   const api = factory(
     isNode ? require('./ncc.js') : root.GempagoNCC,
-    isNode ? require('./layout.js') : root.GempagoLayout
+    isNode ? require('./layout.js') : root.GempagoLayout,
+    isNode ? require('./digit-cnn.js') : root.GempagoDigitCNN
   );
   if (isNode) module.exports = api;
   else root.GempagoReader = api;
-})(typeof self !== 'undefined' ? self : this, function (ncc, layout) {
+})(typeof self !== 'undefined' ? self : this, function (ncc, layout, digitCNN) {
   'use strict';
 
   const DIGIT_WINDOW = 8;
@@ -242,10 +243,10 @@
     // 조용한 판부터 시도한다. 가장 조용한 판에서 글자가 안 나오면 그 판이 이 숫자를
     // 흡수한 것이다(조합의 모든 캡처가 같은 숫자면 배경판에 숫자가 박힌다) - 다음 판은
     // 다른 조합이라 무늬 노이즈는 있어도 글자는 살아 있다.
-    let res = null, spans = null;
+    let res = null, spans = null, noise = null;
     for (const cand of bestResidual(zBand(img, band), variants)) {
       const s = residualSpans(cand.res, DIA_GLYPH_GAP);
-      if (s.length) { res = cand.res; spans = s; break; }
+      if (s.length) { res = cand.res; spans = s; noise = cand.noise; break; }
     }
     if (!spans) return null;
 
@@ -267,10 +268,21 @@
     if (!digit) return null;
     return {
       digit: digit.name.split(':')[1],
-      score: digit.score, margin: digit.margin,
+      score: digit.score, margin: digit.margin, noise,
       runnerUp: digit.runnerUp ? digit.runnerUp.split(':')[1] : null,
     };
   }
+
+  /*
+   * 배경판이 이 화면과 맞는지의 한계선. 잔차에서 글자를 뺀 나머지가 이만큼 시끄러우면
+   * 그 판으로 뺀 잔차는 글자가 아니라 무늬를 담고 있어서 숫자를 믿을 수 없다.
+   *
+   * 실측: 아는 출처(게임 스크린샷)는 자리별로 0.02~0.11 인데, 브라우저 화면 공유로
+   * 들어온 프레임은 같은 해상도인데도 0.27~0.43 이었다(리샘플 경로가 달라서다).
+   * 그때 왼쪽 다이아의 3 을 0.836 점으로 자신 있게 5 라고 읽었다 - 점수만으로는
+   * 못 거르고 젬 포인트 검산이 겨우 잡아냈다. 그래서 판이 안 맞으면 아예 의심으로 둔다.
+   */
+  const DIA_BG_MAX_NOISE = 0.2;
 
 
   /** 자리마다 나올 수 있는 이름이 정해져 있다. 위는 의지력, 아래는 포인트, 좌/우는 효과. */
@@ -303,26 +315,36 @@
     }
     const image = origin.image;
 
+    // 이름은 템플릿 매칭(글자가 커서 리샘플을 견딘다), 숫자는 분류기.
+    // 숫자만 원본 픽셀에서 읽는다 - 화면을 기준 배율로 늘리면 3~12px 짜리 글자에
+    // 보간이 얹혀서 캡처 출처 차이가 증폭된다 (digit-cnn.js 주석 참고).
     const dia = layout.diamonds(origin);
+    const diaNative = layout.diamonds(origin, true);
     const gem = {};
     for (const pos of Object.keys(dia)) {
       const label = pick(image, dia[pos].label, atlas['dia-label'], diaCandidates(atlas, pos));
-      const value = readDiamondValue(image, dia[pos].value, atlas, pos);
+      const value = atlas.digitCNN
+        ? digitCNN.classify(atlas.digitCNN, origin.raw, diaNative[pos].value, pos, origin.scale)
+        : readDiamondValue(image, dia[pos].value, atlas, pos);
       gem[pos] = {
         slot: dia[pos].slot,
         label: label ? label.name : null,
         labelText: label ? atlas.text['dia-label'][label.name] : null,
-        value: value ? +value.digit : null,
+        // 분류기는 value/prob 를, 옛 템플릿 경로는 digit/score 를 준다.
+        value: value ? (value.value != null ? value.value : +value.digit) : null,
         scores: {
           label: label ? label.score : 0,
           labelMargin: label ? label.margin : 0,
-          value: value ? value.score : 0,
+          value: value ? (value.prob != null ? value.prob : value.score) : 0,
           valueMargin: value ? value.margin : 0,
+          bgNoise: value ? (value.noise == null ? 0 : value.noise) : null,
         },
         // 위/아래는 이름 후보가 1~2개뿐이라 이름 마진이 의미 없다. 점수만 본다.
         confident: !!(label && value &&
           label.score >= minScore &&
-          value.score >= minScore && value.margin >= valueMinMargin &&
+          (value.prob != null ? value.prob : value.score) >= minScore &&
+          value.margin >= valueMinMargin &&
+          (value.noise == null || value.noise <= DIA_BG_MAX_NOISE) &&
           (pos === 'top' || pos === 'bottom' || label.margin >= minMargin)),
       };
     }
@@ -448,10 +470,11 @@
     const unsure = POS.filter((p) => !gem[p].confident || gem[p].value == null);
     const sum = (ps) => ps.reduce((a, p) => a + gem[p].value, 0);
 
+    const info = { gemPoint: gemPoint.value, sum: sum(POS) };
     if (!unsure.length) {
-      if (sum(POS) === gemPoint.value) return { status: 'ok' };
+      if (info.sum === gemPoint.value) return Object.assign({ status: 'ok' }, info);
       for (const p of POS) gem[p].confident = false;
-      return { status: 'mismatch' };
+      return Object.assign({ status: 'mismatch' }, info);
     }
     if (unsure.length === 1) {
       const p = unsure[0];
@@ -460,11 +483,11 @@
         gem[p].value = v;
         gem[p].confident = true;
         gem[p].recovered = true;
-        return { status: 'recovered', pos: p, value: v };
+        return Object.assign({ status: 'recovered', pos: p, value: v }, info);
       }
-      return { status: 'mismatch' };
+      return Object.assign({ status: 'mismatch' }, info);
     }
-    return { status: 'unknown' };
+    return Object.assign({ status: 'unknown', unsure }, info);
   }
 
   /**

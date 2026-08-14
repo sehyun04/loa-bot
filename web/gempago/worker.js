@@ -37,6 +37,7 @@ const ready = (async () => {
   solver = await loadModule('solver.js', 'solver.js');
   await loadModule('vision/ncc.js', 'ncc.js');
   await loadModule('vision/layout.js', 'layout.js');
+  await loadModule('vision/digit-cnn.js', 'digit-cnn.js');
   reader = await loadModule('vision/reader.js', 'reader.js');
   interpret = await loadModule('vision/interpret.js', 'interpret.js');
 })();
@@ -132,6 +133,7 @@ self.onmessage = async (e) => {
 
     if (type === 'atlas') {
       atlas = payload.atlas;
+      if (atlas.digitCNNJson) atlas.digitCNN = loaded['digit-cnn.js'].prepare(atlas.digitCNNJson);
       cachedScale = null;
       self.postMessage({ id, ok: true, result: { keys: Object.keys(atlas.label).length } });
       return;
