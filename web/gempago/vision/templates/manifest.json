@@ -912,6 +912,629 @@
       "src": "cap28.png 열1"
     },
     {
+      "file": "meta-reroll-2-1.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap-roaring1.png"
+    },
+    {
+      "file": "meta-reroll-2-2.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap-roaring2.png"
+    },
+    {
+      "file": "meta-reroll-2-3.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap14.png"
+    },
+    {
+      "file": "meta-reroll-2-4.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap16.png"
+    },
+    {
+      "file": "meta-reroll-2-5.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap18.png"
+    },
+    {
+      "file": "meta-reroll-2-6.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap44.png"
+    },
+    {
+      "file": "meta-reroll-2-7.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap53.png"
+    },
+    {
+      "file": "meta-reroll-2-8.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap54.png"
+    },
+    {
+      "file": "meta-reroll-1-1.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-reroll-1-2.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-reroll-1-3.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap15.png"
+    },
+    {
+      "file": "meta-reroll-1-4.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap17.png"
+    },
+    {
+      "file": "meta-reroll-1-5.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap20.png"
+    },
+    {
+      "file": "meta-reroll-1-6.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap26.png"
+    },
+    {
+      "file": "meta-reroll-1-7.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-reroll-1-8.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-attempt-6-1.png",
+      "group": "meta-digit",
+      "key": "attempt:6",
+      "text": "6",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-attempt-6-2.png",
+      "group": "meta-digit",
+      "key": "attempt:6",
+      "text": "6",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-attempt-6-3.png",
+      "group": "meta-digit",
+      "key": "attempt:6",
+      "text": "6",
+      "src": "cap35.png"
+    },
+    {
+      "file": "meta-attempt-6-4.png",
+      "group": "meta-digit",
+      "key": "attempt:6",
+      "text": "6",
+      "src": "cap48.png"
+    },
+    {
+      "file": "meta-attempt-7-1.png",
+      "group": "meta-digit",
+      "key": "attempt:7",
+      "text": "7",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-attempt-7-2.png",
+      "group": "meta-digit",
+      "key": "attempt:7",
+      "text": "7",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-attempt-7-3.png",
+      "group": "meta-digit",
+      "key": "attempt:7",
+      "text": "7",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-attempt-7-4.png",
+      "group": "meta-digit",
+      "key": "attempt:7",
+      "text": "7",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-attempt-7-5.png",
+      "group": "meta-digit",
+      "key": "attempt:7",
+      "text": "7",
+      "src": "cap31.png"
+    },
+    {
+      "file": "meta-point-5-1.png",
+      "group": "meta-digit",
+      "key": "point:5",
+      "text": "5",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-point-5-2.png",
+      "group": "meta-digit",
+      "key": "point:5",
+      "text": "5",
+      "src": "cap35.png"
+    },
+    {
+      "file": "meta-point-5-3.png",
+      "group": "meta-digit",
+      "key": "point:5",
+      "text": "5",
+      "src": "cap48.png"
+    },
+    {
+      "file": "meta-point-5-4.png",
+      "group": "meta-digit",
+      "key": "point:5",
+      "text": "5",
+      "src": "cap57.png"
+    },
+    {
+      "file": "meta-attempt-5-1.png",
+      "group": "meta-digit",
+      "key": "attempt:5",
+      "text": "5",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-attempt-5-2.png",
+      "group": "meta-digit",
+      "key": "attempt:5",
+      "text": "5",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-attempt-5-3.png",
+      "group": "meta-digit",
+      "key": "attempt:5",
+      "text": "5",
+      "src": "cap36.png"
+    },
+    {
+      "file": "meta-attempt-5-4.png",
+      "group": "meta-digit",
+      "key": "attempt:5",
+      "text": "5",
+      "src": "cap49.png"
+    },
+    {
+      "file": "meta-point-8-1.png",
+      "group": "meta-digit",
+      "key": "point:8",
+      "text": "8",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-point-8-2.png",
+      "group": "meta-digit",
+      "key": "point:8",
+      "text": "8",
+      "src": "cap32.png"
+    },
+    {
+      "file": "meta-point-8-3.png",
+      "group": "meta-digit",
+      "key": "point:8",
+      "text": "8",
+      "src": "cap38.png"
+    },
+    {
+      "file": "meta-point-8-4.png",
+      "group": "meta-digit",
+      "key": "point:8",
+      "text": "8",
+      "src": "cap55.png"
+    },
+    {
+      "file": "meta-point-4-1.png",
+      "group": "meta-digit",
+      "key": "point:4",
+      "text": "4",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-point-4-2.png",
+      "group": "meta-digit",
+      "key": "point:4",
+      "text": "4",
+      "src": "cap40.png"
+    },
+    {
+      "file": "meta-point-4-3.png",
+      "group": "meta-digit",
+      "key": "point:4",
+      "text": "4",
+      "src": "cap41.png"
+    },
+    {
+      "file": "meta-point-6-1.png",
+      "group": "meta-digit",
+      "key": "point:6",
+      "text": "6",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-point-6-2.png",
+      "group": "meta-digit",
+      "key": "point:6",
+      "text": "6",
+      "src": "cap49.png"
+    },
+    {
+      "file": "meta-point-6-3.png",
+      "group": "meta-digit",
+      "key": "point:6",
+      "text": "6",
+      "src": "cap53.png"
+    },
+    {
+      "file": "meta-attempt-4-1.png",
+      "group": "meta-digit",
+      "key": "attempt:4",
+      "text": "4",
+      "src": "cap31.png"
+    },
+    {
+      "file": "meta-attempt-4-2.png",
+      "group": "meta-digit",
+      "key": "attempt:4",
+      "text": "4",
+      "src": "cap37.png"
+    },
+    {
+      "file": "meta-attempt-4-3.png",
+      "group": "meta-digit",
+      "key": "attempt:4",
+      "text": "4",
+      "src": "cap57.png"
+    },
+    {
+      "file": "meta-point-7-1.png",
+      "group": "meta-digit",
+      "key": "point:7",
+      "text": "7",
+      "src": "cap31.png"
+    },
+    {
+      "file": "meta-point-7-2.png",
+      "group": "meta-digit",
+      "key": "point:7",
+      "text": "7",
+      "src": "cap36.png"
+    },
+    {
+      "file": "meta-point-7-3.png",
+      "group": "meta-digit",
+      "key": "point:7",
+      "text": "7",
+      "src": "cap37.png"
+    },
+    {
+      "file": "meta-attempt-3-1.png",
+      "group": "meta-digit",
+      "key": "attempt:3",
+      "text": "3",
+      "src": "cap32.png"
+    },
+    {
+      "file": "meta-attempt-3-2.png",
+      "group": "meta-digit",
+      "key": "attempt:3",
+      "text": "3",
+      "src": "cap38.png"
+    },
+    {
+      "file": "meta-attempt-3-3.png",
+      "group": "meta-digit",
+      "key": "attempt:3",
+      "text": "3",
+      "src": "cap43.png"
+    },
+    {
+      "file": "meta-attempt-2-1.png",
+      "group": "meta-digit",
+      "key": "attempt:2",
+      "text": "2",
+      "src": "cap33.png"
+    },
+    {
+      "file": "meta-attempt-2-2.png",
+      "group": "meta-digit",
+      "key": "attempt:2",
+      "text": "2",
+      "src": "cap39.png"
+    },
+    {
+      "file": "meta-attempt-2-3.png",
+      "group": "meta-digit",
+      "key": "attempt:2",
+      "text": "2",
+      "src": "cap51.png"
+    },
+    {
+      "file": "meta-point-1-1.png",
+      "group": "meta-digit",
+      "key": "point:1",
+      "text": "1",
+      "src": "cap33.png"
+    },
+    {
+      "file": "meta-point-1-2.png",
+      "group": "meta-digit",
+      "key": "point:1",
+      "text": "1",
+      "src": "cap34.png"
+    },
+    {
+      "file": "meta-point-1-3.png",
+      "group": "meta-digit",
+      "key": "point:1",
+      "text": "1",
+      "src": "cap43.png"
+    },
+    {
+      "file": "meta-point-0-1.png",
+      "group": "meta-digit",
+      "key": "point:0",
+      "text": "0",
+      "src": "cap33.png"
+    },
+    {
+      "file": "meta-point-0-2.png",
+      "group": "meta-digit",
+      "key": "point:0",
+      "text": "0",
+      "src": "cap43.png"
+    },
+    {
+      "file": "meta-point-0-3.png",
+      "group": "meta-digit",
+      "key": "point:0",
+      "text": "0",
+      "src": "cap52.png"
+    },
+    {
+      "file": "meta-attempt-1-1.png",
+      "group": "meta-digit",
+      "key": "attempt:1",
+      "text": "1",
+      "src": "cap34.png"
+    },
+    {
+      "file": "meta-attempt-1-2.png",
+      "group": "meta-digit",
+      "key": "attempt:1",
+      "text": "1",
+      "src": "cap50.png"
+    },
+    {
+      "file": "meta-attempt-1-3.png",
+      "group": "meta-digit",
+      "key": "attempt:1",
+      "text": "1",
+      "src": "cap55.png"
+    },
+    {
+      "file": "meta-point-9-1.png",
+      "group": "meta-digit",
+      "key": "point:9",
+      "text": "9",
+      "src": "cap39.png"
+    },
+    {
+      "file": "meta-point-9-2.png",
+      "group": "meta-digit",
+      "key": "point:9",
+      "text": "9",
+      "src": "cap50.png"
+    },
+    {
+      "file": "meta-point-9-3.png",
+      "group": "meta-digit",
+      "key": "point:9",
+      "text": "9",
+      "src": "cap54.png"
+    },
+    {
+      "file": "meta-attempt-9-1.png",
+      "group": "meta-digit",
+      "key": "attempt:9",
+      "text": "9",
+      "src": "cap44.png"
+    },
+    {
+      "file": "meta-attempt-9-2.png",
+      "group": "meta-digit",
+      "key": "attempt:9",
+      "text": "9",
+      "src": "cap53.png"
+    },
+    {
+      "file": "meta-attempt-9-3.png",
+      "group": "meta-digit",
+      "key": "attempt:9",
+      "text": "9",
+      "src": "cap54.png"
+    },
+    {
+      "file": "meta-reroll-0-1.png",
+      "group": "meta-digit",
+      "key": "reroll:0",
+      "text": "0",
+      "src": "cap50.png"
+    },
+    {
+      "file": "meta-reroll-0-2.png",
+      "group": "meta-digit",
+      "key": "reroll:0",
+      "text": "0",
+      "src": "cap51.png"
+    },
+    {
+      "file": "meta-reroll-0-3.png",
+      "group": "meta-digit",
+      "key": "reroll:0",
+      "text": "0",
+      "src": "cap52.png"
+    },
+    {
+      "file": "meta-reroll-3-1.png",
+      "group": "meta-digit",
+      "key": "reroll:3",
+      "text": "3",
+      "src": "cap59.png"
+    },
+    {
+      "file": "meta-point-2-1.png",
+      "group": "meta-digit",
+      "key": "point:2",
+      "text": "2",
+      "src": "cap60.png"
+    },
+    {
+      "file": "meta-label-gem-point-1.png",
+      "group": "meta-label",
+      "key": "gem-point",
+      "text": "젬 포인트",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-label-gem-point-2.png",
+      "group": "meta-label",
+      "key": "gem-point",
+      "text": "젬 포인트",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-label-gem-point-3.png",
+      "group": "meta-label",
+      "key": "gem-point",
+      "text": "젬 포인트",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-label-gem-point-4.png",
+      "group": "meta-label",
+      "key": "gem-point",
+      "text": "젬 포인트",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-label-gem-point-5.png",
+      "group": "meta-label",
+      "key": "gem-point",
+      "text": "젬 포인트",
+      "src": "cap31.png"
+    },
+    {
+      "file": "meta-cost-0-1.png",
+      "group": "meta-cost",
+      "key": "0",
+      "text": "0",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-cost-0-2.png",
+      "group": "meta-cost",
+      "key": "0",
+      "text": "0",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-cost-0-3.png",
+      "group": "meta-cost",
+      "key": "0",
+      "text": "0",
+      "src": "cap31.png"
+    },
+    {
+      "file": "meta-cost-900-1.png",
+      "group": "meta-cost",
+      "key": "900",
+      "text": "900",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-cost-900-2.png",
+      "group": "meta-cost",
+      "key": "900",
+      "text": "900",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-cost-900-3.png",
+      "group": "meta-cost",
+      "key": "900",
+      "text": "900",
+      "src": "cap35.png"
+    },
+    {
+      "file": "meta-cost-900-4.png",
+      "group": "meta-cost",
+      "key": "900",
+      "text": "900",
+      "src": "cap36.png"
+    },
+    {
+      "file": "meta-cost-900-5.png",
+      "group": "meta-cost",
+      "key": "900",
+      "text": "900",
+      "src": "cap37.png"
+    },
+    {
+      "file": "meta-cost-1800-1.png",
+      "group": "meta-cost",
+      "key": "1800",
+      "text": "1800",
+      "src": "cap60.png"
+    },
+    {
       "file": "dia-bg-top-1.png",
       "group": "dia-bg",
       "key": "top",
@@ -946,20 +1569,20 @@
       "group": "dia-bg",
       "key": "top",
       "range": [
-        -1.2539,
-        3.4983
+        -1.2645,
+        3.5903
       ],
-      "src": "혼돈의-x0.935 12장 z 정규화 배경판"
+      "src": "혼돈의-x0.935 18장 z 정규화 배경판"
     },
     {
       "file": "dia-bg-top-5.png",
       "group": "dia-bg",
       "key": "top",
       "range": [
-        -1.3048,
-        3.7703
+        -1.3047,
+        3.7683
       ],
-      "src": "질서의-x0.935 11장 z 정규화 배경판"
+      "src": "질서의-x0.935 15장 z 정규화 배경판"
     },
     {
       "file": "dia-bg-left-1.png",
@@ -996,20 +1619,20 @@
       "group": "dia-bg",
       "key": "left",
       "range": [
-        -1.3594,
-        2.9933
+        -1.3619,
+        2.9697
       ],
-      "src": "혼돈의-x0.935 12장 z 정규화 배경판"
+      "src": "혼돈의-x0.935 18장 z 정규화 배경판"
     },
     {
       "file": "dia-bg-left-5.png",
       "group": "dia-bg",
       "key": "left",
       "range": [
-        -1.4214,
-        3.1085
+        -1.421,
+        3.1083
       ],
-      "src": "질서의-x0.935 11장 z 정규화 배경판"
+      "src": "질서의-x0.935 15장 z 정규화 배경판"
     },
     {
       "file": "dia-bg-right-1.png",
@@ -1046,20 +1669,20 @@
       "group": "dia-bg",
       "key": "right",
       "range": [
-        -1.525,
-        3.0368
+        -1.5247,
+        3.0254
       ],
-      "src": "혼돈의-x0.935 12장 z 정규화 배경판"
+      "src": "혼돈의-x0.935 18장 z 정규화 배경판"
     },
     {
       "file": "dia-bg-right-5.png",
       "group": "dia-bg",
       "key": "right",
       "range": [
-        -1.507,
-        3.0106
+        -1.5042,
+        3.0133
       ],
-      "src": "질서의-x0.935 11장 z 정규화 배경판"
+      "src": "질서의-x0.935 15장 z 정규화 배경판"
     },
     {
       "file": "dia-bg-bottom-1.png",
@@ -1096,20 +1719,20 @@
       "group": "dia-bg",
       "key": "bottom",
       "range": [
-        -1.3527,
-        2.3861
+        -1.3636,
+        2.3725
       ],
-      "src": "혼돈의-x0.935 12장 z 정규화 배경판"
+      "src": "혼돈의-x0.935 18장 z 정규화 배경판"
     },
     {
       "file": "dia-bg-bottom-5.png",
       "group": "dia-bg",
       "key": "bottom",
       "range": [
-        -1.3811,
-        2.3576
+        -1.3786,
+        2.3568
       ],
-      "src": "질서의-x0.935 11장 z 정규화 배경판"
+      "src": "질서의-x0.935 15장 z 정규화 배경판"
     },
     {
       "file": "dia-label-uijiryeok-1.png",
@@ -2001,6 +2624,13 @@
       "src": "cap20.png left"
     },
     {
+      "file": "dia-digit-left-4-3.png",
+      "group": "dia-digit",
+      "key": "left:4",
+      "text": "left:4",
+      "src": "cap60.png left"
+    },
+    {
       "file": "dia-digit-left-5-1.png",
       "group": "dia-digit",
       "key": "left:5",
@@ -2029,6 +2659,13 @@
       "src": "cap26.png left"
     },
     {
+      "file": "dia-digit-left-5-5.png",
+      "group": "dia-digit",
+      "key": "left:5",
+      "text": "left:5",
+      "src": "cap52.png left"
+    },
+    {
       "file": "dia-digit-right-3-1.png",
       "group": "dia-digit",
       "key": "right:3",
@@ -2041,6 +2678,20 @@
       "key": "right:3",
       "text": "right:3",
       "src": "cap30.png right"
+    },
+    {
+      "file": "dia-digit-right-3-3.png",
+      "group": "dia-digit",
+      "key": "right:3",
+      "text": "right:3",
+      "src": "cap51.png right"
+    },
+    {
+      "file": "dia-digit-right-3-4.png",
+      "group": "dia-digit",
+      "key": "right:3",
+      "text": "right:3",
+      "src": "cap55.png right"
     },
     {
       "file": "dia-digit-right-2-1.png",
@@ -2092,6 +2743,13 @@
       "src": "cap24.png right"
     },
     {
+      "file": "dia-digit-right-5-3.png",
+      "group": "dia-digit",
+      "key": "right:5",
+      "text": "right:5",
+      "src": "cap54.png right"
+    },
+    {
       "file": "dia-digit-top-2-1.png",
       "group": "dia-digit",
       "key": "top:2",
@@ -2118,6 +2776,20 @@
       "key": "top:2",
       "text": "top:2",
       "src": "cap49.png top"
+    },
+    {
+      "file": "dia-digit-top-2-5.png",
+      "group": "dia-digit",
+      "key": "top:2",
+      "text": "top:2",
+      "src": "cap53.png top"
+    },
+    {
+      "file": "dia-digit-top-2-6.png",
+      "group": "dia-digit",
+      "key": "top:2",
+      "text": "top:2",
+      "src": "cap54.png top"
     },
     {
       "file": "dia-digit-right-4-1.png",
@@ -2267,508 +2939,18 @@
       "src": "cap33.png bottom"
     },
     {
-      "file": "meta-reroll-2-1.png",
-      "group": "meta-digit",
-      "key": "reroll:2",
-      "text": "2",
-      "src": "cap-roaring1.png"
-    },
-    {
-      "file": "meta-reroll-2-2.png",
-      "group": "meta-digit",
-      "key": "reroll:2",
-      "text": "2",
-      "src": "cap-roaring2.png"
-    },
-    {
-      "file": "meta-reroll-2-3.png",
-      "group": "meta-digit",
-      "key": "reroll:2",
-      "text": "2",
-      "src": "cap14.png"
-    },
-    {
-      "file": "meta-reroll-2-4.png",
-      "group": "meta-digit",
-      "key": "reroll:2",
-      "text": "2",
-      "src": "cap16.png"
-    },
-    {
-      "file": "meta-reroll-2-5.png",
-      "group": "meta-digit",
-      "key": "reroll:2",
-      "text": "2",
-      "src": "cap18.png"
-    },
-    {
-      "file": "meta-reroll-2-6.png",
-      "group": "meta-digit",
-      "key": "reroll:2",
-      "text": "2",
-      "src": "cap44.png"
-    },
-    {
-      "file": "meta-reroll-1-1.png",
-      "group": "meta-digit",
-      "key": "reroll:1",
-      "text": "1",
-      "src": "cap27.png"
-    },
-    {
-      "file": "meta-reroll-1-2.png",
-      "group": "meta-digit",
-      "key": "reroll:1",
-      "text": "1",
-      "src": "cap28.png"
-    },
-    {
-      "file": "meta-reroll-1-3.png",
-      "group": "meta-digit",
-      "key": "reroll:1",
-      "text": "1",
-      "src": "cap15.png"
-    },
-    {
-      "file": "meta-reroll-1-4.png",
-      "group": "meta-digit",
-      "key": "reroll:1",
-      "text": "1",
-      "src": "cap17.png"
-    },
-    {
-      "file": "meta-reroll-1-5.png",
-      "group": "meta-digit",
-      "key": "reroll:1",
-      "text": "1",
-      "src": "cap20.png"
-    },
-    {
-      "file": "meta-reroll-1-6.png",
-      "group": "meta-digit",
-      "key": "reroll:1",
-      "text": "1",
-      "src": "cap26.png"
-    },
-    {
-      "file": "meta-reroll-1-7.png",
-      "group": "meta-digit",
-      "key": "reroll:1",
-      "text": "1",
-      "src": "cap29.png"
-    },
-    {
-      "file": "meta-reroll-1-8.png",
-      "group": "meta-digit",
-      "key": "reroll:1",
-      "text": "1",
-      "src": "cap30.png"
-    },
-    {
-      "file": "meta-attempt-6-1.png",
-      "group": "meta-digit",
-      "key": "attempt:6",
-      "text": "6",
-      "src": "cap27.png"
-    },
-    {
-      "file": "meta-attempt-6-2.png",
-      "group": "meta-digit",
-      "key": "attempt:6",
-      "text": "6",
-      "src": "cap29.png"
-    },
-    {
-      "file": "meta-attempt-6-3.png",
-      "group": "meta-digit",
-      "key": "attempt:6",
-      "text": "6",
-      "src": "cap35.png"
-    },
-    {
-      "file": "meta-attempt-6-4.png",
-      "group": "meta-digit",
-      "key": "attempt:6",
-      "text": "6",
-      "src": "cap48.png"
-    },
-    {
-      "file": "meta-attempt-7-1.png",
-      "group": "meta-digit",
-      "key": "attempt:7",
-      "text": "7",
-      "src": "cap27.png"
-    },
-    {
-      "file": "meta-attempt-7-2.png",
-      "group": "meta-digit",
-      "key": "attempt:7",
-      "text": "7",
-      "src": "cap28.png"
-    },
-    {
-      "file": "meta-attempt-7-3.png",
-      "group": "meta-digit",
-      "key": "attempt:7",
-      "text": "7",
-      "src": "cap29.png"
-    },
-    {
-      "file": "meta-attempt-7-4.png",
-      "group": "meta-digit",
-      "key": "attempt:7",
-      "text": "7",
-      "src": "cap30.png"
-    },
-    {
-      "file": "meta-attempt-7-5.png",
-      "group": "meta-digit",
-      "key": "attempt:7",
-      "text": "7",
-      "src": "cap31.png"
-    },
-    {
-      "file": "meta-point-5-1.png",
-      "group": "meta-digit",
-      "key": "point:5",
-      "text": "5",
-      "src": "cap27.png"
-    },
-    {
-      "file": "meta-point-5-2.png",
-      "group": "meta-digit",
-      "key": "point:5",
-      "text": "5",
-      "src": "cap35.png"
-    },
-    {
-      "file": "meta-point-5-3.png",
-      "group": "meta-digit",
-      "key": "point:5",
-      "text": "5",
-      "src": "cap48.png"
-    },
-    {
-      "file": "meta-attempt-5-1.png",
-      "group": "meta-digit",
-      "key": "attempt:5",
-      "text": "5",
-      "src": "cap28.png"
-    },
-    {
-      "file": "meta-attempt-5-2.png",
-      "group": "meta-digit",
-      "key": "attempt:5",
-      "text": "5",
-      "src": "cap30.png"
-    },
-    {
-      "file": "meta-attempt-5-3.png",
-      "group": "meta-digit",
-      "key": "attempt:5",
-      "text": "5",
-      "src": "cap36.png"
-    },
-    {
-      "file": "meta-attempt-5-4.png",
-      "group": "meta-digit",
-      "key": "attempt:5",
-      "text": "5",
-      "src": "cap49.png"
-    },
-    {
-      "file": "meta-point-8-1.png",
-      "group": "meta-digit",
-      "key": "point:8",
-      "text": "8",
-      "src": "cap28.png"
-    },
-    {
-      "file": "meta-point-8-2.png",
-      "group": "meta-digit",
-      "key": "point:8",
-      "text": "8",
-      "src": "cap32.png"
-    },
-    {
-      "file": "meta-point-8-3.png",
-      "group": "meta-digit",
-      "key": "point:8",
-      "text": "8",
-      "src": "cap38.png"
-    },
-    {
-      "file": "meta-point-4-1.png",
-      "group": "meta-digit",
-      "key": "point:4",
-      "text": "4",
-      "src": "cap29.png"
-    },
-    {
-      "file": "meta-point-4-2.png",
-      "group": "meta-digit",
-      "key": "point:4",
-      "text": "4",
-      "src": "cap40.png"
-    },
-    {
-      "file": "meta-point-4-3.png",
-      "group": "meta-digit",
-      "key": "point:4",
-      "text": "4",
-      "src": "cap41.png"
-    },
-    {
-      "file": "meta-point-6-1.png",
-      "group": "meta-digit",
-      "key": "point:6",
-      "text": "6",
-      "src": "cap30.png"
-    },
-    {
-      "file": "meta-point-6-2.png",
-      "group": "meta-digit",
-      "key": "point:6",
-      "text": "6",
-      "src": "cap49.png"
-    },
-    {
-      "file": "meta-attempt-4-1.png",
-      "group": "meta-digit",
-      "key": "attempt:4",
-      "text": "4",
-      "src": "cap31.png"
-    },
-    {
-      "file": "meta-attempt-4-2.png",
-      "group": "meta-digit",
-      "key": "attempt:4",
-      "text": "4",
-      "src": "cap37.png"
-    },
-    {
-      "file": "meta-point-7-1.png",
-      "group": "meta-digit",
-      "key": "point:7",
-      "text": "7",
-      "src": "cap31.png"
-    },
-    {
-      "file": "meta-point-7-2.png",
-      "group": "meta-digit",
-      "key": "point:7",
-      "text": "7",
-      "src": "cap36.png"
-    },
-    {
-      "file": "meta-point-7-3.png",
-      "group": "meta-digit",
-      "key": "point:7",
-      "text": "7",
-      "src": "cap37.png"
-    },
-    {
-      "file": "meta-attempt-3-1.png",
-      "group": "meta-digit",
-      "key": "attempt:3",
-      "text": "3",
-      "src": "cap32.png"
-    },
-    {
-      "file": "meta-attempt-3-2.png",
-      "group": "meta-digit",
-      "key": "attempt:3",
-      "text": "3",
-      "src": "cap38.png"
-    },
-    {
-      "file": "meta-attempt-3-3.png",
-      "group": "meta-digit",
-      "key": "attempt:3",
-      "text": "3",
-      "src": "cap43.png"
-    },
-    {
-      "file": "meta-attempt-2-1.png",
-      "group": "meta-digit",
-      "key": "attempt:2",
-      "text": "2",
-      "src": "cap33.png"
-    },
-    {
-      "file": "meta-attempt-2-2.png",
-      "group": "meta-digit",
-      "key": "attempt:2",
-      "text": "2",
-      "src": "cap39.png"
-    },
-    {
-      "file": "meta-point-1-1.png",
-      "group": "meta-digit",
-      "key": "point:1",
-      "text": "1",
-      "src": "cap33.png"
-    },
-    {
-      "file": "meta-point-1-2.png",
-      "group": "meta-digit",
-      "key": "point:1",
-      "text": "1",
-      "src": "cap34.png"
-    },
-    {
-      "file": "meta-point-1-3.png",
-      "group": "meta-digit",
-      "key": "point:1",
-      "text": "1",
-      "src": "cap43.png"
-    },
-    {
-      "file": "meta-point-0-1.png",
-      "group": "meta-digit",
-      "key": "point:0",
-      "text": "0",
-      "src": "cap33.png"
-    },
-    {
-      "file": "meta-point-0-2.png",
-      "group": "meta-digit",
-      "key": "point:0",
-      "text": "0",
-      "src": "cap43.png"
-    },
-    {
-      "file": "meta-attempt-1-1.png",
-      "group": "meta-digit",
-      "key": "attempt:1",
-      "text": "1",
-      "src": "cap34.png"
-    },
-    {
-      "file": "meta-attempt-1-2.png",
-      "group": "meta-digit",
-      "key": "attempt:1",
-      "text": "1",
-      "src": "cap50.png"
-    },
-    {
-      "file": "meta-point-9-1.png",
-      "group": "meta-digit",
-      "key": "point:9",
-      "text": "9",
-      "src": "cap39.png"
-    },
-    {
-      "file": "meta-point-9-2.png",
-      "group": "meta-digit",
-      "key": "point:9",
-      "text": "9",
-      "src": "cap50.png"
-    },
-    {
-      "file": "meta-attempt-9-1.png",
-      "group": "meta-digit",
-      "key": "attempt:9",
-      "text": "9",
-      "src": "cap44.png"
-    },
-    {
-      "file": "meta-reroll-0-1.png",
-      "group": "meta-digit",
-      "key": "reroll:0",
-      "text": "0",
-      "src": "cap50.png"
-    },
-    {
-      "file": "meta-label-gem-point-1.png",
-      "group": "meta-label",
-      "key": "gem-point",
-      "text": "젬 포인트",
-      "src": "cap27.png"
-    },
-    {
-      "file": "meta-label-gem-point-2.png",
-      "group": "meta-label",
-      "key": "gem-point",
-      "text": "젬 포인트",
-      "src": "cap28.png"
-    },
-    {
-      "file": "meta-label-gem-point-3.png",
-      "group": "meta-label",
-      "key": "gem-point",
-      "text": "젬 포인트",
-      "src": "cap29.png"
-    },
-    {
-      "file": "meta-label-gem-point-4.png",
-      "group": "meta-label",
-      "key": "gem-point",
-      "text": "젬 포인트",
-      "src": "cap30.png"
-    },
-    {
-      "file": "meta-label-gem-point-5.png",
-      "group": "meta-label",
-      "key": "gem-point",
-      "text": "젬 포인트",
-      "src": "cap31.png"
-    },
-    {
-      "file": "meta-cost-0-1.png",
-      "group": "meta-cost",
-      "key": "0",
-      "text": "0",
-      "src": "cap29.png"
-    },
-    {
-      "file": "meta-cost-0-2.png",
-      "group": "meta-cost",
-      "key": "0",
-      "text": "0",
-      "src": "cap30.png"
-    },
-    {
-      "file": "meta-cost-0-3.png",
-      "group": "meta-cost",
-      "key": "0",
-      "text": "0",
-      "src": "cap31.png"
-    },
-    {
-      "file": "meta-cost-900-1.png",
-      "group": "meta-cost",
-      "key": "900",
-      "text": "900",
-      "src": "cap27.png"
-    },
-    {
-      "file": "meta-cost-900-2.png",
-      "group": "meta-cost",
-      "key": "900",
-      "text": "900",
-      "src": "cap28.png"
-    },
-    {
-      "file": "meta-cost-900-3.png",
-      "group": "meta-cost",
-      "key": "900",
-      "text": "900",
-      "src": "cap35.png"
-    },
-    {
-      "file": "meta-cost-900-4.png",
-      "group": "meta-cost",
-      "key": "900",
-      "text": "900",
-      "src": "cap36.png"
-    },
-    {
-      "file": "meta-cost-900-5.png",
-      "group": "meta-cost",
-      "key": "900",
-      "text": "900",
-      "src": "cap37.png"
+      "file": "dia-digit-bottom-3-3.png",
+      "group": "dia-digit",
+      "key": "bottom:3",
+      "text": "bottom:3",
+      "src": "cap52.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-3-4.png",
+      "group": "dia-digit",
+      "key": "bottom:3",
+      "text": "bottom:3",
+      "src": "cap58.png bottom"
     }
   ]
 }

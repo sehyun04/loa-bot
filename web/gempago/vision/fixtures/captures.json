@@ -1881,6 +1881,506 @@
         ],
         "costGold": 900
       }
+    },
+    {
+      "file": "cap51.png",
+      "source": "Screenshot_260814_164818.jpg 1920x1080",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "아군 피해 강화",
+          "value": "효과 변경"
+        },
+        {
+          "label": "아군 피해 강화",
+          "value": "Lv. 1 감소"
+        },
+        {
+          "label": "의지력 효율",
+          "value": "+1 증가"
+        },
+        {
+          "label": "혼돈 포인트",
+          "value": "+1 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 1
+        },
+        "left": {
+          "label": "낙인력",
+          "value": 2
+        },
+        "right": {
+          "label": "아군 피해 강화",
+          "value": 3
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 1
+        }
+      },
+      "ui": {
+        "reroll": 0,
+        "attempts": [
+          2,
+          5
+        ],
+        "costGold": 900
+      }
+    },
+    {
+      "file": "cap52.png",
+      "source": "Screenshot_260814_164826.jpg 1920x1080",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "의지력 효율",
+          "value": "+1 증가"
+        },
+        {
+          "label": "혼돈 포인트",
+          "value": "+1 증가"
+        },
+        {
+          "label": "의지력 효율",
+          "value": "+2 증가"
+        },
+        {
+          "label": "다른 항목 보기",
+          "value": "2회 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 1
+        },
+        "left": {
+          "label": "추가 피해",
+          "value": 5
+        },
+        "right": {
+          "label": "낙인력",
+          "value": 1
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 3
+        }
+      },
+      "ui": {
+        "reroll": 0,
+        "attempts": [
+          3,
+          5
+        ],
+        "costGold": 900
+      }
+    },
+    {
+      "file": "cap53.png",
+      "source": "Screenshot_260814_165407.jpg 1920x1080",
+      "gem": "질서의 젬 : 안정",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "낙인력",
+          "value": "Lv. 1 증가"
+        },
+        {
+          "label": "질서 포인트",
+          "value": "+2 증가"
+        },
+        {
+          "label": "다른 항목 보기",
+          "value": "1회 증가"
+        },
+        {
+          "label": "다른 항목 보기",
+          "value": "2회 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 2
+        },
+        "left": {
+          "label": "공격력",
+          "value": 1
+        },
+        "right": {
+          "label": "낙인력",
+          "value": 1
+        },
+        "bottom": {
+          "label": "질서 포인트",
+          "value": 2
+        }
+      },
+      "ui": {
+        "reroll": 2,
+        "attempts": [
+          6,
+          9
+        ],
+        "costGold": 900
+      }
+    },
+    {
+      "file": "cap54.png",
+      "source": "Screenshot_260814_165442.jpg 1920x1080",
+      "gem": "질서의 젬 : 안정",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "공격력",
+          "value": "Lv. 2 증가"
+        },
+        {
+          "label": "의지력 효율",
+          "value": "-1 감소"
+        },
+        {
+          "label": "가공 상태",
+          "value": "유지"
+        },
+        {
+          "label": "공격력",
+          "value": "Lv. 1 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 2
+        },
+        "left": {
+          "label": "공격력",
+          "value": 1
+        },
+        "right": {
+          "label": "낙인력",
+          "value": 5
+        },
+        "bottom": {
+          "label": "질서 포인트",
+          "value": 1
+        }
+      },
+      "ui": {
+        "reroll": 2,
+        "attempts": [
+          3,
+          9
+        ],
+        "costGold": 900
+      }
+    },
+    {
+      "file": "cap55.png",
+      "source": "Screenshot_260814_165513.jpg 1920x1080",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "낙인력",
+          "value": "Lv. 1 증가"
+        },
+        {
+          "label": "혼돈 포인트",
+          "value": "-1 감소"
+        },
+        {
+          "label": "가공 상태",
+          "value": "유지"
+        },
+        {
+          "label": "아군 피해 강화",
+          "value": "Lv. 1 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 1
+        },
+        "left": {
+          "label": "낙인력",
+          "value": 2
+        },
+        "right": {
+          "label": "아군 피해 강화",
+          "value": 3
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 2
+        }
+      },
+      "ui": {
+        "reroll": 0,
+        "attempts": [
+          1,
+          5
+        ],
+        "costGold": 900
+      }
+    },
+    {
+      "file": "cap56.png",
+      "source": "Screenshot_260814_165516.jpg 1920x1080",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "공격력",
+          "value": "Lv. 1 증가"
+        },
+        {
+          "label": "의지력 효율",
+          "value": "+1 증가"
+        },
+        {
+          "label": "공격력",
+          "value": "Lv. 2 증가"
+        },
+        {
+          "label": "혼돈 포인트",
+          "value": "+1 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 1
+        },
+        "left": {
+          "label": "공격력",
+          "value": 1
+        },
+        "right": {
+          "label": "아군 피해 강화",
+          "value": 1
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 1
+        }
+      },
+      "ui": {
+        "reroll": 0,
+        "attempts": [
+          5,
+          5
+        ],
+        "costGold": 900
+      }
+    },
+    {
+      "file": "cap57.png",
+      "source": "Screenshot_260814_165618.jpg 1920x1080",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "혼돈 포인트",
+          "value": "+2 증가"
+        },
+        {
+          "label": "혼돈 포인트",
+          "value": "+1 증가"
+        },
+        {
+          "label": "아군 피해 강화",
+          "value": "효과 변경"
+        },
+        {
+          "label": "공격력",
+          "value": "Lv. 2 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 2
+        },
+        "left": {
+          "label": "공격력",
+          "value": 1
+        },
+        "right": {
+          "label": "아군 피해 강화",
+          "value": 1
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 1
+        }
+      },
+      "ui": {
+        "reroll": 0,
+        "attempts": [
+          4,
+          5
+        ],
+        "costGold": 900
+      }
+    },
+    {
+      "file": "cap58.png",
+      "source": "Screenshot_260814_165631.jpg 1920x1080",
+      "gem": "혼돈의 젬 : 침식",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "혼돈 포인트",
+          "value": "+1 증가"
+        },
+        {
+          "label": "공격력",
+          "value": "Lv. 3 증가"
+        },
+        {
+          "label": "아군 피해 강화",
+          "value": "Lv. 1 증가"
+        },
+        {
+          "label": "아군 피해 강화",
+          "value": "Lv. 2 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 2
+        },
+        "left": {
+          "label": "공격력",
+          "value": 1
+        },
+        "right": {
+          "label": "아군 피해 강화",
+          "value": 1
+        },
+        "bottom": {
+          "label": "혼돈 포인트",
+          "value": 3
+        }
+      },
+      "ui": {
+        "reroll": 0,
+        "attempts": [
+          3,
+          5
+        ],
+        "costGold": 900
+      }
+    },
+    {
+      "file": "cap59.png",
+      "source": "Screenshot_260814_165715.jpg 1920x1080",
+      "gem": "질서의 젬 : 안정",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "공격력",
+          "value": "Lv. 1 증가"
+        },
+        {
+          "label": "추가 피해",
+          "value": "Lv. 2 증가"
+        },
+        {
+          "label": "추가 피해",
+          "value": "Lv. 1 증가"
+        },
+        {
+          "label": "의지력 효율",
+          "value": "+1 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 1
+        },
+        "left": {
+          "label": "공격력",
+          "value": 1
+        },
+        "right": {
+          "label": "추가 피해",
+          "value": 1
+        },
+        "bottom": {
+          "label": "질서 포인트",
+          "value": 1
+        }
+      },
+      "ui": {
+        "reroll": 3,
+        "attempts": [
+          6,
+          7
+        ],
+        "costGold": 900
+      }
+    },
+    {
+      "file": "cap60.png",
+      "source": "Screenshot_260814_170000.jpg 1920x1080",
+      "gem": "질서의 젬 : 안정",
+      "scale": 0.935,
+      "options": [
+        {
+          "label": "의지력 효율",
+          "value": "+1 증가"
+        },
+        {
+          "label": "아군 피해 강화",
+          "value": "Lv. 1 증가"
+        },
+        {
+          "label": "질서 포인트",
+          "value": "+1 증가"
+        },
+        {
+          "label": "의지력 효율",
+          "value": "+2 증가"
+        }
+      ],
+      "gemState": {
+        "top": {
+          "label": "의지력 효율",
+          "value": 2
+        },
+        "left": {
+          "label": "아군 피해 강화",
+          "value": 4
+        },
+        "right": {
+          "label": "낙인력",
+          "value": 4
+        },
+        "bottom": {
+          "label": "질서 포인트",
+          "value": 2
+        }
+      },
+      "ui": {
+        "reroll": 1,
+        "attempts": [
+          1,
+          7
+        ],
+        "costGold": 1800
+      }
     }
   ],
   "gemStateNote": "다이아 4개. 젬 포인트 숫자가 네 값의 합과 일치하는 것으로 전부 검산했다."
