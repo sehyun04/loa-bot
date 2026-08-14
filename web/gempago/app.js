@@ -30,7 +30,7 @@
     return p.toFixed(4) + '%p';
   }
 
-  const worker = new Worker('worker.js?v=2026-08-14.4');
+  const worker = new Worker('worker.js?v=2026-08-14.6');
   let seq = 0;
   const pending = new Map();
 
@@ -363,25 +363,46 @@
   const POS_KO = { top: '의지력', left: '왼쪽 효과', right: '오른쪽 효과', bottom: '포인트' };
 
   /**
+   * 좌/우 다이아를 1번/2번 효과 칸에 배정한다.
+   *
+   * 다이아의 이름이 이 젬의 현재 효과 이름이다 - 화면이 진실이므로 입력칸이 다르면
+   * 입력칸을 고친다. "효과 변경" 이 뜨면 효과 이름 자체가 바뀌는데(공격력 -> 보스 피해),
+   * 예전에는 칸이 비어 있을 때만 채워서 옛 이름이 그대로 남았고 그 뒤로 아무것도
+   * 매칭되지 않았다.
+   *
+   * 배정 규칙: **아직 남아 있는 이름은 자기 칸을 지킨다.** 그래야 바뀐 효과만 갈리고
+   * 사용자가 정해둔 1번/2번 구분(목표를 그 기준으로 잡는다)이 흔들리지 않는다.
+   */
+  function assignEffectSlots(gem) {
+    const names = { opt1: $('name_opt1').value.trim(), opt2: $('name_opt2').value.trim() };
+    const out = {};
+    const used = new Set();
+
+    for (const pos of ['left', 'right']) {
+      const t = gem[pos] && gem[pos].confident ? gem[pos].labelText : null;
+      if (!t) continue;
+      for (const slot of ['opt1', 'opt2']) {
+        if (!used.has(slot) && names[slot] === t) { out[pos] = slot; used.add(slot); break; }
+      }
+    }
+    for (const pos of ['left', 'right']) {
+      const t = gem[pos] && gem[pos].confident ? gem[pos].labelText : null;
+      if (!t || out[pos]) continue;
+      const free = ['opt1', 'opt2'].find((s) => !used.has(s));
+      if (free) { out[pos] = free; used.add(free); }
+    }
+    return out;
+  }
+
+  /**
    * 다이아에서 읽은 현재 수치를 입력칸에 넣는다. 의심 표시된 자리는 건드리지 않는다 -
    * 조용히 틀린 값을 넣는 것보다 사람이 한 번 보는 게 낫다.
-   *
-   * 좌/우 효과는 이름으로 칸을 고른다. 사용자가 1번/2번 이름을 바꿔 넣어 뒀으면
-   * 화면의 왼쪽 다이아가 2번 효과일 수 있기 때문이다. 이름이 어느 칸과도 안 맞으면
-   * 그 자리는 채우지 않는다.
    */
   function applyGemState(res) {
-    const out = { filled: [], skipped: [], slotsChanged: false };
+    const out = { filled: [], skipped: [], slotsChanged: false, renamed: [] };
     if (!res.found || !res.gem) return out;
 
-    const optTarget = (g) => {
-      const n1 = $('name_opt1').value.trim(), n2 = $('name_opt2').value.trim();
-      if (g.labelText === n1) return 'opt1';
-      if (g.labelText === n2) return 'opt2';
-      if (g.slot === 'opt1' && !n1) return 'opt1';
-      if (g.slot === 'opt2' && !n2) return 'opt2';
-      return null;
-    };
+    const slotOf = assignEffectSlots(res.gem);
 
     for (const pos of ['top', 'left', 'right', 'bottom']) {
       const g = res.gem[pos];
@@ -396,10 +417,14 @@
 
       let slot = g.slot;
       if (slot === 'opt1' || slot === 'opt2') {
-        slot = optTarget(g);
-        if (!slot) { out.skipped.push(`${POS_KO[pos]} "${g.labelText}" (이름 칸과 안 맞음)`); continue; }
+        slot = slotOf[pos];
+        if (!slot) { out.skipped.push(`${POS_KO[pos]} "${g.labelText}" (효과 칸 배정 실패)`); continue; }
         const input = $('name_' + slot);
-        if (!input.value.trim()) { input.value = g.labelText; out.slotsChanged = true; }
+        if (input.value.trim() !== g.labelText) {
+          if (input.value.trim()) out.renamed.push(`${input.value.trim()} -> ${g.labelText}`);
+          input.value = g.labelText;
+          out.slotsChanged = true;
+        }
       }
       // 아래 다이아의 이름이 젬 계열(혼돈/질서)을 알려준다.
       if (slot === 'point' && g.labelText && $('gemType').value !== g.labelText) {
@@ -515,12 +540,16 @@
       picks[i].value = opt ? id : '';
     });
 
+    // 채웠는데 애매한 것과 아예 못 채운 것은 사용자가 할 일이 다르다.
+    // 앞은 "맞는지 봐 주세요", 뒤는 "직접 고르세요" 다.
+    const filled = (res.resolved || []).filter(Boolean).length;
     const names = res.problems.map((p) => `열${p.column}: ${p.reason}`);
     $('pickStatus').hidden = false;
     $('pickStatus').className = 'capture-status warn';
-    $('pickStatus').textContent =
-      '항목 4개 중 자동으로 못 채운 게 있어 그 칸은 그대로 뒀습니다.\n' + names.join('\n') +
-      '\n아래 결과는 지금 왼쪽에 입력된 값 기준입니다. 못 채운 항목은 직접 고르세요.';
+    $('pickStatus').textContent = (filled === 4
+      ? '4개 다 채웠지만 확실하지 않은 항목이 있습니다. 화면과 같은지 봐 주세요.\n'
+      : '항목 4개 중 자동으로 못 채운 게 있어 그 칸은 비워 뒀습니다.\n') + names.join('\n')
+      + '\n아래 결과는 지금 왼쪽에 입력된 값 기준입니다.';
     setCapture(`읽음 (배율 ${res.scale}, ${res.ms}ms)\n` + read.join('\n'), 'warn');
     refresh();
   }
@@ -534,6 +563,11 @@
     const meta = applyMeta(res);
     gem.filled.push.apply(gem.filled, meta.filled);
     gem.skipped.push.apply(gem.skipped, meta.skipped);
+    // 효과가 바뀌면("효과 변경") 이름 칸도 따라 바뀐다. 조용히 바꾸면 목표를 1번/2번으로
+    // 나눠 잡은 사용자가 눈치채지 못하므로 알린다.
+    if (gem.renamed && gem.renamed.length) {
+      gem.filled.push(`효과 이름 갱신: ${gem.renamed.join(', ')}`);
+    }
     // 젬 포인트 검산 결과. 복구된 값은 이미 confident 로 채워져 있다.
     if (res.sumCheck && res.sumCheck.status === 'recovered') {
       gem.filled.push(`(${POS_KO[res.sumCheck.pos]}는 젬 포인트 합으로 보정)`);
