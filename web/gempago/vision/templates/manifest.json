@@ -57,6 +57,20 @@
       "family": "stat"
     },
     {
+      "file": "label-boss-pihae-3.png",
+      "group": "label",
+      "key": "boss-pihae",
+      "text": "보스 피해",
+      "src": "cap47.png 열2"
+    },
+    {
+      "file": "label-boss-pihae-2.png",
+      "group": "label",
+      "key": "boss-pihae",
+      "text": "보스 피해",
+      "src": "cap45.png 열2"
+    },
+    {
       "file": "label-uijiryeok-1.png",
       "group": "label",
       "key": "uijiryeok",
