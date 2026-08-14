@@ -122,15 +122,18 @@
    * 하나라도 실패하면 ids 는 null 이다 - 셋만 아는 상태로 판단하면 안 된다.
    */
   function toPicks(options, slots) {
-    const ids = [];
+    // resolved 는 열 번호와 자리가 맞아야 한다. 성공한 것만 밀어 넣으면 호출부가
+    // "몇 번째 열이 이 id 인지" 를 알 수 없어서, 실패한 열만 비우는 일이 불가능해진다.
+    const resolved = [null, null, null, null];
     const problems = [];
     (options || []).forEach((o, i) => {
       if (o && o.confident === false) problems.push({ column: i + 1, reason: '인식이 불확실합니다' });
       const r = toOutcomeId(o, slots);
-      if (r.ok) ids.push(r.id);
+      if (r.ok) resolved[i] = r.id;
       else problems.push({ column: i + 1, reason: r.reason });
     });
-    return { ids: ids.length === 4 && !problems.length ? ids : null, resolved: ids, problems };
+    const ok = resolved.every(Boolean) && !problems.length;
+    return { ids: ok ? resolved.slice() : null, resolved, problems };
   }
 
   /**

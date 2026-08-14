@@ -30,7 +30,7 @@
     return p.toFixed(4) + '%p';
   }
 
-  const worker = new Worker('worker.js?v=2026-08-13.2');
+  const worker = new Worker('worker.js?v=2026-08-14.3');
   let seq = 0;
   const pending = new Map();
 
@@ -386,7 +386,13 @@
     for (const pos of ['top', 'left', 'right', 'bottom']) {
       const g = res.gem[pos];
       if (!g || !g.slot) continue;
-      if (!g.confident) { out.skipped.push(`${POS_KO[pos]} (확실치 않음)`); continue; }
+      // 못 채웠어도 무엇으로 읽었는지는 보여준다. 안 보여주면 사용자가 왜 안 채워졌는지
+      // 알 수 없고, 이상하게 읽는 화면을 나중에 재현할 수도 없다.
+      if (!g.confident) {
+        const guess = g.labelText ? `${g.labelText} ${g.value == null ? '?' : g.value}` : '?';
+        out.skipped.push(`${POS_KO[pos]}: ${guess} 로 읽었지만 확실치 않음`);
+        continue;
+      }
 
       let slot = g.slot;
       if (slot === 'opt1' || slot === 'opt2') {
@@ -500,13 +506,23 @@
     }
 
     // 4개를 다 알아내지 못했으면 아무것도 채우지 않는다. 셋만 넣으면 오히려 헷갈린다.
+    // 다만 아래 결과는 반드시 다시 계산한다 - 안 그러면 방금 자동 입력한 수치·횟수가
+    // 반영되지 않은 옛 판단이 그대로 남아서, 화면과 다른 확률을 보고 판단하게 된다.
+    // 알아낸 열만 채우고 나머지는 비운다. 안 비우면 이전 화면의 선택이 남아서
+    // 지금 화면과 무관한 판단이 아래에 뜬다 (실측: 젬을 바꿔도 옛 확률이 그대로였다).
+    (res.resolved || []).forEach((id, i) => {
+      const opt = id && picks[i].querySelector(`option[value="${CSS.escape(id)}"]`);
+      picks[i].value = opt ? id : '';
+    });
+
     const names = res.problems.map((p) => `열${p.column}: ${p.reason}`);
     $('pickStatus').hidden = false;
     $('pickStatus').className = 'capture-status warn';
     $('pickStatus').textContent =
-      '자동으로 못 채운 항목이 있어 그대로 뒀습니다.\n' + names.join('\n') +
-      '\n효과 이름이 안 맞으면 위 "1번/2번 효과 이름" 에 화면 그대로 넣어보세요.';
+      '항목 4개 중 자동으로 못 채운 게 있어 그 칸은 그대로 뒀습니다.\n' + names.join('\n') +
+      '\n아래 결과는 지금 왼쪽에 입력된 값 기준입니다. 못 채운 항목은 직접 고르세요.';
     setCapture(`읽음 (배율 ${res.scale}, ${res.ms}ms)\n` + read.join('\n'), 'warn');
+    refresh();
   }
 
   /** 읽고 -> 다이아로 현재 수치·이름을 채우고 -> 모르는 효과 이름이면 채우고 -> 다시 해석한다. */
@@ -522,8 +538,18 @@
     if (res.sumCheck && res.sumCheck.status === 'recovered') {
       gem.filled.push(`(${POS_KO[res.sumCheck.pos]}는 젬 포인트 합으로 보정)`);
     }
+    // 네 자리가 전부 "배경판이 안 맞아서" 막힌 경우는 원인이 하나다 - 이 화면의 출처가
+    // 아틀라스에 없는 것이다. 값을 하나씩 고치라고 하는 것보다 프레임을 받는 게 빠르다.
+    const noisy = ['top', 'left', 'right', 'bottom']
+      .filter((p) => res.gem && res.gem[p] && res.gem[p].scores.bgNoise > 0.2);
+    if (noisy.length === 4) {
+      gem.skipped.length = 0;
+      gem.skipped.push('현재 수치 4개 전부: 이 화면 출처의 표본이 없어 숫자를 못 믿습니다.'
+        + ' "이 화면 저장" 을 눌러 나온 PNG 를 몇 장 모아 주면 읽을 수 있게 됩니다.');
+    }
     if (res.sumCheck && res.sumCheck.status === 'mismatch') {
-      gem.skipped.push('수치 합이 젬 포인트와 안 맞음 - 네 수치를 직접 확인하세요');
+      gem.skipped.push(`수치 합 ${res.sumCheck.sum} 인데 화면의 젬 포인트는 ${res.sumCheck.gemPoint}`
+        + ' - 네 수치를 직접 확인하세요');
     }
     if (gem.slotsChanged) {
       syncStatLabels();
@@ -570,6 +596,7 @@
     $('shareBtn').textContent = '화면 공유 시작';
     $('shareBtn').classList.remove('on');
     $('readBtn').disabled = true;
+    $('saveFrameBtn').disabled = true;
     $('autoRead').disabled = true;
     $('autoRead').checked = false;
   }
@@ -589,10 +616,14 @@
       $('shareBtn').textContent = '공유 끄기';
       $('shareBtn').classList.add('on');
       $('readBtn').disabled = false;
+      $('saveFrameBtn').disabled = false;
       $('autoRead').disabled = false;
       // 창 크기가 바뀌면 배율도 바뀐다. 캐시를 비우고 처음부터 찾게 한다.
       await ask('forgetScale', {});
-      setCapture('공유 중. 가공 화면을 띄우고 "지금 읽기" 를 누르세요.\n처음 한 번은 배율을 찾느라 2초쯤 걸립니다.');
+      // 들어오는 프레임 크기를 보여준다. 창모드 공유나 브라우저 다운스케일 때문에
+      // 게임 해상도와 다른 경우가 많고, 그 차이가 인식 실패의 흔한 원인이다.
+      setCapture(`공유 중 (${v.videoWidth}x${v.videoHeight}). 가공 화면을 띄우고 "지금 읽기" 를 누르세요.`
+        + '\n처음 한 번은 배율을 찾느라 2초쯤 걸립니다.');
     } catch (err) {
       stopShare();
       setCapture(err.name === 'NotAllowedError' ? '공유를 취소했습니다.' : '공유 실패: ' + err.message,
@@ -601,6 +632,30 @@
   });
 
   $('readBtn').addEventListener('click', () => grabAndRead());
+
+  /*
+   * 공유 화면 한 프레임을 그대로 PNG 로 내려받는다.
+   *
+   * 게임의 스크린샷 폴더 파일과 이 프레임은 같은 화면이어도 픽셀이 다르다 - 창모드
+   * 크기와 브라우저 다운스케일을 거치기 때문이다. 다이아 숫자는 글자가 3~12px 라
+   * 그 차이에 그대로 무너진다(README "같은 문자열이라도 템플릿을 여러 개 둔다").
+   * 그래서 실제로 읽히는 프레임 자체를 표본으로 받을 방법이 필요하다.
+   */
+  $('saveFrameBtn').addEventListener('click', () => {
+    const v = $('preview');
+    if (!v.videoWidth) { setCapture('아직 영상이 안 들어왔습니다.', 'warn'); return; }
+    grabCanvas.width = v.videoWidth;
+    grabCanvas.height = v.videoHeight;
+    grabCtx.drawImage(v, 0, 0, v.videoWidth, v.videoHeight);
+    grabCanvas.toBlob((blob) => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `share-${v.videoWidth}x${v.videoHeight}-${Date.now()}.png`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+      setCapture(`프레임을 저장했습니다 (${v.videoWidth}x${v.videoHeight}). 다운로드 폴더를 보세요.`, 'ok');
+    }, 'image/png');
+  });
 
   $('autoRead').addEventListener('change', (e) => {
     clearInterval(autoTimer);
