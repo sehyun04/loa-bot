@@ -22,11 +22,12 @@
   const isNode = typeof require === 'function' && typeof module !== 'undefined';
   const api = factory(
     isNode ? require('./ncc.js') : root.GempagoNCC,
-    isNode ? require('./layout.js') : root.GempagoLayout
+    isNode ? require('./layout.js') : root.GempagoLayout,
+    isNode ? require('./digit-cnn.js') : root.GempagoDigitCNN
   );
   if (isNode) module.exports = api;
   else root.GempagoReader = api;
-})(typeof self !== 'undefined' ? self : this, function (ncc, layout) {
+})(typeof self !== 'undefined' ? self : this, function (ncc, layout, digitCNN) {
   'use strict';
 
   const DIGIT_WINDOW = 8;
@@ -314,28 +315,36 @@
     }
     const image = origin.image;
 
+    // 이름은 템플릿 매칭(글자가 커서 리샘플을 견딘다), 숫자는 분류기.
+    // 숫자만 원본 픽셀에서 읽는다 - 화면을 기준 배율로 늘리면 3~12px 짜리 글자에
+    // 보간이 얹혀서 캡처 출처 차이가 증폭된다 (digit-cnn.js 주석 참고).
     const dia = layout.diamonds(origin);
+    const diaNative = layout.diamonds(origin, true);
     const gem = {};
     for (const pos of Object.keys(dia)) {
       const label = pick(image, dia[pos].label, atlas['dia-label'], diaCandidates(atlas, pos));
-      const value = readDiamondValue(image, dia[pos].value, atlas, pos);
+      const value = atlas.digitCNN
+        ? digitCNN.classify(atlas.digitCNN, origin.raw, diaNative[pos].value, pos, origin.scale)
+        : readDiamondValue(image, dia[pos].value, atlas, pos);
       gem[pos] = {
         slot: dia[pos].slot,
         label: label ? label.name : null,
         labelText: label ? atlas.text['dia-label'][label.name] : null,
-        value: value ? +value.digit : null,
+        // 분류기는 value/prob 를, 옛 템플릿 경로는 digit/score 를 준다.
+        value: value ? (value.value != null ? value.value : +value.digit) : null,
         scores: {
           label: label ? label.score : 0,
           labelMargin: label ? label.margin : 0,
-          value: value ? value.score : 0,
+          value: value ? (value.prob != null ? value.prob : value.score) : 0,
           valueMargin: value ? value.margin : 0,
-          bgNoise: value ? value.noise : null,
+          bgNoise: value ? (value.noise == null ? 0 : value.noise) : null,
         },
         // 위/아래는 이름 후보가 1~2개뿐이라 이름 마진이 의미 없다. 점수만 본다.
         confident: !!(label && value &&
           label.score >= minScore &&
-          value.score >= minScore && value.margin >= valueMinMargin &&
-          value.noise <= DIA_BG_MAX_NOISE &&
+          (value.prob != null ? value.prob : value.score) >= minScore &&
+          value.margin >= valueMinMargin &&
+          (value.noise == null || value.noise <= DIA_BG_MAX_NOISE) &&
           (pos === 'top' || pos === 'bottom' || label.margin >= minMargin)),
       };
     }

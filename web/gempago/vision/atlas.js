@@ -54,6 +54,12 @@ function load(dir) {
   }
 
   if (!atlas.anchor) throw new Error('anchor 템플릿이 manifest 에 없습니다');
+
+  // 다이아 숫자 분류기. 없으면 reader 가 옛 템플릿 경로로 돌아간다.
+  const cnnPath = path.join(base, 'digit-cnn.json');
+  if (fs.existsSync(cnnPath)) {
+    atlas.digitCNN = require('./digit-cnn.js').prepare(JSON.parse(fs.readFileSync(cnnPath, 'utf8')));
+  }
   return atlas;
 }
 

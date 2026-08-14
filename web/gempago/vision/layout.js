@@ -99,7 +99,15 @@
     const image = scale === 1 ? img : ncc.resize(img, 1 / scale);
     const r = ncc.locate(image, anchorTpl, 4);
     if (!r || r.score < minScore) return null;
-    return { image, x: r.x, y: r.y, score: r.score, scale };
+    // 원본(리샘플 전) 좌표도 같이 준다. 다이아 숫자는 글자가 3~12px 라 확대 보간에
+    // 무너져서 원본 픽셀에서 읽어야 한다 (README "다이아 - 원본에서 읽는다").
+    // resize 의 좌표 대응이 (x+0.5)*s-0.5 이므로 역변환도 같은 식을 쓴다.
+    return {
+      image, x: r.x, y: r.y, score: r.score, scale,
+      raw: img,
+      rawX: Math.round((r.x + 0.5) * scale - 0.5),
+      rawY: Math.round((r.y + 0.5) * scale - 0.5),
+    };
   }
 
   // locate 가 화면을 기준 배율로 되돌려 주므로 여기서는 배율을 곱하지 않는다.
@@ -172,17 +180,25 @@
     return out;
   }
 
-  /** 다이아 4개의 옵션명/값 영역. 키는 top/left/right/bottom. */
-  function diamonds(origin) {
+  /**
+   * 다이아 4개의 옵션명/값 영역. 키는 top/left/right/bottom.
+   *
+   * @param {boolean} [native] true 면 리샘플 전 원본 좌표로 준다. REF 는 2048 기준이라
+   *   원본이 그보다 작으면 오프셋도 그만큼 줄여야 한다(= 배율을 곱한다).
+   */
+  function diamonds(origin, native) {
+    const u = native ? origin.scale : 1;
+    const ox = native ? origin.rawX : origin.x;
+    const oy = native ? origin.rawY : origin.y;
     const half = REF.diamond.halfWidth;
     const out = {};
     for (const pos of Object.keys(DIAMOND_SLOTS)) {
       const d = REF.diamond[pos];
       const box = (band) => ({
-        x: Math.round(origin.x + d.dx - half),
-        y: Math.round(origin.y + band.dy),
-        w: half * 2,
-        h: band.h,
+        x: Math.round(ox + (d.dx - half) * u),
+        y: Math.round(oy + band.dy * u),
+        w: Math.round(half * 2 * u),
+        h: Math.round(band.h * u),
       });
       out[pos] = { slot: DIAMOND_SLOTS[pos], label: box(d.label), value: box(d.value) };
     }
