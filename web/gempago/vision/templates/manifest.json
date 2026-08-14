@@ -1,0 +1,2774 @@
+{
+  "note": "캡처에서 잘라낸 템플릿. 같은 key 가 여러 개면 출처가 다른 변형이고, 매칭은 최고점을 쓴다.",
+  "groundTruth": "fixtures/captures.json",
+  "items": [
+    {
+      "file": "anchor.png",
+      "group": "anchor",
+      "key": "anchor",
+      "text": "다음 항목 중 무작위로 적용됩니다.",
+      "src": "로아젬1.PNG"
+    },
+    {
+      "file": "label-agun-pihae-1.png",
+      "group": "label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap-roaring1.png 열1",
+      "size": [
+        93,
+        14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-agun-pihae-2.png",
+      "group": "label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap18.png 열2",
+      "size": [
+        93,
+        14
+      ]
+    },
+    {
+      "file": "label-hondon-point-1.png",
+      "group": "label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap-roaring1.png 열2",
+      "size": [
+        74,
+        14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-boss-pihae-1.png",
+      "group": "label",
+      "key": "boss-pihae",
+      "text": "보스 피해",
+      "src": "cap14.png 열1",
+      "size": [
+        60,
+        14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-uijiryeok-1.png",
+      "group": "label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap14.png 열3",
+      "size": [
+        73,
+        14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-jilseo-point-1.png",
+      "group": "label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap16.png 열3",
+      "size": [
+        73,
+        14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-jilseo-point-3.png",
+      "group": "label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap48.png 열4"
+    },
+    {
+      "file": "label-jilseo-point-2.png",
+      "group": "label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap42.png 열1"
+    },
+    {
+      "file": "label-agun-gonggyeok-1.png",
+      "group": "label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap18.png 열3",
+      "size": [
+        93,
+        14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-agun-gonggyeok-2.png",
+      "group": "label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap46.png 열2"
+    },
+    {
+      "file": "label-agun-gonggyeok-3.png",
+      "group": "label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap47.png 열3"
+    },
+    {
+      "file": "label-chuga-pihae-1.png",
+      "group": "label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap21.png 열3",
+      "size": [
+        59,
+        14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-gagong-sangtae-1.png",
+      "group": "label",
+      "key": "gagong-sangtae",
+      "text": "가공 상태",
+      "src": "cap15.png 열4",
+      "size": [
+        59,
+        14
+      ],
+      "family": "keep"
+    },
+    {
+      "file": "label-gagong-sangtae-2.png",
+      "group": "label",
+      "key": "gagong-sangtae",
+      "text": "가공 상태",
+      "src": "cap29.png 열4",
+      "size": [
+        60,
+        14
+      ]
+    },
+    {
+      "file": "label-dareun-hangmok-1.png",
+      "group": "label",
+      "key": "dareun-hangmok",
+      "text": "다른 항목 보기",
+      "src": "cap16.png 열1",
+      "size": [
+        91,
+        14
+      ],
+      "family": "reroll"
+    },
+    {
+      "file": "label-dareun-hangmok-2.png",
+      "group": "label",
+      "key": "dareun-hangmok",
+      "text": "다른 항목 보기",
+      "src": "cap44.png 열3"
+    },
+    {
+      "file": "label-gagong-biyong-1.png",
+      "group": "label",
+      "key": "gagong-biyong",
+      "text": "가공 비용",
+      "src": "cap20.png 열3",
+      "size": [
+        60,
+        14
+      ],
+      "family": "cost"
+    },
+    {
+      "file": "label-gagong-biyong-2.png",
+      "group": "label",
+      "key": "gagong-biyong",
+      "text": "가공 비용",
+      "src": "cap23.png 열3",
+      "size": [
+        60,
+        14
+      ]
+    },
+    {
+      "file": "label-gagong-biyong-4.png",
+      "group": "label",
+      "key": "gagong-biyong",
+      "text": "가공 비용",
+      "src": "cap37.png 열4",
+      "size": [
+        61,
+        14
+      ]
+    },
+    {
+      "file": "label-gagong-biyong-3.png",
+      "group": "label",
+      "key": "gagong-biyong",
+      "text": "가공 비용",
+      "src": "cap33.png 열1",
+      "size": [
+        61,
+        14
+      ]
+    },
+    {
+      "file": "label-gonggyeok-1.png",
+      "group": "label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap22.png 열4",
+      "size": [
+        40,
+        14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-gonggyeok-4.png",
+      "group": "label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap41.png 열3"
+    },
+    {
+      "file": "label-gonggyeok-3.png",
+      "group": "label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap40.png 열1"
+    },
+    {
+      "file": "label-gonggyeok-2.png",
+      "group": "label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap24.png 열1",
+      "size": [
+        41,
+        14
+      ]
+    },
+    {
+      "file": "label-nagin-1.png",
+      "group": "label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap27.png 열4",
+      "size": [
+        39,
+        14
+      ],
+      "family": "stat"
+    },
+    {
+      "file": "label-nagin-2.png",
+      "group": "label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap31.png 열2",
+      "size": [
+        41,
+        14
+      ]
+    },
+    {
+      "file": "label-nagin-3.png",
+      "group": "label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap38.png 열1",
+      "size": [
+        41,
+        14
+      ]
+    },
+    {
+      "file": "label-nagin-4.png",
+      "group": "label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap28.png 열4",
+      "size": [
+        39,
+        14
+      ]
+    },
+    {
+      "file": "label-hondon-point-2.png",
+      "group": "label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap24.png 열4",
+      "size": [
+        74,
+        14
+      ]
+    },
+    {
+      "file": "label-hondon-point-5.png",
+      "group": "label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap38.png 열2",
+      "size": [
+        76,
+        14
+      ]
+    },
+    {
+      "file": "label-hondon-point-4.png",
+      "group": "label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap33.png 열3",
+      "size": [
+        76,
+        14
+      ]
+    },
+    {
+      "file": "label-hondon-point-3.png",
+      "group": "label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap29.png 열3",
+      "size": [
+        76,
+        14
+      ]
+    },
+    {
+      "file": "label-agun-pihae-3.png",
+      "group": "label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap26.png 열1",
+      "size": [
+        95,
+        14
+      ]
+    },
+    {
+      "file": "label-agun-pihae-5.png",
+      "group": "label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap39.png 열1",
+      "size": [
+        95,
+        14
+      ]
+    },
+    {
+      "file": "label-agun-pihae-4.png",
+      "group": "label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap29.png 열1",
+      "size": [
+        95,
+        14
+      ]
+    },
+    {
+      "file": "label-uijiryeok-2.png",
+      "group": "label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap26.png 열2",
+      "size": [
+        75,
+        14
+      ]
+    },
+    {
+      "file": "label-uijiryeok-4.png",
+      "group": "label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap33.png 열2",
+      "size": [
+        75,
+        14
+      ]
+    },
+    {
+      "file": "label-uijiryeok-3.png",
+      "group": "label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap30.png 열1",
+      "size": [
+        75,
+        14
+      ]
+    },
+    {
+      "file": "label-chuga-pihae-2.png",
+      "group": "label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap26.png 열3",
+      "size": [
+        60,
+        14
+      ]
+    },
+    {
+      "file": "label-chuga-pihae-3.png",
+      "group": "label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap35.png 열3",
+      "size": [
+        60,
+        14
+      ]
+    },
+    {
+      "file": "whole-yuji-1.png",
+      "group": "whole",
+      "key": "yuji",
+      "text": "유지",
+      "src": "cap15.png 열4",
+      "size": [
+        26,
+        13
+      ]
+    },
+    {
+      "file": "whole-yuji-2.png",
+      "group": "whole",
+      "key": "yuji",
+      "text": "유지",
+      "src": "cap17.png 열2",
+      "size": [
+        26,
+        13
+      ]
+    },
+    {
+      "file": "whole-yuji-4.png",
+      "group": "whole",
+      "key": "yuji",
+      "text": "유지",
+      "src": "cap34.png 열4"
+    },
+    {
+      "file": "whole-yuji-3.png",
+      "group": "whole",
+      "key": "yuji",
+      "text": "유지",
+      "src": "cap29.png 열4"
+    },
+    {
+      "file": "whole-change-1.png",
+      "group": "whole",
+      "key": "change",
+      "text": "효과 변경",
+      "src": "cap14.png 열2",
+      "size": [
+        59,
+        13
+      ]
+    },
+    {
+      "file": "whole-change-2.png",
+      "group": "whole",
+      "key": "change",
+      "text": "효과 변경",
+      "src": "cap19.png 열3",
+      "size": [
+        59,
+        13
+      ]
+    },
+    {
+      "file": "whole-change-3.png",
+      "group": "whole",
+      "key": "change",
+      "text": "효과 변경",
+      "src": "cap26.png 열3",
+      "size": [
+        60,
+        13
+      ]
+    },
+    {
+      "file": "whole-cost-plus-1.png",
+      "group": "whole",
+      "key": "cost-plus",
+      "text": "+100% 증가",
+      "src": "cap20.png 열3",
+      "size": [
+        81,
+        13
+      ]
+    },
+    {
+      "file": "whole-cost-plus-2.png",
+      "group": "whole",
+      "key": "cost-plus",
+      "text": "+100% 증가",
+      "src": "cap23.png 열4",
+      "size": [
+        82,
+        13
+      ]
+    },
+    {
+      "file": "whole-cost-minus-1.png",
+      "group": "whole",
+      "key": "cost-minus",
+      "text": "-100% 감소",
+      "src": "cap23.png 열3",
+      "size": [
+        81,
+        13
+      ]
+    },
+    {
+      "file": "prefix-lv-1.png",
+      "group": "prefix",
+      "key": "lv",
+      "text": "Lv.",
+      "src": "cap-roaring1.png 열1",
+      "size": [
+        20,
+        13
+      ],
+      "pattern": "{p} {d} {s}"
+    },
+    {
+      "file": "prefix-lv-2.png",
+      "group": "prefix",
+      "key": "lv",
+      "text": "Lv.",
+      "src": "cap16.png 열2",
+      "size": [
+        20,
+        13
+      ]
+    },
+    {
+      "file": "prefix-lv-3.png",
+      "group": "prefix",
+      "key": "lv",
+      "text": "Lv.",
+      "src": "cap21.png 열4",
+      "size": [
+        20,
+        13
+      ]
+    },
+    {
+      "file": "prefix-plus-1.png",
+      "group": "prefix",
+      "key": "plus",
+      "text": "+",
+      "src": "cap-roaring1.png 열2",
+      "size": [
+        8,
+        13
+      ],
+      "pattern": "{p}{d} {s}"
+    },
+    {
+      "file": "prefix-plus-2.png",
+      "group": "prefix",
+      "key": "plus",
+      "text": "+",
+      "src": "cap17.png 열1",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "prefix-plus-3.png",
+      "group": "prefix",
+      "key": "plus",
+      "text": "+",
+      "src": "cap21.png 열2",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "prefix-lv-4.png",
+      "group": "prefix",
+      "key": "lv",
+      "text": "Lv.",
+      "src": "cap26.png 열1",
+      "size": [
+        20,
+        13
+      ]
+    },
+    {
+      "file": "prefix-plus-4.png",
+      "group": "prefix",
+      "key": "plus",
+      "text": "+",
+      "src": "cap26.png 열2",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "prefix-minus-1.png",
+      "group": "prefix",
+      "key": "minus",
+      "text": "-",
+      "src": "cap14.png 열3",
+      "size": [
+        7,
+        13
+      ],
+      "pattern": "{p}{d} {s}"
+    },
+    {
+      "file": "digit-1-1.png",
+      "group": "digit",
+      "key": "1",
+      "text": "1",
+      "src": "cap-roaring1.png 열1 덩어리 127..130",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-1-2.png",
+      "group": "digit",
+      "key": "1",
+      "text": "1",
+      "src": "cap17.png 열1 덩어리 120..124",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-1-3.png",
+      "group": "digit",
+      "key": "1",
+      "text": "1",
+      "src": "cap18.png 열2 덩어리 251..255",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-2-1.png",
+      "group": "digit",
+      "key": "2",
+      "text": "2",
+      "src": "cap-roaring1.png 열2 덩어리 242..249",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-2-2.png",
+      "group": "digit",
+      "key": "2",
+      "text": "2",
+      "src": "cap16.png 열2 덩어리 250..257",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-2-3.png",
+      "group": "digit",
+      "key": "2",
+      "text": "2",
+      "src": "cap21.png 열2 덩어리 243..249",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-2-4.png",
+      "group": "digit",
+      "key": "2",
+      "text": "2",
+      "src": "cap25.png 열3 덩어리 367..374",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-2-5.png",
+      "group": "digit",
+      "key": "2",
+      "text": "2",
+      "src": "cap26.png 열2 덩어리 241..249",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-3-1.png",
+      "group": "digit",
+      "key": "3",
+      "text": "3",
+      "src": "cap16.png 열3 덩어리 367..374",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-3-2.png",
+      "group": "digit",
+      "key": "3",
+      "text": "3",
+      "src": "cap26.png 열1 덩어리 124..131",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-4-1.png",
+      "group": "digit",
+      "key": "4",
+      "text": "4",
+      "src": "cap17.png 열4 덩어리 491..499",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-4-2.png",
+      "group": "digit",
+      "key": "4",
+      "text": "4",
+      "src": "cap21.png 열4 덩어리 499..506",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "digit-4-3.png",
+      "group": "digit",
+      "key": "4",
+      "text": "4",
+      "src": "cap26.png 열4 덩어리 499..507",
+      "size": [
+        8,
+        13
+      ]
+    },
+    {
+      "file": "suffix-jeungga-1.png",
+      "group": "suffix",
+      "key": "jeungga",
+      "text": "증가",
+      "src": "cap-roaring1.png 열1",
+      "size": [
+        28,
+        13
+      ]
+    },
+    {
+      "file": "suffix-jeungga-2.png",
+      "group": "suffix",
+      "key": "jeungga",
+      "text": "증가",
+      "src": "cap16.png 열2",
+      "size": [
+        28,
+        13
+      ]
+    },
+    {
+      "file": "suffix-jeungga-3.png",
+      "group": "suffix",
+      "key": "jeungga",
+      "text": "증가",
+      "src": "cap21.png 열2",
+      "size": [
+        28,
+        13
+      ]
+    },
+    {
+      "file": "suffix-jeungga-4.png",
+      "group": "suffix",
+      "key": "jeungga",
+      "text": "증가",
+      "src": "cap26.png 열2",
+      "size": [
+        28,
+        13
+      ]
+    },
+    {
+      "file": "suffix-jeungga-7.png",
+      "group": "suffix",
+      "key": "jeungga",
+      "text": "증가",
+      "src": "cap38.png 열2"
+    },
+    {
+      "file": "suffix-jeungga-6.png",
+      "group": "suffix",
+      "key": "jeungga",
+      "text": "증가",
+      "src": "cap33.png 열2"
+    },
+    {
+      "file": "suffix-jeungga-5.png",
+      "group": "suffix",
+      "key": "jeungga",
+      "text": "증가",
+      "src": "cap29.png 열3"
+    },
+    {
+      "file": "suffix-gamso-1.png",
+      "group": "suffix",
+      "key": "gamso",
+      "text": "감소",
+      "src": "cap14.png 열3",
+      "size": [
+        34,
+        13
+      ]
+    },
+    {
+      "file": "suffix-gamso-2.png",
+      "group": "suffix",
+      "key": "gamso",
+      "text": "감소",
+      "src": "cap24.png 열2",
+      "size": [
+        27,
+        13
+      ]
+    },
+    {
+      "file": "suffix-gamso-4.png",
+      "group": "suffix",
+      "key": "gamso",
+      "text": "감소",
+      "src": "cap32.png 열3"
+    },
+    {
+      "file": "suffix-gamso-3.png",
+      "group": "suffix",
+      "key": "gamso",
+      "text": "감소",
+      "src": "cap37.png 열1"
+    },
+    {
+      "file": "suffix-hoi-jeungga-1.png",
+      "group": "suffix",
+      "key": "hoi-jeungga",
+      "text": "회 증가",
+      "src": "cap16.png 열1",
+      "size": [
+        47,
+        13
+      ],
+      "pattern": "{d}{s}"
+    },
+    {
+      "file": "suffix-hoi-jeungga-2.png",
+      "group": "suffix",
+      "key": "hoi-jeungga",
+      "text": "회 증가",
+      "src": "cap25.png 열3",
+      "size": [
+        47,
+        13
+      ]
+    },
+    {
+      "file": "suffix-hoi-jeungga-3.png",
+      "group": "suffix",
+      "key": "hoi-jeungga",
+      "text": "회 증가",
+      "src": "cap28.png 열1"
+    },
+    {
+      "file": "dia-bg-top-1.png",
+      "group": "dia-bg",
+      "key": "top",
+      "range": [
+        -1.31,
+        3.9268
+      ],
+      "src": "혼돈의-x1 4장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-top-2.png",
+      "group": "dia-bg",
+      "key": "top",
+      "range": [
+        -1.3387,
+        3.8021
+      ],
+      "src": "질서의-x0.98 8장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-top-3.png",
+      "group": "dia-bg",
+      "key": "top",
+      "range": [
+        -1.3365,
+        3.813
+      ],
+      "src": "혼돈의-x0.98 4장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-top-4.png",
+      "group": "dia-bg",
+      "key": "top",
+      "range": [
+        -1.2539,
+        3.4983
+      ],
+      "src": "혼돈의-x0.935 12장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-top-5.png",
+      "group": "dia-bg",
+      "key": "top",
+      "range": [
+        -1.3048,
+        3.7703
+      ],
+      "src": "질서의-x0.935 11장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-left-1.png",
+      "group": "dia-bg",
+      "key": "left",
+      "range": [
+        -1.4265,
+        3
+      ],
+      "src": "혼돈의-x1 4장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-left-2.png",
+      "group": "dia-bg",
+      "key": "left",
+      "range": [
+        -1.4761,
+        3.0405
+      ],
+      "src": "질서의-x0.98 8장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-left-3.png",
+      "group": "dia-bg",
+      "key": "left",
+      "range": [
+        -1.4703,
+        3.0371
+      ],
+      "src": "혼돈의-x0.98 4장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-left-4.png",
+      "group": "dia-bg",
+      "key": "left",
+      "range": [
+        -1.3594,
+        2.9933
+      ],
+      "src": "혼돈의-x0.935 12장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-left-5.png",
+      "group": "dia-bg",
+      "key": "left",
+      "range": [
+        -1.4214,
+        3.1085
+      ],
+      "src": "질서의-x0.935 11장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-right-1.png",
+      "group": "dia-bg",
+      "key": "right",
+      "range": [
+        -1.5239,
+        3.3999
+      ],
+      "src": "혼돈의-x1 4장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-right-2.png",
+      "group": "dia-bg",
+      "key": "right",
+      "range": [
+        -1.581,
+        3.2655
+      ],
+      "src": "질서의-x0.98 8장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-right-3.png",
+      "group": "dia-bg",
+      "key": "right",
+      "range": [
+        -1.5466,
+        3.287
+      ],
+      "src": "혼돈의-x0.98 4장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-right-4.png",
+      "group": "dia-bg",
+      "key": "right",
+      "range": [
+        -1.525,
+        3.0368
+      ],
+      "src": "혼돈의-x0.935 12장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-right-5.png",
+      "group": "dia-bg",
+      "key": "right",
+      "range": [
+        -1.507,
+        3.0106
+      ],
+      "src": "질서의-x0.935 11장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-bottom-1.png",
+      "group": "dia-bg",
+      "key": "bottom",
+      "range": [
+        -1.387,
+        2.3643
+      ],
+      "src": "혼돈의-x1 4장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-bottom-2.png",
+      "group": "dia-bg",
+      "key": "bottom",
+      "range": [
+        -1.4474,
+        2.4114
+      ],
+      "src": "질서의-x0.98 8장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-bottom-3.png",
+      "group": "dia-bg",
+      "key": "bottom",
+      "range": [
+        -1.404,
+        2.3898
+      ],
+      "src": "혼돈의-x0.98 4장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-bottom-4.png",
+      "group": "dia-bg",
+      "key": "bottom",
+      "range": [
+        -1.3527,
+        2.3861
+      ],
+      "src": "혼돈의-x0.935 12장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-bg-bottom-5.png",
+      "group": "dia-bg",
+      "key": "bottom",
+      "range": [
+        -1.3811,
+        2.3576
+      ],
+      "src": "질서의-x0.935 11장 z 정규화 배경판"
+    },
+    {
+      "file": "dia-label-uijiryeok-1.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap-roaring1.png top"
+    },
+    {
+      "file": "dia-label-uijiryeok-2.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap-roaring2.png top"
+    },
+    {
+      "file": "dia-label-uijiryeok-3.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap27.png top"
+    },
+    {
+      "file": "dia-label-uijiryeok-4.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap14.png top"
+    },
+    {
+      "file": "dia-label-uijiryeok-5.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap15.png top"
+    },
+    {
+      "file": "dia-label-uijiryeok-6.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap16.png top"
+    },
+    {
+      "file": "dia-label-uijiryeok-7.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap26.png top"
+    },
+    {
+      "file": "dia-label-uijiryeok-8.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap29.png top"
+    },
+    {
+      "file": "dia-label-uijiryeok-9.png",
+      "group": "dia-label",
+      "key": "uijiryeok",
+      "text": "의지력 효율",
+      "src": "cap30.png top"
+    },
+    {
+      "file": "dia-label-gonggyeok-1.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap-roaring1.png left"
+    },
+    {
+      "file": "dia-label-gonggyeok-2.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap-roaring2.png left"
+    },
+    {
+      "file": "dia-label-gonggyeok-3.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap28.png left"
+    },
+    {
+      "file": "dia-label-gonggyeok-4.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap20.png left"
+    },
+    {
+      "file": "dia-label-gonggyeok-5.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap22.png left"
+    },
+    {
+      "file": "dia-label-gonggyeok-6.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap24.png left"
+    },
+    {
+      "file": "dia-label-gonggyeok-7.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap40.png left"
+    },
+    {
+      "file": "dia-label-gonggyeok-8.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap41.png left"
+    },
+    {
+      "file": "dia-label-gonggyeok-9.png",
+      "group": "dia-label",
+      "key": "gonggyeok",
+      "text": "공격력",
+      "src": "cap44.png left"
+    },
+    {
+      "file": "dia-label-agun-pihae-1.png",
+      "group": "dia-label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap-roaring1.png right"
+    },
+    {
+      "file": "dia-label-agun-pihae-2.png",
+      "group": "dia-label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap-roaring2.png right"
+    },
+    {
+      "file": "dia-label-agun-pihae-3.png",
+      "group": "dia-label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap14.png right"
+    },
+    {
+      "file": "dia-label-agun-pihae-4.png",
+      "group": "dia-label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap15.png right"
+    },
+    {
+      "file": "dia-label-agun-pihae-5.png",
+      "group": "dia-label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap16.png right"
+    },
+    {
+      "file": "dia-label-agun-pihae-6.png",
+      "group": "dia-label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap26.png right"
+    },
+    {
+      "file": "dia-label-agun-pihae-7.png",
+      "group": "dia-label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap29.png right"
+    },
+    {
+      "file": "dia-label-agun-pihae-8.png",
+      "group": "dia-label",
+      "key": "agun-pihae",
+      "text": "아군 피해 강화",
+      "src": "cap30.png right"
+    },
+    {
+      "file": "dia-label-hondon-point-1.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap-roaring1.png bottom"
+    },
+    {
+      "file": "dia-label-hondon-point-2.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap-roaring2.png bottom"
+    },
+    {
+      "file": "dia-label-hondon-point-3.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap27.png bottom"
+    },
+    {
+      "file": "dia-label-hondon-point-4.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap21.png bottom"
+    },
+    {
+      "file": "dia-label-hondon-point-5.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap23.png bottom"
+    },
+    {
+      "file": "dia-label-hondon-point-6.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap24.png bottom"
+    },
+    {
+      "file": "dia-label-hondon-point-7.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap26.png bottom"
+    },
+    {
+      "file": "dia-label-hondon-point-8.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap29.png bottom"
+    },
+    {
+      "file": "dia-label-hondon-point-9.png",
+      "group": "dia-label",
+      "key": "hondon-point",
+      "text": "혼돈 포인트",
+      "src": "cap30.png bottom"
+    },
+    {
+      "file": "dia-label-boss-pihae-1.png",
+      "group": "dia-label",
+      "key": "boss-pihae",
+      "text": "보스 피해",
+      "src": "cap14.png left"
+    },
+    {
+      "file": "dia-label-boss-pihae-2.png",
+      "group": "dia-label",
+      "key": "boss-pihae",
+      "text": "보스 피해",
+      "src": "cap15.png left"
+    },
+    {
+      "file": "dia-label-boss-pihae-3.png",
+      "group": "dia-label",
+      "key": "boss-pihae",
+      "text": "보스 피해",
+      "src": "cap16.png left"
+    },
+    {
+      "file": "dia-label-boss-pihae-4.png",
+      "group": "dia-label",
+      "key": "boss-pihae",
+      "text": "보스 피해",
+      "src": "cap45.png left"
+    },
+    {
+      "file": "dia-label-boss-pihae-5.png",
+      "group": "dia-label",
+      "key": "boss-pihae",
+      "text": "보스 피해",
+      "src": "cap47.png left"
+    },
+    {
+      "file": "dia-label-jilseo-point-1.png",
+      "group": "dia-label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap14.png bottom"
+    },
+    {
+      "file": "dia-label-jilseo-point-2.png",
+      "group": "dia-label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap15.png bottom"
+    },
+    {
+      "file": "dia-label-jilseo-point-3.png",
+      "group": "dia-label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap16.png bottom"
+    },
+    {
+      "file": "dia-label-jilseo-point-4.png",
+      "group": "dia-label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap40.png bottom"
+    },
+    {
+      "file": "dia-label-jilseo-point-5.png",
+      "group": "dia-label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap41.png bottom"
+    },
+    {
+      "file": "dia-label-jilseo-point-6.png",
+      "group": "dia-label",
+      "key": "jilseo-point",
+      "text": "질서 포인트",
+      "src": "cap42.png bottom"
+    },
+    {
+      "file": "dia-label-agun-gonggyeok-1.png",
+      "group": "dia-label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap18.png left"
+    },
+    {
+      "file": "dia-label-agun-gonggyeok-2.png",
+      "group": "dia-label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap19.png left"
+    },
+    {
+      "file": "dia-label-agun-gonggyeok-3.png",
+      "group": "dia-label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap20.png right"
+    },
+    {
+      "file": "dia-label-agun-gonggyeok-4.png",
+      "group": "dia-label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap45.png right"
+    },
+    {
+      "file": "dia-label-agun-gonggyeok-5.png",
+      "group": "dia-label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap46.png right"
+    },
+    {
+      "file": "dia-label-agun-gonggyeok-6.png",
+      "group": "dia-label",
+      "key": "agun-gonggyeok",
+      "text": "아군 공격 강화",
+      "src": "cap47.png right"
+    },
+    {
+      "file": "dia-label-chuga-pihae-1.png",
+      "group": "dia-label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap27.png right"
+    },
+    {
+      "file": "dia-label-chuga-pihae-2.png",
+      "group": "dia-label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap21.png left"
+    },
+    {
+      "file": "dia-label-chuga-pihae-3.png",
+      "group": "dia-label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap22.png right"
+    },
+    {
+      "file": "dia-label-chuga-pihae-4.png",
+      "group": "dia-label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap23.png left"
+    },
+    {
+      "file": "dia-label-chuga-pihae-5.png",
+      "group": "dia-label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap26.png left"
+    },
+    {
+      "file": "dia-label-chuga-pihae-6.png",
+      "group": "dia-label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap35.png left"
+    },
+    {
+      "file": "dia-label-chuga-pihae-7.png",
+      "group": "dia-label",
+      "key": "chuga-pihae",
+      "text": "추가 피해",
+      "src": "cap36.png left"
+    },
+    {
+      "file": "dia-label-nagin-1.png",
+      "group": "dia-label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap27.png left"
+    },
+    {
+      "file": "dia-label-nagin-2.png",
+      "group": "dia-label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap28.png right"
+    },
+    {
+      "file": "dia-label-nagin-3.png",
+      "group": "dia-label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap29.png left"
+    },
+    {
+      "file": "dia-label-nagin-4.png",
+      "group": "dia-label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap30.png left"
+    },
+    {
+      "file": "dia-label-nagin-5.png",
+      "group": "dia-label",
+      "key": "nagin",
+      "text": "낙인력",
+      "src": "cap31.png left"
+    },
+    {
+      "file": "dia-digit-top-1-1.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap-roaring1.png top"
+    },
+    {
+      "file": "dia-digit-top-1-2.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap-roaring2.png top"
+    },
+    {
+      "file": "dia-digit-top-1-3.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap27.png top"
+    },
+    {
+      "file": "dia-digit-top-1-4.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap28.png top"
+    },
+    {
+      "file": "dia-digit-top-1-5.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap19.png top"
+    },
+    {
+      "file": "dia-digit-top-1-6.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap21.png top"
+    },
+    {
+      "file": "dia-digit-top-1-7.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap26.png top"
+    },
+    {
+      "file": "dia-digit-top-1-8.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap29.png top"
+    },
+    {
+      "file": "dia-digit-top-1-9.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap30.png top"
+    },
+    {
+      "file": "dia-digit-top-1-10.png",
+      "group": "dia-digit",
+      "key": "top:1",
+      "text": "top:1",
+      "src": "cap31.png top"
+    },
+    {
+      "file": "dia-digit-left-1-1.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap-roaring1.png left"
+    },
+    {
+      "file": "dia-digit-left-1-2.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap-roaring2.png left"
+    },
+    {
+      "file": "dia-digit-left-1-3.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap14.png left"
+    },
+    {
+      "file": "dia-digit-left-1-4.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap18.png left"
+    },
+    {
+      "file": "dia-digit-left-1-5.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap23.png left"
+    },
+    {
+      "file": "dia-digit-left-1-6.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap24.png left"
+    },
+    {
+      "file": "dia-digit-left-1-7.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap29.png left"
+    },
+    {
+      "file": "dia-digit-left-1-8.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap30.png left"
+    },
+    {
+      "file": "dia-digit-left-1-9.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap31.png left"
+    },
+    {
+      "file": "dia-digit-left-1-10.png",
+      "group": "dia-digit",
+      "key": "left:1",
+      "text": "left:1",
+      "src": "cap35.png left"
+    },
+    {
+      "file": "dia-digit-right-1-1.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap-roaring1.png right"
+    },
+    {
+      "file": "dia-digit-right-1-2.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap-roaring2.png right"
+    },
+    {
+      "file": "dia-digit-right-1-3.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap27.png right"
+    },
+    {
+      "file": "dia-digit-right-1-4.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap28.png right"
+    },
+    {
+      "file": "dia-digit-right-1-5.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap14.png right"
+    },
+    {
+      "file": "dia-digit-right-1-6.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap15.png right"
+    },
+    {
+      "file": "dia-digit-right-1-7.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap16.png right"
+    },
+    {
+      "file": "dia-digit-right-1-8.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap18.png right"
+    },
+    {
+      "file": "dia-digit-right-1-9.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap26.png right"
+    },
+    {
+      "file": "dia-digit-right-1-10.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap29.png right"
+    },
+    {
+      "file": "dia-digit-right-1-11.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap35.png right"
+    },
+    {
+      "file": "dia-digit-right-1-12.png",
+      "group": "dia-digit",
+      "key": "right:1",
+      "text": "right:1",
+      "src": "cap36.png right"
+    },
+    {
+      "file": "dia-digit-bottom-1-1.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap-roaring1.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-2.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap-roaring2.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-3.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap27.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-4.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap14.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-5.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap16.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-6.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap17.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-7.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap18.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-8.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap29.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-9.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap30.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-10.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap31.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-1-11.png",
+      "group": "dia-digit",
+      "key": "bottom:1",
+      "text": "bottom:1",
+      "src": "cap32.png bottom"
+    },
+    {
+      "file": "dia-digit-top-4-1.png",
+      "group": "dia-digit",
+      "key": "top:4",
+      "text": "top:4",
+      "src": "cap14.png top"
+    },
+    {
+      "file": "dia-digit-top-4-2.png",
+      "group": "dia-digit",
+      "key": "top:4",
+      "text": "top:4",
+      "src": "cap18.png top"
+    },
+    {
+      "file": "dia-digit-top-4-3.png",
+      "group": "dia-digit",
+      "key": "top:4",
+      "text": "top:4",
+      "src": "cap38.png top"
+    },
+    {
+      "file": "dia-digit-top-4-4.png",
+      "group": "dia-digit",
+      "key": "top:4",
+      "text": "top:4",
+      "src": "cap39.png top"
+    },
+    {
+      "file": "dia-digit-top-4-5.png",
+      "group": "dia-digit",
+      "key": "top:4",
+      "text": "top:4",
+      "src": "cap50.png top"
+    },
+    {
+      "file": "dia-digit-top-5-1.png",
+      "group": "dia-digit",
+      "key": "top:5",
+      "text": "top:5",
+      "src": "cap15.png top"
+    },
+    {
+      "file": "dia-digit-top-5-2.png",
+      "group": "dia-digit",
+      "key": "top:5",
+      "text": "top:5",
+      "src": "cap16.png top"
+    },
+    {
+      "file": "dia-digit-top-5-3.png",
+      "group": "dia-digit",
+      "key": "top:5",
+      "text": "top:5",
+      "src": "cap17.png top"
+    },
+    {
+      "file": "dia-digit-top-5-4.png",
+      "group": "dia-digit",
+      "key": "top:5",
+      "text": "top:5",
+      "src": "cap20.png top"
+    },
+    {
+      "file": "dia-digit-left-3-1.png",
+      "group": "dia-digit",
+      "key": "left:3",
+      "text": "left:3",
+      "src": "cap28.png left"
+    },
+    {
+      "file": "dia-digit-left-3-2.png",
+      "group": "dia-digit",
+      "key": "left:3",
+      "text": "left:3",
+      "src": "cap15.png left"
+    },
+    {
+      "file": "dia-digit-left-3-3.png",
+      "group": "dia-digit",
+      "key": "left:3",
+      "text": "left:3",
+      "src": "cap19.png left"
+    },
+    {
+      "file": "dia-digit-left-3-4.png",
+      "group": "dia-digit",
+      "key": "left:3",
+      "text": "left:3",
+      "src": "cap22.png left"
+    },
+    {
+      "file": "dia-digit-bottom-4-1.png",
+      "group": "dia-digit",
+      "key": "bottom:4",
+      "text": "bottom:4",
+      "src": "cap15.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-4-2.png",
+      "group": "dia-digit",
+      "key": "bottom:4",
+      "text": "bottom:4",
+      "src": "cap22.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-4-3.png",
+      "group": "dia-digit",
+      "key": "bottom:4",
+      "text": "bottom:4",
+      "src": "cap24.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-4-4.png",
+      "group": "dia-digit",
+      "key": "bottom:4",
+      "text": "bottom:4",
+      "src": "cap34.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-4-5.png",
+      "group": "dia-digit",
+      "key": "bottom:4",
+      "text": "bottom:4",
+      "src": "cap43.png bottom"
+    },
+    {
+      "file": "dia-digit-left-4-1.png",
+      "group": "dia-digit",
+      "key": "left:4",
+      "text": "left:4",
+      "src": "cap16.png left"
+    },
+    {
+      "file": "dia-digit-left-4-2.png",
+      "group": "dia-digit",
+      "key": "left:4",
+      "text": "left:4",
+      "src": "cap20.png left"
+    },
+    {
+      "file": "dia-digit-left-5-1.png",
+      "group": "dia-digit",
+      "key": "left:5",
+      "text": "left:5",
+      "src": "cap17.png left"
+    },
+    {
+      "file": "dia-digit-left-5-2.png",
+      "group": "dia-digit",
+      "key": "left:5",
+      "text": "left:5",
+      "src": "cap21.png left"
+    },
+    {
+      "file": "dia-digit-left-5-3.png",
+      "group": "dia-digit",
+      "key": "left:5",
+      "text": "left:5",
+      "src": "cap25.png left"
+    },
+    {
+      "file": "dia-digit-left-5-4.png",
+      "group": "dia-digit",
+      "key": "left:5",
+      "text": "left:5",
+      "src": "cap26.png left"
+    },
+    {
+      "file": "dia-digit-right-3-1.png",
+      "group": "dia-digit",
+      "key": "right:3",
+      "text": "right:3",
+      "src": "cap17.png right"
+    },
+    {
+      "file": "dia-digit-right-3-2.png",
+      "group": "dia-digit",
+      "key": "right:3",
+      "text": "right:3",
+      "src": "cap30.png right"
+    },
+    {
+      "file": "dia-digit-right-2-1.png",
+      "group": "dia-digit",
+      "key": "right:2",
+      "text": "right:2",
+      "src": "cap19.png right"
+    },
+    {
+      "file": "dia-digit-right-2-2.png",
+      "group": "dia-digit",
+      "key": "right:2",
+      "text": "right:2",
+      "src": "cap25.png right"
+    },
+    {
+      "file": "dia-digit-right-2-3.png",
+      "group": "dia-digit",
+      "key": "right:2",
+      "text": "right:2",
+      "src": "cap50.png right"
+    },
+    {
+      "file": "dia-digit-bottom-5-1.png",
+      "group": "dia-digit",
+      "key": "bottom:5",
+      "text": "bottom:5",
+      "src": "cap21.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-5-2.png",
+      "group": "dia-digit",
+      "key": "bottom:5",
+      "text": "bottom:5",
+      "src": "cap26.png bottom"
+    },
+    {
+      "file": "dia-digit-right-5-1.png",
+      "group": "dia-digit",
+      "key": "right:5",
+      "text": "right:5",
+      "src": "cap22.png right"
+    },
+    {
+      "file": "dia-digit-right-5-2.png",
+      "group": "dia-digit",
+      "key": "right:5",
+      "text": "right:5",
+      "src": "cap24.png right"
+    },
+    {
+      "file": "dia-digit-top-2-1.png",
+      "group": "dia-digit",
+      "key": "top:2",
+      "text": "top:2",
+      "src": "cap23.png top"
+    },
+    {
+      "file": "dia-digit-top-2-2.png",
+      "group": "dia-digit",
+      "key": "top:2",
+      "text": "top:2",
+      "src": "cap24.png top"
+    },
+    {
+      "file": "dia-digit-top-2-3.png",
+      "group": "dia-digit",
+      "key": "top:2",
+      "text": "top:2",
+      "src": "cap48.png top"
+    },
+    {
+      "file": "dia-digit-top-2-4.png",
+      "group": "dia-digit",
+      "key": "top:2",
+      "text": "top:2",
+      "src": "cap49.png top"
+    },
+    {
+      "file": "dia-digit-right-4-1.png",
+      "group": "dia-digit",
+      "key": "right:4",
+      "text": "right:4",
+      "src": "cap23.png right"
+    },
+    {
+      "file": "dia-digit-right-4-2.png",
+      "group": "dia-digit",
+      "key": "right:4",
+      "text": "right:4",
+      "src": "cap31.png right"
+    },
+    {
+      "file": "dia-digit-right-4-3.png",
+      "group": "dia-digit",
+      "key": "right:4",
+      "text": "right:4",
+      "src": "cap32.png right"
+    },
+    {
+      "file": "dia-digit-right-4-4.png",
+      "group": "dia-digit",
+      "key": "right:4",
+      "text": "right:4",
+      "src": "cap33.png right"
+    },
+    {
+      "file": "dia-digit-right-4-5.png",
+      "group": "dia-digit",
+      "key": "right:4",
+      "text": "right:4",
+      "src": "cap34.png right"
+    },
+    {
+      "file": "dia-digit-bottom-2-1.png",
+      "group": "dia-digit",
+      "key": "bottom:2",
+      "text": "bottom:2",
+      "src": "cap23.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-2-2.png",
+      "group": "dia-digit",
+      "key": "bottom:2",
+      "text": "bottom:2",
+      "src": "cap35.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-2-3.png",
+      "group": "dia-digit",
+      "key": "bottom:2",
+      "text": "bottom:2",
+      "src": "cap36.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-2-4.png",
+      "group": "dia-digit",
+      "key": "bottom:2",
+      "text": "bottom:2",
+      "src": "cap37.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-2-5.png",
+      "group": "dia-digit",
+      "key": "bottom:2",
+      "text": "bottom:2",
+      "src": "cap38.png bottom"
+    },
+    {
+      "file": "dia-digit-top-3-1.png",
+      "group": "dia-digit",
+      "key": "top:3",
+      "text": "top:3",
+      "src": "cap25.png top"
+    },
+    {
+      "file": "dia-digit-top-3-2.png",
+      "group": "dia-digit",
+      "key": "top:3",
+      "text": "top:3",
+      "src": "cap36.png top"
+    },
+    {
+      "file": "dia-digit-top-3-3.png",
+      "group": "dia-digit",
+      "key": "top:3",
+      "text": "top:3",
+      "src": "cap37.png top"
+    },
+    {
+      "file": "dia-digit-top-3-4.png",
+      "group": "dia-digit",
+      "key": "top:3",
+      "text": "top:3",
+      "src": "cap43.png top"
+    },
+    {
+      "file": "dia-digit-left-2-1.png",
+      "group": "dia-digit",
+      "key": "left:2",
+      "text": "left:2",
+      "src": "cap27.png left"
+    },
+    {
+      "file": "dia-digit-left-2-2.png",
+      "group": "dia-digit",
+      "key": "left:2",
+      "text": "left:2",
+      "src": "cap32.png left"
+    },
+    {
+      "file": "dia-digit-left-2-3.png",
+      "group": "dia-digit",
+      "key": "left:2",
+      "text": "left:2",
+      "src": "cap33.png left"
+    },
+    {
+      "file": "dia-digit-left-2-4.png",
+      "group": "dia-digit",
+      "key": "left:2",
+      "text": "left:2",
+      "src": "cap34.png left"
+    },
+    {
+      "file": "dia-digit-left-2-5.png",
+      "group": "dia-digit",
+      "key": "left:2",
+      "text": "left:2",
+      "src": "cap39.png left"
+    },
+    {
+      "file": "dia-digit-bottom-3-1.png",
+      "group": "dia-digit",
+      "key": "bottom:3",
+      "text": "bottom:3",
+      "src": "cap28.png bottom"
+    },
+    {
+      "file": "dia-digit-bottom-3-2.png",
+      "group": "dia-digit",
+      "key": "bottom:3",
+      "text": "bottom:3",
+      "src": "cap33.png bottom"
+    },
+    {
+      "file": "meta-reroll-2-1.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap-roaring1.png"
+    },
+    {
+      "file": "meta-reroll-2-2.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap-roaring2.png"
+    },
+    {
+      "file": "meta-reroll-2-3.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap14.png"
+    },
+    {
+      "file": "meta-reroll-2-4.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap16.png"
+    },
+    {
+      "file": "meta-reroll-2-5.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap18.png"
+    },
+    {
+      "file": "meta-reroll-2-6.png",
+      "group": "meta-digit",
+      "key": "reroll:2",
+      "text": "2",
+      "src": "cap44.png"
+    },
+    {
+      "file": "meta-reroll-1-1.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-reroll-1-2.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-reroll-1-3.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap15.png"
+    },
+    {
+      "file": "meta-reroll-1-4.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap17.png"
+    },
+    {
+      "file": "meta-reroll-1-5.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap20.png"
+    },
+    {
+      "file": "meta-reroll-1-6.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap26.png"
+    },
+    {
+      "file": "meta-reroll-1-7.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-reroll-1-8.png",
+      "group": "meta-digit",
+      "key": "reroll:1",
+      "text": "1",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-attempt-6-1.png",
+      "group": "meta-digit",
+      "key": "attempt:6",
+      "text": "6",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-attempt-6-2.png",
+      "group": "meta-digit",
+      "key": "attempt:6",
+      "text": "6",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-attempt-6-3.png",
+      "group": "meta-digit",
+      "key": "attempt:6",
+      "text": "6",
+      "src": "cap35.png"
+    },
+    {
+      "file": "meta-attempt-6-4.png",
+      "group": "meta-digit",
+      "key": "attempt:6",
+      "text": "6",
+      "src": "cap48.png"
+    },
+    {
+      "file": "meta-attempt-7-1.png",
+      "group": "meta-digit",
+      "key": "attempt:7",
+      "text": "7",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-attempt-7-2.png",
+      "group": "meta-digit",
+      "key": "attempt:7",
+      "text": "7",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-attempt-7-3.png",
+      "group": "meta-digit",
+      "key": "attempt:7",
+      "text": "7",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-attempt-7-4.png",
+      "group": "meta-digit",
+      "key": "attempt:7",
+      "text": "7",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-attempt-7-5.png",
+      "group": "meta-digit",
+      "key": "attempt:7",
+      "text": "7",
+      "src": "cap31.png"
+    },
+    {
+      "file": "meta-point-5-1.png",
+      "group": "meta-digit",
+      "key": "point:5",
+      "text": "5",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-point-5-2.png",
+      "group": "meta-digit",
+      "key": "point:5",
+      "text": "5",
+      "src": "cap35.png"
+    },
+    {
+      "file": "meta-point-5-3.png",
+      "group": "meta-digit",
+      "key": "point:5",
+      "text": "5",
+      "src": "cap48.png"
+    },
+    {
+      "file": "meta-attempt-5-1.png",
+      "group": "meta-digit",
+      "key": "attempt:5",
+      "text": "5",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-attempt-5-2.png",
+      "group": "meta-digit",
+      "key": "attempt:5",
+      "text": "5",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-attempt-5-3.png",
+      "group": "meta-digit",
+      "key": "attempt:5",
+      "text": "5",
+      "src": "cap36.png"
+    },
+    {
+      "file": "meta-attempt-5-4.png",
+      "group": "meta-digit",
+      "key": "attempt:5",
+      "text": "5",
+      "src": "cap49.png"
+    },
+    {
+      "file": "meta-point-8-1.png",
+      "group": "meta-digit",
+      "key": "point:8",
+      "text": "8",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-point-8-2.png",
+      "group": "meta-digit",
+      "key": "point:8",
+      "text": "8",
+      "src": "cap32.png"
+    },
+    {
+      "file": "meta-point-8-3.png",
+      "group": "meta-digit",
+      "key": "point:8",
+      "text": "8",
+      "src": "cap38.png"
+    },
+    {
+      "file": "meta-point-4-1.png",
+      "group": "meta-digit",
+      "key": "point:4",
+      "text": "4",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-point-4-2.png",
+      "group": "meta-digit",
+      "key": "point:4",
+      "text": "4",
+      "src": "cap40.png"
+    },
+    {
+      "file": "meta-point-4-3.png",
+      "group": "meta-digit",
+      "key": "point:4",
+      "text": "4",
+      "src": "cap41.png"
+    },
+    {
+      "file": "meta-point-6-1.png",
+      "group": "meta-digit",
+      "key": "point:6",
+      "text": "6",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-point-6-2.png",
+      "group": "meta-digit",
+      "key": "point:6",
+      "text": "6",
+      "src": "cap49.png"
+    },
+    {
+      "file": "meta-attempt-4-1.png",
+      "group": "meta-digit",
+      "key": "attempt:4",
+      "text": "4",
+      "src": "cap31.png"
+    },
+    {
+      "file": "meta-attempt-4-2.png",
+      "group": "meta-digit",
+      "key": "attempt:4",
+      "text": "4",
+      "src": "cap37.png"
+    },
+    {
+      "file": "meta-point-7-1.png",
+      "group": "meta-digit",
+      "key": "point:7",
+      "text": "7",
+      "src": "cap31.png"
+    },
+    {
+      "file": "meta-point-7-2.png",
+      "group": "meta-digit",
+      "key": "point:7",
+      "text": "7",
+      "src": "cap36.png"
+    },
+    {
+      "file": "meta-point-7-3.png",
+      "group": "meta-digit",
+      "key": "point:7",
+      "text": "7",
+      "src": "cap37.png"
+    },
+    {
+      "file": "meta-attempt-3-1.png",
+      "group": "meta-digit",
+      "key": "attempt:3",
+      "text": "3",
+      "src": "cap32.png"
+    },
+    {
+      "file": "meta-attempt-3-2.png",
+      "group": "meta-digit",
+      "key": "attempt:3",
+      "text": "3",
+      "src": "cap38.png"
+    },
+    {
+      "file": "meta-attempt-3-3.png",
+      "group": "meta-digit",
+      "key": "attempt:3",
+      "text": "3",
+      "src": "cap43.png"
+    },
+    {
+      "file": "meta-attempt-2-1.png",
+      "group": "meta-digit",
+      "key": "attempt:2",
+      "text": "2",
+      "src": "cap33.png"
+    },
+    {
+      "file": "meta-attempt-2-2.png",
+      "group": "meta-digit",
+      "key": "attempt:2",
+      "text": "2",
+      "src": "cap39.png"
+    },
+    {
+      "file": "meta-point-1-1.png",
+      "group": "meta-digit",
+      "key": "point:1",
+      "text": "1",
+      "src": "cap33.png"
+    },
+    {
+      "file": "meta-point-1-2.png",
+      "group": "meta-digit",
+      "key": "point:1",
+      "text": "1",
+      "src": "cap34.png"
+    },
+    {
+      "file": "meta-point-1-3.png",
+      "group": "meta-digit",
+      "key": "point:1",
+      "text": "1",
+      "src": "cap43.png"
+    },
+    {
+      "file": "meta-point-0-1.png",
+      "group": "meta-digit",
+      "key": "point:0",
+      "text": "0",
+      "src": "cap33.png"
+    },
+    {
+      "file": "meta-point-0-2.png",
+      "group": "meta-digit",
+      "key": "point:0",
+      "text": "0",
+      "src": "cap43.png"
+    },
+    {
+      "file": "meta-attempt-1-1.png",
+      "group": "meta-digit",
+      "key": "attempt:1",
+      "text": "1",
+      "src": "cap34.png"
+    },
+    {
+      "file": "meta-attempt-1-2.png",
+      "group": "meta-digit",
+      "key": "attempt:1",
+      "text": "1",
+      "src": "cap50.png"
+    },
+    {
+      "file": "meta-point-9-1.png",
+      "group": "meta-digit",
+      "key": "point:9",
+      "text": "9",
+      "src": "cap39.png"
+    },
+    {
+      "file": "meta-point-9-2.png",
+      "group": "meta-digit",
+      "key": "point:9",
+      "text": "9",
+      "src": "cap50.png"
+    },
+    {
+      "file": "meta-attempt-9-1.png",
+      "group": "meta-digit",
+      "key": "attempt:9",
+      "text": "9",
+      "src": "cap44.png"
+    },
+    {
+      "file": "meta-reroll-0-1.png",
+      "group": "meta-digit",
+      "key": "reroll:0",
+      "text": "0",
+      "src": "cap50.png"
+    },
+    {
+      "file": "meta-label-gem-point-1.png",
+      "group": "meta-label",
+      "key": "gem-point",
+      "text": "젬 포인트",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-label-gem-point-2.png",
+      "group": "meta-label",
+      "key": "gem-point",
+      "text": "젬 포인트",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-label-gem-point-3.png",
+      "group": "meta-label",
+      "key": "gem-point",
+      "text": "젬 포인트",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-label-gem-point-4.png",
+      "group": "meta-label",
+      "key": "gem-point",
+      "text": "젬 포인트",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-label-gem-point-5.png",
+      "group": "meta-label",
+      "key": "gem-point",
+      "text": "젬 포인트",
+      "src": "cap31.png"
+    },
+    {
+      "file": "meta-cost-0-1.png",
+      "group": "meta-cost",
+      "key": "0",
+      "text": "0",
+      "src": "cap29.png"
+    },
+    {
+      "file": "meta-cost-0-2.png",
+      "group": "meta-cost",
+      "key": "0",
+      "text": "0",
+      "src": "cap30.png"
+    },
+    {
+      "file": "meta-cost-0-3.png",
+      "group": "meta-cost",
+      "key": "0",
+      "text": "0",
+      "src": "cap31.png"
+    },
+    {
+      "file": "meta-cost-900-1.png",
+      "group": "meta-cost",
+      "key": "900",
+      "text": "900",
+      "src": "cap27.png"
+    },
+    {
+      "file": "meta-cost-900-2.png",
+      "group": "meta-cost",
+      "key": "900",
+      "text": "900",
+      "src": "cap28.png"
+    },
+    {
+      "file": "meta-cost-900-3.png",
+      "group": "meta-cost",
+      "key": "900",
+      "text": "900",
+      "src": "cap35.png"
+    },
+    {
+      "file": "meta-cost-900-4.png",
+      "group": "meta-cost",
+      "key": "900",
+      "text": "900",
+      "src": "cap36.png"
+    },
+    {
+      "file": "meta-cost-900-5.png",
+      "group": "meta-cost",
+      "key": "900",
+      "text": "900",
+      "src": "cap37.png"
+    }
+  ]
+}

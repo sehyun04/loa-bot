@@ -1,0 +1,471 @@
+/*
+ * vision 회귀 테스트.  node web/gempago/vision/test.js
+ *
+ * 지금 검증하는 건 두 가지다.
+ * 1. NCC 구현이 맞는가 (자기 자신과 1.0, 반전과 -1, 균일면에서 무응답)
+ * 2. 템플릿이 UI 컨텍스트에 종속된다는 한계가 그대로인가
+ *    - 이건 고쳐야 할 버그가 아니라 설계 제약이다. 수치가 흔들리면 알아야 해서 박아둔다.
+ */
+const path = require('path');
+const png = require('./png.js');
+const ncc = require('./ncc.js');
+const layout = require('./layout.js');
+const reader = require('./reader.js');
+
+let pass = 0, fail = 0;
+
+function check(name, ok, detail) {
+  if (ok) { pass++; console.log('  pass  ' + name); }
+  else { fail++; console.log('  FAIL  ' + name + (detail ? '  -> ' + detail : '')); }
+}
+
+function near(name, got, want, tol) {
+  check(name + ' = ' + got.toFixed(4), Math.abs(got - want) <= tol, 'want ' + want + ' +-' + tol);
+}
+
+const here = (...p) => path.join(__dirname, ...p);
+
+console.log('NCC 기본 성질');
+{
+  const img = { width: 6, height: 4, data: new Float32Array([
+    10, 20, 30, 40, 50, 60,
+    11, 21, 31, 41, 51, 61,
+    12, 22, 32, 42, 52, 62,
+    13, 23, 33, 43, 53, 63,
+  ]) };
+
+  const self = ncc.best(img, img);
+  near('자기 자신과의 상관', self.score, 1, 1e-9);
+  check('자기 자신은 (0,0)', self.x === 0 && self.y === 0);
+
+  // 밝기/대비를 바꿔도 모양이 같으면 1 이어야 한다. NCC 를 쓰는 이유 자체.
+  const scaled = { width: 6, height: 4, data: img.data.map((v) => v * 3 + 77) };
+  near('밝기/대비 불변', ncc.best(scaled, img).score, 1, 1e-9);
+
+  // 부호가 뒤집힌 패턴은 -1. 그래야 "닮지 않음"을 구분할 수 있다.
+  const inverted = { width: 6, height: 4, data: img.data.map((v) => -v) };
+  near('반전 패턴', ncc.best(inverted, img).score, -1, 1e-9);
+
+  // 단색 배경은 분산이 0 이라 상관이 정의되지 않는다. 점수를 지어내면 안 된다.
+  const flat = { width: 6, height: 4, data: new Float32Array(24).fill(128) };
+  check('균일면은 후보 없음', ncc.matchTemplate(flat, img).length === 0);
+}
+
+console.log('NCC 위치 찾기');
+{
+  const tpl = { width: 2, height: 2, data: new Float32Array([0, 255, 255, 0]) };
+  const img = { width: 8, height: 5, data: new Float32Array(40).fill(30) };
+  const put = (x, y) => {
+    img.data[y * 8 + x] = 0;       img.data[y * 8 + x + 1] = 255;
+    img.data[(y + 1) * 8 + x] = 255; img.data[(y + 1) * 8 + x + 1] = 0;
+  };
+  put(5, 3);
+  const b = ncc.best(img, tpl);
+  near('심어둔 패턴 점수', b.score, 1, 1e-9);
+  check('심어둔 위치 (5,3)', b.x === 5 && b.y === 3, `got ${b.x},${b.y}`);
+
+  // band 를 주면 그 밖은 안 본다. 화면에서 행 단위로 자를 때 쓴다.
+  const inBand = ncc.best(img, tpl, { x: 0, y: 0, w: 4, h: 3 });
+  check('band 밖은 무시', !inBand || inBand.score < 0.99, inBand && String(inBand.score));
+}
+
+console.log('classify 는 2등과의 격차를 돌려준다');
+{
+  const a = { width: 3, height: 3, data: Float32Array.from([0, 255, 0, 255, 0, 255, 0, 255, 0]) };
+  const b = { width: 3, height: 3, data: Float32Array.from([255, 255, 255, 0, 0, 0, 255, 255, 255]) };
+  const r = ncc.classify(a, { a, b });
+  check('정답 라벨 a', r.label === 'a', r.label);
+  check('2등 기록됨', r.runnerUp === 'b', String(r.runnerUp));
+  check('margin > 0', r.margin > 0, String(r.margin));
+}
+
+console.log('실제 캡처: 템플릿은 UI 컨텍스트에 종속된다');
+{
+  const tplLv = png.loadGray(here('fixtures', 'tpl_lv.png'));
+  const row = png.loadGray(here('fixtures', 'cmp_row.png'));
+  const diamond = png.loadGray(here('fixtures', 'cmp_diamond.png'));
+
+  const onRow = ncc.best(row, tplLv);
+  const onDiamond = ncc.best(diamond, tplLv);
+
+  near('같은 배경(선택지 행)', onRow.score, 1.0, 0.001);
+  near('다른 배경(다이아)', onDiamond.score, 0.44, 0.03);
+  check(
+    '두 배경의 격차가 0.5 이상',
+    onRow.score - onDiamond.score > 0.5,
+    (onRow.score - onDiamond.score).toFixed(4)
+  );
+}
+
+console.log('PNG 디코더');
+{
+  const src = png.loadGray(here('fixtures', 'tpl_lv.png'));
+  const round = png.toGray(png.decode(png.encodeGray(src)));
+  check('encode -> decode 크기 유지', round.width === src.width && round.height === src.height);
+  let maxDiff = 0;
+  for (let i = 0; i < src.data.length; i++) {
+    maxDiff = Math.max(maxDiff, Math.abs(round.data[i] - src.data[i]));
+  }
+  // 그레이 -> RGB 로 다시 쓰면서 반올림하므로 1 이내 오차는 정상.
+  check('픽셀 오차 <= 1 (max ' + maxDiff.toFixed(2) + ')', maxDiff <= 1);
+}
+
+const atlas = require('./atlas.js').load();
+const groundTruth = JSON.parse(
+  require('fs').readFileSync(here('fixtures', 'captures.json'), 'utf8')
+);
+
+console.log('템플릿끼리 서로 구분되는가 (이게 안 되면 나머지는 의미 없다)');
+{
+  // 한 문자열에 변형이 여러 개다. 대표로 첫 번째끼리 비교한다.
+  const one = (g, k) => atlas[g][k][0];
+
+  const agun = one('label', 'agun-pihae'), hondon = one('label', 'hondon-point');
+  const [wide, narrow] = agun.width >= hondon.width ? [agun, hondon] : [hondon, agun];
+  check('다른 옵션명끼리 0.3 미만 (' + ncc.best(wide, narrow).score.toFixed(3) + ')',
+    ncc.best(wide, narrow).score < 0.3);
+
+  // 숫자는 8px 창 덕분에 갈린다. 창 없이 값 전체를 비교하면 0.9 가 나와서 못 쓴다.
+  const digits = ['1', '2', '3', '4'];
+  let worst = { score: -1 };
+  for (const a of digits) {
+    for (const b of digits) {
+      if (a === b) continue;
+      const s = ncc.best(one('digit', a), one('digit', b)).score;
+      if (s > worst.score) worst = { score: s, pair: a + ' vs ' + b };
+    }
+  }
+  check(`서로 다른 숫자끼리 0.6 미만 (최악 ${worst.pair} = ${worst.score.toFixed(3)})`,
+    worst.score < 0.6);
+  check('숫자 템플릿 폭이 ' + reader.DIGIT_WINDOW + 'px',
+    digits.every((d) => atlas.digit[d].every((t) => t.width === reader.DIGIT_WINDOW)));
+
+  check('접두 Lv. vs + 가 0.7 미만',
+    ncc.best(one('prefix', 'lv'), one('prefix', 'plus')).score < 0.7);
+}
+
+console.log(`실제 캡처 ${groundTruth.captures.length}장을 끝까지 읽는다`);
+{
+  let correct = 0, total = 0, flagged = 0;
+  const t0 = Date.now();
+
+  for (const cap of groundTruth.captures) {
+    const img = png.loadGray(here('fixtures', cap.file));
+    // 배율 탐색은 따로 검증한다. 여기서는 정답표의 배율을 알려주고 읽기만 본다.
+    const r = reader.readOptions(img, atlas, { scale: cap.scale });
+    if (!r.ok) { check(cap.file + ' 화면 인식', false, r.reason); total += 4; continue; }
+
+    const wrong = [];
+    cap.options.forEach((want, i) => {
+      const o = r.options[i];
+      total++;
+      if (o.labelText === want.label && o.value && o.value.text === want.value) correct++;
+      else wrong.push(`열${i + 1} ${o.labelText}/${o.value && o.value.text} != ${want.label}/${want.value}`);
+      if (!o.confident) flagged++;
+    });
+    check(cap.file + ' 4개 모두 정답', wrong.length === 0, wrong.join(', '));
+  }
+
+  check(`옵션 ${total}개 전부 정답 (${correct}/${total})`, correct === total);
+  // 의심 표시는 틀렸다는 뜻이 아니라 "사람이 확인하라"는 뜻이다. 지금 걸리는 건
+  // "아군 피해 강화" 와 "아군 공격 강화" 처럼 한 글자만 다른 옵션명들이다(마진 0.10).
+  check(`의심 표시가 ${total} 개 중 6개 이하 (${flagged}개)`, flagged <= 6);
+  console.log(`  (${groundTruth.captures.length}장 ${Date.now() - t0}ms)`);
+}
+
+console.log('게임 밝기 설정에 흔들리지 않는다');
+{
+  // NCC 는 평균을 빼고 표준편차로 나누므로 선형 밝기/대비 변화에는 원리상 무관하다.
+  // 게임 밝기 설정은 보통 감마(비선형)라 그건 따로 확인해야 한다.
+  // 정말로 깨지는 건 포화뿐이다 - 흰색으로 날아가면 정보 자체가 사라진다.
+  const imgs = groundTruth.captures.map((c) => ({ cap: c, img: png.loadGray(here('fixtures', c.file)) }));
+
+  function accuracy(fn) {
+    let ok = 0, total = 0;
+    for (const { cap, img } of imgs) {
+      const r = reader.readOptions(fn(img), atlas, { scale: cap.scale });
+      cap.options.forEach((w, i) => {
+        total++;
+        const o = r.ok && r.options[i];
+        if (o && o.labelText === w.label && o.value && o.value.text === w.value) ok++;
+      });
+    }
+    return ok + '/' + total;
+  }
+  const map = (img, f) => ({
+    width: img.width, height: img.height,
+    data: img.data.map((v) => Math.min(255, Math.max(0, f(v)))),
+  });
+  const gamma = (g) => (img) => map(img, (v) => 255 * Math.pow(v / 255, g));
+
+  const all = imgs.reduce((a, x) => a + x.cap.options.length, 0) + '/' +
+    imgs.reduce((a, x) => a + x.cap.options.length, 0);
+
+  check('감마 0.5 에서도 전부 정답', accuracy(gamma(0.5)) === all, accuracy(gamma(0.5)));
+  check('감마 2.0 에서도 전부 정답', accuracy(gamma(2.0)) === all, accuracy(gamma(2.0)));
+  check('대비 절반이어도 전부 정답', accuracy((i) => map(i, (v) => v * 0.5)) === all);
+  check('어둡고 밋밋해도 전부 정답', accuracy((i) => map(i, (v) => v * 0.35 + 140)) === all);
+
+  // 포화는 진짜로 깨진다. 한계를 알아야 사용자에게 뭘 조심하라고 말할 수 있다.
+  // 실측: 포화 픽셀 4.5% 까지는 전부 정답, 6.3% 에서 44/60, 9.5% 에서 16/60.
+  check('심하게 날아가면(포화 9%) 무너진다', accuracy((i) => map(i, (v) => v + 170)) !== all,
+    accuracy((i) => map(i, (v) => v + 170)));
+}
+
+console.log('다이아 4개(젬의 현재 수치)를 읽는다');
+{
+  const one = layout.diamonds(layout.locate(
+    png.loadGray(here('fixtures', 'cap-roaring1.png')), atlas.anchor, { scale: 1 }));
+  check('위/아래는 의지력·포인트, 좌/우는 효과',
+    one.top.slot === 'will' && one.bottom.slot === 'point' &&
+    one.left.slot === 'opt1' && one.right.slot === 'opt2');
+
+  // 자기 캡처에서 뜬 템플릿은 빼고 읽는다(leave-one-out). 안 빼면 자기 템플릿이
+  // 무조건 이겨서 테스트가 아무것도 못 잡는다. 배경판은 전체로 만든 것이라 못 빼지만
+  // 캡처 하나의 영향이 1/N 이라 무시할 수 있다.
+  // 실측 기대값은 make-diamond-templates.js 와 같다: 이름 156/156, 값 147/156.
+  // 값 오답은 전부 "그 (자리x배율) 조합에 그 숫자 표본이 하나뿐"인 경우고,
+  // 전부 의심으로 표시된다 - 조용히 틀리는 것이 0 이어야 한다는 게 핵심 성질이다.
+  const without = (file) => {
+    const filtered = Object.assign({}, atlas);
+    for (const g of ['dia-label', 'dia-digit']) {
+      filtered[g] = {};
+      for (const key of Object.keys(atlas[g])) {
+        const vs = atlas[g][key].filter((t) => !(t.src && t.src.indexOf(file) === 0));
+        if (vs.length) filtered[g][key] = vs;
+      }
+    }
+    return filtered;
+  };
+
+  let labelOk = 0, valueOk = 0, total = 0, silentWrong = 0;
+  const t0 = Date.now();
+  for (const cap of groundTruth.captures) {
+    const img = png.loadGray(here('fixtures', cap.file));
+    const r = reader.readDiamonds(img, without(cap.file), { scale: cap.scale });
+    if (!r.ok) { check(cap.file + ' 다이아 인식', false, r.reason); total += 4; continue; }
+    for (const pos of ['top', 'left', 'right', 'bottom']) {
+      const got = r.gem[pos];
+      const want = cap.gemState[pos];
+      total++;
+      if (got.labelText === want.label) labelOk++;
+      const valueRight = got.value === want.value;
+      if (valueRight) valueOk++;
+      if (!valueRight && got.confident) silentWrong++;
+    }
+  }
+  check(`이름 ${total}개 전부 정답 (${labelOk}/${total})`, labelOk === total);
+  check(`값 정답이 147개 이상 (${valueOk}/${total})`, valueOk >= 147);
+  check(`자신 있게 틀린 값이 없다 (${silentWrong}개)`, silentWrong === 0);
+  console.log(`  (${groundTruth.captures.length}장 ${Date.now() - t0}ms)`);
+}
+
+const gemSum = (cap) =>
+  ['top', 'left', 'right', 'bottom'].reduce((a, p) => a + cap.gemState[p].value, 0);
+
+/** 이 캡처에서 뜬 템플릿을 전부 뺀 아틀라스 (leave-one-out). */
+function atlasWithout(file, groups) {
+  const filtered = Object.assign({}, atlas);
+  for (const g of groups) {
+    filtered[g] = {};
+    for (const key of Object.keys(atlas[g])) {
+      const vs = atlas[g][key].filter((t) => !(t.src && t.src.indexOf(file) === 0));
+      if (vs.length) filtered[g][key] = vs;
+    }
+  }
+  return filtered;
+}
+
+console.log('리롤/가공 횟수/젬 포인트/가공 비용을 읽는다');
+{
+  // 다이아와 같은 leave-one-out. 오답은 전부 "그 숫자 표본이 자기 하나뿐"인 경우고
+  // (9/9 한 장, 리롤 0회 한 장) 전부 의심으로 표시된다 (실측 132/135).
+  const groups = ['meta-digit', 'meta-label', 'meta-cost'];
+  let ok = 0, total = 0, silentWrong = 0, costOk = 0, costTotal = 0;
+  for (const cap of groundTruth.captures) {
+    if (!cap.ui) continue;
+    const img = png.loadGray(here('fixtures', cap.file));
+    const r = reader.readMeta(img, atlasWithout(cap.file, groups), { scale: cap.scale });
+    const want = [
+      [r.reroll, cap.ui.reroll],
+      [r.attemptsLeft, cap.ui.attempts && cap.ui.attempts[0]],
+      [r.attemptsMax, cap.ui.attempts && cap.ui.attempts[1]],
+      // 젬 포인트 정답은 네 수치의 합이다. 버튼이 보이는 캡처에만 이 줄도 보인다.
+      [r.gemPoint, cap.ui.attempts ? gemSum(cap) : null],
+    ];
+    for (const [got, truth] of want) {
+      if (truth == null) continue;
+      total++;
+      if (got && got.value === truth) ok++;
+      else if (got && got.confident) silentWrong++;
+    }
+
+    if (cap.ui.costGold == null) continue;
+    costTotal++;
+    if (r.cost && r.cost.gold === cap.ui.costGold) costOk++;
+    else if (r.cost && r.cost.confident) silentWrong++;
+  }
+  check(`횟수·젬 포인트 정답이 108개 이상 (${ok}/${total})`, ok >= 108);
+  check(`가공 비용 전부 정답 (${costOk}/${costTotal})`, costOk === costTotal);
+  check(`자신 있게 틀린 값이 없다 (${silentWrong}개)`, silentWrong === 0);
+
+  // 금액 -> 배율 뒤집기. 0 골드는 -100%, 기준 900 은 기본이다.
+  const img = png.loadGray(here('fixtures', 'cap29.png'));
+  const minus = reader.readMeta(img, atlasWithout('cap29.png', groups), { scale: 0.935 });
+  check('0 골드는 -100% 로 읽는다', minus.cost && minus.cost.mod === -1,
+    JSON.stringify(minus.cost));
+}
+
+console.log('젬 포인트 합으로 다이아를 검산한다');
+{
+  // 젬 포인트 = 네 수치의 합. 넷 중 하나만 애매하면 그 자리는 계산으로 복구되고,
+  // 넷 다 확실한데 합이 안 맞으면 전부 의심으로 내려간다.
+  const groups = ['dia-label', 'dia-digit', 'meta-digit', 'meta-label'];
+  let valueOk = 0, total = 0, silentWrong = 0, recovered = 0, recoveredWrong = 0, mismatch = 0;
+  for (const cap of groundTruth.captures) {
+    const img = png.loadGray(here('fixtures', cap.file));
+    const a = atlasWithout(cap.file, groups);
+    const d = reader.readDiamonds(img, a, { scale: cap.scale });
+    const m = reader.readMeta(null, a, { origin: d.origin });
+    const s = reader.reconcileGem(d.gem, m.gemPoint);
+    if (s.status === 'recovered') {
+      recovered++;
+      if (d.gem[s.pos].value !== cap.gemState[s.pos].value) recoveredWrong++;
+    }
+    if (s.status === 'mismatch') mismatch++;
+    for (const pos of ['top', 'left', 'right', 'bottom']) {
+      total++;
+      const right = d.gem[pos].value === cap.gemState[pos].value;
+      if (right) valueOk++;
+      else if (d.gem[pos].confident) silentWrong++;
+    }
+  }
+  check(`검산이 ${recovered}건 복구, 틀리게 복구한 적 없음 (${recoveredWrong}건)`, recoveredWrong === 0);
+  check(`검산 후에도 자신 있게 틀린 값이 없다 (${silentWrong}개)`, silentWrong === 0);
+  check(`검산 후 값 정답이 늘었다 (${valueOk}/${total}, 검산 전 147)`, valueOk >= 150);
+  console.log(`  (복구 ${recovered} · 합 불일치 ${mismatch})`);
+}
+
+console.log('배율이 달라도 찾는다');
+{
+  const original = png.loadGray(here('fixtures', 'cap-roaring1.png'));
+  const one = ncc.findScale(original, atlas.anchor, { min: 0.9, max: 1.1 });
+  check('기준 캡처의 배율은 1.0 (' + one.scale + ')', one.scale === 1 && one.score > 0.99);
+
+  // 2048x1280 원본을 2000x1250 으로 리샘플한 캡처. NCC 는 배율에 관대하지 않아서
+  // 이 2.3% 차이만으로 앵커 점수가 0.56 까지 떨어진다.
+  const resampled = png.loadGray(here('fixtures', 'cap17.png'));
+  const r = ncc.findScale(resampled, atlas.anchor, { min: 0.9, max: 1.1 });
+  check('리샘플 캡처의 배율을 0.98 로 잡는다 (' + r.scale + ')', Math.abs(r.scale - 0.98) < 0.015);
+  check('배율을 맞추면 앵커 점수가 0.85 이상 (' + r.score.toFixed(3) + ')', r.score > 0.85);
+
+  // 이쪽이 진짜다. 게임이 1920x1080 으로 직접 렌더한 화면이라 글자 래스터 자체가 다르다.
+  // 1920/2048 = 0.9375 이고 실제로 그 근처를 찾아낸다.
+  const native = png.loadGray(here('fixtures', 'cap26.png'));
+  const n = ncc.findScale(native, atlas.anchor, { min: 0.85, max: 1.05 });
+  check('1920x1080 화면의 배율을 0.94 근처로 잡는다 (' + n.scale + ')',
+    Math.abs(n.scale - 0.9375) < 0.02, String(n.scale));
+  check('해상도가 달라도 앵커를 찾는다 (' + n.score.toFixed(3) + ')', n.score > 0.7);
+}
+
+console.log('앵커가 없으면 못 찾았다고 말한다');
+{
+  // 가공 화면이 아닌 것: 옵션 행만 잘라낸 이미지에는 앵커 문장이 없다.
+  const notGem = png.loadGray(here('fixtures', 'cmp_row.png'));
+  const r = reader.readOptions(notGem, atlas, { scale: 1 });
+  check('엉뚱한 이미지는 거부한다', !r.ok, JSON.stringify(r.options && r.options[0]));
+}
+
+console.log('읽은 글자 -> 확률 표 항목 id');
+{
+  const interpret = require('./interpret.js');
+  const rules = require('../rules.js');
+
+  // 실제 캡처에 나온 젬. 1번/2번 효과 이름은 젬마다 다르므로 밖에서 알려줘야 한다.
+  const slots = { opt1: '공격력', opt2: '아군 피해 강화', point: '혼돈 포인트' };
+
+  // 27개 항목 전부: 화면 표기로 바꿨다가 다시 id 로 돌아오는지.
+  // 캡처가 없어도 이 왕복은 완전히 검증된다.
+  let round = 0;
+  const broken = [];
+  for (const o of rules.OUTCOMES) {
+    const screen = interpret.toScreenText(o, slots);
+    const back = interpret.toOutcomeId(screen, slots);
+    if (back.ok && back.id === o.id) round++;
+    else broken.push(o.id + ' -> ' + (back.id || back.reason));
+  }
+  check(`27개 항목 왕복 (${round}/${rules.OUTCOMES.length})`, round === rules.OUTCOMES.length,
+    broken.slice(0, 3).join(' | '));
+
+  // 실제 캡처에서 읽은 그대로.
+  const real = { labelText: '아군 피해 강화', value: { prefix: 'lv', digit: '1', suffix: '증가' } };
+  const r = interpret.toOutcomeId(real, slots);
+  check('아군 피해 강화 Lv. 1 증가 -> opt2+1', r.ok && r.id === 'opt2+1', JSON.stringify(r));
+
+  const pt = { labelText: '혼돈 포인트', value: { prefix: 'plus', digit: '2', suffix: '증가' } };
+  check('혼돈 포인트 +2 증가 -> point+2',
+    interpret.toOutcomeId(pt, slots).id === 'point+2');
+
+  // 질서 젬도 같은 자리를 쓴다.
+  check('질서 포인트도 point 로', interpret.resolveSlot('질서 포인트', slots) === 'point');
+
+  // 모르는 효과 이름은 조용히 넘기면 안 된다.
+  const unknown = interpret.toOutcomeId(
+    { labelText: '보스 피해', value: { prefix: 'lv', digit: '1', suffix: '증가' } }, slots);
+  check('모르는 효과 이름은 거부', !unknown.ok && /어느 수치인지/.test(unknown.reason), unknown.reason);
+
+  // 표기와 슬롯이 어긋나면 슬롯을 잘못 잡은 것이다.
+  const mismatch = interpret.toOutcomeId(
+    { labelText: '의지력 효율', value: { prefix: 'lv', digit: '1', suffix: '증가' } }, slots);
+  check('의지력인데 Lv. 표기면 거부', !mismatch.ok, JSON.stringify(mismatch));
+
+  // 확률 표에 없는 조합(포인트 -2 같은 것)은 막아야 한다.
+  const impossible = interpret.toOutcomeId(
+    { labelText: '혼돈 포인트', value: { prefix: 'plus', digit: '2', suffix: '감소' } }, slots);
+  check('확률 표에 없는 항목은 거부', !impossible.ok && /확률 표에 없는/.test(impossible.reason),
+    impossible.reason);
+
+  // 4개가 다 안 나오면 ids 를 주면 안 된다. 셋만 알고 판단할 수는 없다.
+  const partial = interpret.toPicks([real, pt, real, { labelText: '???' }], slots);
+  check('하나라도 실패하면 ids 는 null', partial.ids === null && partial.problems.length === 1);
+
+  const full = interpret.toPicks([real, pt, real, pt], slots);
+  check('4개 다 되면 ids 반환', full.ids && full.ids.length === 4, JSON.stringify(full.problems));
+}
+
+console.log('화면에서 읽어 솔버까지 (끝에서 끝까지)');
+{
+  const interpret = require('./interpret.js');
+  const solver = require('../solver.js');
+  const img = png.loadGray(here('fixtures', 'cap-roaring2.png'));
+
+  const read = reader.readOptions(img, atlas, { scale: 1 });
+  const slots = { opt1: '공격력', opt2: '아군 피해 강화', point: '혼돈 포인트' };
+  const picks = interpret.toPicks(read.options, slots);
+
+  check('캡처에서 4개 id 를 뽑았다', !!picks.ids, JSON.stringify(picks.problems));
+  check('id 가 기대와 일치',
+    JSON.stringify(picks.ids) === JSON.stringify(['opt2+1', 'point+2', 'point+1', 'opt2+2']),
+    JSON.stringify(picks.ids));
+
+  // 특수 항목이 섞인 캡처도 id 로 떨어져야 한다. cap19: 질서포인트+4 / 유지 / 효과변경 / 의지력+4
+  const jilseo = png.loadGray(here('fixtures', 'cap19.png'));
+  const r19 = reader.readOptions(jilseo, atlas, { scale: 0.98 });
+  const p19 = interpret.toPicks(r19.options,
+    { opt1: '보스 피해', opt2: '아군 공격 강화', point: '질서 포인트' });
+  check('특수 항목 4개도 id 로 (' + JSON.stringify(p19.resolved) + ')',
+    JSON.stringify(p19.resolved) === JSON.stringify(['point+4', 'keep', 'change:opt2', 'will+4']),
+    JSON.stringify(p19.problems));
+
+  // 그 4개를 그대로 솔버에 넣는다. 이게 되면 화면 -> 판단 경로가 뚫린 것이다.
+  const sol = solver.solveFull(solver.thresholdTarget({ point: 5 }), 9);
+  const state = { will: 1, point: 1, opt1: 1, opt2: 1, n: 9, cost: 0, r: 2 };
+  const d = sol.decide(state, picks.ids);
+  check('솔버가 판단을 냈다', d.action === 'commit' || d.action === 'reroll',
+    JSON.stringify(d));
+  console.log(`  굴리기 ${(d.commit * 100).toFixed(2)}% · 리롤 ${(d.reroll * 100).toFixed(2)}% -> ${d.action}`);
+}
+
+console.log();
+console.log(`${pass} pass / ${fail} fail`);
+process.exit(fail ? 1 : 0);

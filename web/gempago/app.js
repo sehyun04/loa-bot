@@ -1,0 +1,672 @@
+/*
+ * 젬파고 계산기 UI.
+ *
+ * 계산은 전부 worker.js 안의 solver.js 가 한다. 여기서는 확률을 흉내내지 않는다.
+ * 값이 의심스러우면 `node web/gempago/test.js` 가 같은 코드를 검증한다.
+ */
+(function () {
+  'use strict';
+
+  const STATS = [
+    { key: 'will', label: '의지력 효율' },
+    { key: 'point', label: '포인트' },
+    { key: 'opt1', label: '1번 효과' },
+    { key: 'opt2', label: '2번 효과' },
+  ];
+
+  const $ = (id) => document.getElementById(id);
+
+  // 고점 목표는 확률이 0.2% 대까지 내려간다. 소수점 2자리로 자르면 서로 다른 값이
+  // 똑같이 보이고, "리롤한다"고 해놓고 양쪽에 같은 숫자를 띄우는 꼴이 된다.
+  function pct(v) {
+    const p = v * 100;
+    if (p === 0 || p >= 1) return p.toFixed(2) + '%';
+    return p.toFixed(p >= 0.1 ? 3 : 4) + '%';
+  }
+
+  function pp(v) {
+    const p = v * 100;
+    if (p >= 0.01) return p.toFixed(2) + '%p';
+    return p.toFixed(4) + '%p';
+  }
+
+  const worker = new Worker('worker.js?v=2026-08-13.2');
+  let seq = 0;
+  const pending = new Map();
+
+  worker.onmessage = (e) => {
+    const { id, ok, result, error } = e.data;
+    const p = pending.get(id);
+    if (!p) return;
+    pending.delete(id);
+    ok ? p.resolve(result) : p.reject(new Error(error));
+  };
+  worker.onerror = (e) => {
+    setNote('계산기를 불러오지 못했습니다', e.message + ' - 로컬 서버로 열었는지 확인하세요.', true);
+  };
+
+  function ask(type, payload, transfer) {
+    const id = ++seq;
+    return new Promise((resolve, reject) => {
+      pending.set(id, { resolve, reject });
+      worker.postMessage({ id, type, payload }, transfer || []);
+    });
+  }
+
+  function setNote(title, text, isError) {
+    $('note').hidden = false;
+    $('note').classList.toggle('error', !!isError);
+    $('note').querySelector('strong').textContent = title;
+    $('noteText').textContent = text || '';
+  }
+
+  function fillRange(sel, from, to, value) {
+    sel.innerHTML = '';
+    for (let v = from; v <= to; v++) {
+      const o = document.createElement('option');
+      o.value = String(v);
+      o.textContent = String(v);
+      sel.appendChild(o);
+    }
+    sel.value = String(value);
+  }
+
+  // 현재 수치 / 목표 수치 입력칸을 같은 모양으로 만든다.
+  function buildStatInputs(container, prefix, initial) {
+    container.innerHTML = '';
+    for (const { key, label } of STATS) {
+      const row = document.createElement('label');
+      row.className = 'row';
+      const span = document.createElement('span');
+      span.textContent = label;
+      const sel = document.createElement('select');
+      sel.id = prefix + '_' + key;
+      fillRange(sel, 1, 5, initial);
+      row.appendChild(span);
+      row.appendChild(sel);
+      container.appendChild(row);
+    }
+  }
+
+  buildStatInputs($('stats'), 'cur', 1);
+  buildStatInputs($('target'), 'tgt', 1);
+
+  const picks = [];
+  for (let i = 0; i < 4; i++) {
+    const sel = document.createElement('select');
+    sel.id = 'pick' + i;
+    $('picks').appendChild(sel);
+    picks.push(sel);
+  }
+
+  function readState() {
+    const s = { n: +$('attempts').value, cost: +$('cost').value, r: +$('rerolls').value };
+    for (const { key } of STATS) s[key] = +$('cur_' + key).value;
+    return s;
+  }
+
+  function readSlots() {
+    return {
+      opt1: $('name_opt1').value.trim() || '1번 효과',
+      opt2: $('name_opt2').value.trim() || '2번 효과',
+      point: $('gemType').value,
+    };
+  }
+
+  // 수치 입력칸 이름도 젬에 맞춰 바꾼다. 화면과 같은 단어를 봐야 헷갈리지 않는다.
+  function syncStatLabels() {
+    const s = readSlots();
+    const names = { will: '의지력 효율', point: s.point, opt1: s.opt1, opt2: s.opt2 };
+    for (const { key } of STATS) {
+      for (const prefix of ['cur', 'tgt']) {
+        const span = $(prefix + '_' + key).parentElement.querySelector('span');
+        span.textContent = names[key];
+      }
+    }
+  }
+
+  function readTarget() {
+    const t = {};
+    for (const { key } of STATS) {
+      const v = +$('tgt_' + key).value;
+      if (v > 1) t[key] = v; // 1 은 제약이 아니다
+    }
+    return t;
+  }
+
+  function syncPresetButtons() {
+    const cur = JSON.stringify(readTarget());
+    for (const b of $('presets').children) {
+      const same = JSON.stringify(JSON.parse(b.dataset.target)) === cur;
+      b.setAttribute('aria-pressed', same ? 'true' : 'false');
+    }
+  }
+
+  $('presets').addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    const t = JSON.parse(b.dataset.target);
+    for (const { key } of STATS) $('tgt_' + key).value = String(t[key] || 1);
+    syncPresetButtons();
+    refresh();
+  });
+
+  $('grade').addEventListener('change', () => {
+    const max = +$('grade').value;
+    fillRange($('attempts'), 0, max, max);
+    refresh();
+  });
+
+  // 남은 가공 횟수가 바뀌면 뜰 수 있는 항목도 바뀌므로 선택지를 다시 채운다.
+  let lastOutcomeKey = '';
+  async function refreshOutcomes(state, slots) {
+    const key = STATS.map((s) => state[s.key]).join(',') + '|' + (state.n <= 1) + '|' + state.cost
+      + '|' + slots.opt1 + '|' + slots.opt2 + '|' + slots.point;
+    if (key === lastOutcomeKey) return;
+    lastOutcomeKey = key;
+
+    const outs = await ask('outcomes', { state, slots });
+    for (const sel of picks) {
+      const keep = sel.value;
+      sel.innerHTML = '';
+      const blank = document.createElement('option');
+      blank.value = '';
+      blank.textContent = '(선택)';
+      sel.appendChild(blank);
+      for (const o of outs) {
+        const opt = document.createElement('option');
+        opt.value = o.id;
+        opt.textContent = o.label;
+        sel.appendChild(opt);
+      }
+      // 상태가 바뀌어 더 이상 못 뜨는 항목이면 자동으로 비워진다.
+      sel.value = outs.some((o) => o.id === keep) ? keep : '';
+    }
+  }
+
+  function readPicks() {
+    const ids = picks.map((s) => s.value).filter(Boolean);
+    return ids.length === 4 ? ids : null;
+  }
+
+  let running = false, queued = false;
+
+  async function refresh() {
+    if (running) { queued = true; return; }
+    running = true;
+    try {
+      const state = readState();
+      const target = readTarget();
+      const maxAttempts = +$('grade').value;
+
+      if (state.n > maxAttempts) {
+        fillRange($('attempts'), 0, maxAttempts, maxAttempts);
+        state.n = maxAttempts;
+      }
+
+      syncStatLabels();
+      await refreshOutcomes(state, readSlots());
+
+      if (!Object.keys(target).length) {
+        $('result').hidden = true;
+        setNote('목표를 정하세요', '전부 1 이면 아무 조건이 없어서 확률이 항상 100% 입니다.');
+        return;
+      }
+
+      setNote('계산 중', '처음 한 번만 오래 걸립니다 (목표당 약 2초).');
+      const res = await ask('evaluate', {
+        state, target, maxAttempts, picks: readPicks(), slots: readSlots(),
+      });
+      render(state, res);
+    } catch (err) {
+      setNote('계산 실패', err.message, true);
+      $('result').hidden = true;
+    } finally {
+      running = false;
+      if (queued) { queued = false; refresh(); }
+    }
+  }
+
+  function render(state, res) {
+    $('note').hidden = true;
+    $('result').hidden = false;
+
+    const d = res.decision;
+    const verdict = $('verdict');
+
+    if (res.alreadyMet) {
+      verdict.className = 'verdict commit';
+      verdict.innerHTML = '';
+      verdict.append('목표 달성 - 지금 가공 완료');
+      const small = document.createElement('small');
+      small.textContent = '더 굴리면 -1 이 뜰 수 있어서 손해만 본다.';
+      verdict.appendChild(small);
+    } else if (!d) {
+      verdict.className = 'verdict';
+      verdict.innerHTML = '';
+      verdict.append('현재 목표 달성 확률 ' + pct(res.value));
+      const small = document.createElement('small');
+      small.textContent = '화면에 뜬 4개를 고르면 굴리기/리롤을 판단한다.';
+      verdict.appendChild(small);
+    } else {
+      const isCommit = d.action === 'commit';
+      // 차이가 이 정도면 어느 쪽을 골라도 사실상 같다. 근소한 우위를 단정적으로
+      // 말하면 실제보다 확신 있는 조언처럼 읽힌다.
+      const marginal = d.reroll !== null && d.gain < 0.0005;
+
+      verdict.className = 'verdict ' + (marginal ? '' : d.action);
+      verdict.innerHTML = '';
+      verdict.append(marginal ? '어느 쪽이든 비슷하다' : (isCommit ? '굴린다' : '리롤한다'));
+
+      const small = document.createElement('small');
+      if (d.reroll === null) {
+        small.textContent = '리롤이 없어서 선택지가 없다.';
+      } else if (marginal) {
+        small.textContent =
+          `굳이 따지면 ${isCommit ? '굴리기' : '리롤'}이 ${pp(d.gain)} 앞선다. 리롤을 아껴도 된다.`;
+      } else {
+        small.textContent = `${isCommit ? '리롤' : '굴리기'}보다 ${pp(d.gain)} 유리하다.`;
+      }
+      verdict.appendChild(small);
+    }
+
+    $('valCommit').textContent = d ? pct(d.commit) : pct(res.value);
+    $('valReroll').textContent = d && d.reroll !== null ? pct(d.reroll) : '-';
+    $('optCommit').classList.toggle('pick', !!d && d.action === 'commit');
+    $('optReroll').classList.toggle('pick', !!d && d.action === 'reroll');
+
+    const tb = $('breakdown');
+    tb.innerHTML = '';
+    for (const p of (res.perPick || [])) {
+      const tr = document.createElement('tr');
+      const td1 = document.createElement('td');
+      td1.textContent = p.label;
+      const td2 = document.createElement('td');
+      td2.textContent = pct(p.value);
+      tr.append(td1, td2);
+      tb.appendChild(tr);
+    }
+    tb.parentElement.hidden = !(res.perPick && res.perPick.length);
+
+    $('meta').textContent =
+      `남은 가공 ${state.n}회 · 리롤 ${state.r}회 · 이 목표 전체 풀이 ${res.ms}ms`;
+  }
+
+  // ---- 화면에서 읽기 -------------------------------------------------------
+
+  const grabCanvas = document.createElement('canvas');
+  const grabCtx = grabCanvas.getContext('2d', { willReadFrequently: true });
+  let stream = null;
+  let autoTimer = null;
+  let atlasReady = false;
+  let reading = false;
+
+  function setCapture(text, kind) {
+    const el = $('captureStatus');
+    el.textContent = text;
+    el.className = 'capture-status' + (kind ? ' ' + kind : '');
+  }
+
+  /** 이미지/비디오 한 장을 회색조로. 워커로 넘길 수 있게 Float32Array 로 만든다. */
+  function toGray(source, w, h) {
+    grabCanvas.width = w;
+    grabCanvas.height = h;
+    grabCtx.drawImage(source, 0, 0, w, h);
+    const { data } = grabCtx.getImageData(0, 0, w, h);
+    const g = new Float32Array(w * h);
+    for (let i = 0, p = 0; i < g.length; i++, p += 4) {
+      g[i] = 0.299 * data[p] + 0.587 * data[p + 1] + 0.114 * data[p + 2];
+    }
+    return { width: w, height: h, data: g };
+  }
+
+  async function readImage(image, label) {
+    if (!atlasReady || reading) return;
+    reading = true;
+    try {
+      setCapture((label || '읽는 중') + '...');
+      // 회색조 버퍼는 수 MB 라 복사하지 않고 소유권을 넘긴다.
+      const res = await ask('read', { image, slots: readSlots() }, [image.data.buffer]);
+      await applyWithAutofill(res);
+    } catch (err) {
+      setCapture('읽기 실패: ' + err.message, 'bad');
+    } finally {
+      reading = false;
+    }
+  }
+
+  /**
+   * 화면에서 읽은 효과 이름을 비어 있는 "1번/2번 효과 이름" 칸에 넣는다.
+   * 어느 쪽이 1번인지는 옵션 목록만 봐서는 알 수 없다. 확률 표에서 두 효과는 완전히
+   * 대칭이라 바뀌어도 계산은 같지만, 목표를 1번/2번으로 나눠 잡을 때는 달라진다.
+   * 그래서 채워 넣되 바꿀 수 있게 알려준다.
+   * @returns {{slot:string,name:string}[]} 실제로 채운 것들
+   */
+  function autofillEffectNames(res) {
+    const known = new Set([$('name_opt1').value.trim(), $('name_opt2').value.trim()].filter(Boolean));
+    const found = [];
+    for (const o of res.options) {
+      if (!o.labelText || o.slot || o.special) continue; // 이미 아는 수치이거나 특수 항목
+      if (known.has(o.labelText) || found.includes(o.labelText)) continue;
+      found.push(o.labelText);
+    }
+    const filled = [];
+    for (const name of found) {
+      const empty = ['name_opt1', 'name_opt2'].find((id) => !$(id).value.trim());
+      if (!empty) break;
+      $(empty).value = name;
+      filled.push({ slot: empty === 'name_opt1' ? '1번' : '2번', name });
+    }
+    return filled;
+  }
+
+  const POS_KO = { top: '의지력', left: '왼쪽 효과', right: '오른쪽 효과', bottom: '포인트' };
+
+  /**
+   * 다이아에서 읽은 현재 수치를 입력칸에 넣는다. 의심 표시된 자리는 건드리지 않는다 -
+   * 조용히 틀린 값을 넣는 것보다 사람이 한 번 보는 게 낫다.
+   *
+   * 좌/우 효과는 이름으로 칸을 고른다. 사용자가 1번/2번 이름을 바꿔 넣어 뒀으면
+   * 화면의 왼쪽 다이아가 2번 효과일 수 있기 때문이다. 이름이 어느 칸과도 안 맞으면
+   * 그 자리는 채우지 않는다.
+   */
+  function applyGemState(res) {
+    const out = { filled: [], skipped: [], slotsChanged: false };
+    if (!res.found || !res.gem) return out;
+
+    const optTarget = (g) => {
+      const n1 = $('name_opt1').value.trim(), n2 = $('name_opt2').value.trim();
+      if (g.labelText === n1) return 'opt1';
+      if (g.labelText === n2) return 'opt2';
+      if (g.slot === 'opt1' && !n1) return 'opt1';
+      if (g.slot === 'opt2' && !n2) return 'opt2';
+      return null;
+    };
+
+    for (const pos of ['top', 'left', 'right', 'bottom']) {
+      const g = res.gem[pos];
+      if (!g || !g.slot) continue;
+      if (!g.confident) { out.skipped.push(`${POS_KO[pos]} (확실치 않음)`); continue; }
+
+      let slot = g.slot;
+      if (slot === 'opt1' || slot === 'opt2') {
+        slot = optTarget(g);
+        if (!slot) { out.skipped.push(`${POS_KO[pos]} "${g.labelText}" (이름 칸과 안 맞음)`); continue; }
+        const input = $('name_' + slot);
+        if (!input.value.trim()) { input.value = g.labelText; out.slotsChanged = true; }
+      }
+      // 아래 다이아의 이름이 젬 계열(혼돈/질서)을 알려준다.
+      if (slot === 'point' && g.labelText && $('gemType').value !== g.labelText) {
+        $('gemType').value = g.labelText;
+        out.slotsChanged = true;
+      }
+      $('cur_' + slot).value = String(g.value);
+      out.filled.push(`${g.labelText} ${g.value}`);
+    }
+    return out;
+  }
+
+  /**
+   * 리롤/가공 횟수를 입력칸에 넣는다. 전체 횟수(M)가 등급을 알려주므로 등급까지 맞춘다.
+   * 다이아처럼 의심 표시된 값은 건드리지 않는다.
+   */
+  function applyMeta(res) {
+    const out = { filled: [], skipped: [] };
+    if (!res.found || !res.meta) return out;
+    const m = res.meta;
+
+    if (m.attemptsMax && m.attemptsMax.confident && ['5', '7', '9'].includes(String(m.attemptsMax.value))) {
+      const grade = String(m.attemptsMax.value);
+      if ($('grade').value !== grade) {
+        $('grade').value = grade;
+        fillRange($('attempts'), 0, +grade, +grade);
+      }
+    } else if (m.attemptsMax) {
+      out.skipped.push('등급 (확실치 않음)');
+    }
+
+    if (m.attemptsLeft && m.attemptsLeft.confident && m.attemptsLeft.value <= +$('grade').value) {
+      $('attempts').value = String(m.attemptsLeft.value);
+      out.filled.push(`남은 가공 ${m.attemptsLeft.value}회`);
+    } else if (m.attemptsLeft) {
+      out.skipped.push('남은 가공 (확실치 않음)');
+    }
+
+    if (m.reroll && m.reroll.confident) {
+      $('rerolls').value = String(m.reroll.value);
+      out.filled.push(`리롤 ${m.reroll.value}회`);
+    } else if (m.reroll) {
+      out.skipped.push('리롤 (확실치 않음)');
+    }
+
+    // 비용은 화면의 금액을 배율로 뒤집은 값이다. 아는 금액이 아니면 reader 가 null 을
+    // 주므로(예: 아직 표본이 없는 +100%) 그때는 조용히 손대지 않는다.
+    if (m.cost && m.cost.confident) {
+      const COST_KO = { '-1': '-100%', 0: '기본', 1: '+100%' };
+      $('cost').value = String(m.cost.mod);
+      out.filled.push(`가공 비용 ${COST_KO[m.cost.mod]}`);
+    } else if (m.cost) {
+      out.skipped.push('가공 비용 (확실치 않음)');
+    }
+    return out;
+  }
+
+  /** 자동 입력 결과를 읽기 상태줄 밑에 덧붙인다. */
+  function noteGemState(gem) {
+    if (!gem.filled.length && !gem.skipped.length) return;
+    const lines = [];
+    if (gem.filled.length) lines.push('현재 수치 자동 입력: ' + gem.filled.join(' · '));
+    if (gem.skipped.length) lines.push('그대로 둠: ' + gem.skipped.join(', '));
+    $('captureStatus').textContent += '\n' + lines.join('\n');
+  }
+
+  function applyReading(res) {
+    if (!res.found) {
+      setCapture(res.reason + '\n가공 화면이 보이는 상태인지 확인하세요.', 'warn');
+      return;
+    }
+
+    const read = res.options.map((o, i) =>
+      `${i + 1} ${o.labelText || '?'} / ${o.valueText || '?'}${o.confident ? '' : ' (확인 필요)'}`);
+
+    if (res.picks) {
+      // 지금 입력한 젬 수치에서는 나올 수 없는 항목이면 목록에 아예 없다.
+      // 예를 들어 "의지력 효율 +4 증가" 는 의지력이 1 일 때만 뜬다. 이런 항목이 화면에
+      // 보인다는 건 화면과 입력한 수치가 어긋났다는 뜻이라 조용히 넘기면 안 된다.
+      const missing = [];
+      res.picks.forEach((id, i) => {
+        const opt = picks[i].querySelector(`option[value="${CSS.escape(id)}"]`);
+        if (opt) picks[i].value = id;
+        else missing.push(`열${i + 1} ${res.options[i].labelText} / ${res.options[i].valueText}`);
+      });
+
+      if (missing.length) {
+        $('pickStatus').hidden = false;
+        $('pickStatus').className = 'capture-status bad';
+        $('pickStatus').textContent =
+          '화면에 보이는데 지금 입력한 젬 상태에서는 나올 수 없는 항목이 있습니다.\n' +
+          missing.join('\n') +
+          '\n왼쪽 수치가 화면과 같은지 확인하세요 (예: "+4 증가" 는 그 수치가 1 일 때만 뜹니다).';
+      } else {
+        $('pickStatus').hidden = true;
+      }
+
+      setCapture(
+        `읽음 (배율 ${res.scale}, 앵커 ${res.anchorScore.toFixed(2)}, ${res.ms}ms)\n` + read.join('\n'),
+        missing.length ? 'warn' : 'ok'
+      );
+      refresh();
+      return;
+    }
+
+    // 4개를 다 알아내지 못했으면 아무것도 채우지 않는다. 셋만 넣으면 오히려 헷갈린다.
+    const names = res.problems.map((p) => `열${p.column}: ${p.reason}`);
+    $('pickStatus').hidden = false;
+    $('pickStatus').className = 'capture-status warn';
+    $('pickStatus').textContent =
+      '자동으로 못 채운 항목이 있어 그대로 뒀습니다.\n' + names.join('\n') +
+      '\n효과 이름이 안 맞으면 위 "1번/2번 효과 이름" 에 화면 그대로 넣어보세요.';
+    setCapture(`읽음 (배율 ${res.scale}, ${res.ms}ms)\n` + read.join('\n'), 'warn');
+  }
+
+  /** 읽고 -> 다이아로 현재 수치·이름을 채우고 -> 모르는 효과 이름이면 채우고 -> 다시 해석한다. */
+  async function applyWithAutofill(res) {
+    if (!res.found) { applyReading(res); return; }
+
+    // 다이아가 젬 계열이나 효과 이름을 바꿨으면 옵션 4개를 그 이름으로 다시 해석한다.
+    const gem = applyGemState(res);
+    const meta = applyMeta(res);
+    gem.filled.push.apply(gem.filled, meta.filled);
+    gem.skipped.push.apply(gem.skipped, meta.skipped);
+    // 젬 포인트 검산 결과. 복구된 값은 이미 confident 로 채워져 있다.
+    if (res.sumCheck && res.sumCheck.status === 'recovered') {
+      gem.filled.push(`(${POS_KO[res.sumCheck.pos]}는 젬 포인트 합으로 보정)`);
+    }
+    if (res.sumCheck && res.sumCheck.status === 'mismatch') {
+      gem.skipped.push('수치 합이 젬 포인트와 안 맞음 - 네 수치를 직접 확인하세요');
+    }
+    if (gem.slotsChanged) {
+      syncStatLabels();
+      res = Object.assign(
+        { scale: res.scale, ms: res.ms, anchorScore: res.anchorScore, gem: res.gem },
+        await ask('resolve', { slots: readSlots() })
+      );
+    }
+
+    applyReading(res);
+    noteGemState(gem);
+    if (res.picks) return;
+
+    const filled = autofillEffectNames(res);
+    if (!filled.length) return;
+
+    syncStatLabels();
+    const again = await ask('resolve', { slots: readSlots() });
+    applyReading(Object.assign({ scale: res.scale, ms: res.ms, anchorScore: res.anchorScore }, again));
+    noteGemState(gem);
+    if (again.picks) {
+      $('pickStatus').hidden = false;
+      $('pickStatus').className = 'capture-status';
+      $('pickStatus').textContent =
+        '효과 이름을 화면에서 읽어 채웠습니다: ' +
+        filled.map((f) => `${f.slot} "${f.name}"`).join(', ') +
+        '\n어느 쪽이 1번인지는 옵션 목록만으로는 알 수 없습니다. 다르면 두 칸을 바꿔 주세요.';
+    }
+  }
+
+  async function grabAndRead(label) {
+    const v = $('preview');
+    if (!v.videoWidth) { setCapture('아직 영상이 안 들어왔습니다.', 'warn'); return; }
+    await readImage(toGray(v, v.videoWidth, v.videoHeight), label);
+  }
+
+  function stopShare() {
+    if (stream) stream.getTracks().forEach((t) => t.stop());
+    stream = null;
+    clearInterval(autoTimer);
+    autoTimer = null;
+    $('preview').hidden = true;
+    $('preview').srcObject = null;
+    $('shareBtn').textContent = '화면 공유 시작';
+    $('shareBtn').classList.remove('on');
+    $('readBtn').disabled = true;
+    $('autoRead').disabled = true;
+    $('autoRead').checked = false;
+  }
+
+  $('shareBtn').addEventListener('click', async () => {
+    if (stream) { stopShare(); setCapture('공유를 껐습니다.'); return; }
+    try {
+      // 30fps 로 받을 이유가 없다. 화면이 바뀔 때만 읽으면 되고 인식이 프레임당 수십 ms 다.
+      stream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 5 }, audio: false });
+      const v = $('preview');
+      v.srcObject = stream;
+      v.hidden = false;
+      await v.play();
+      // 사용자가 브라우저 UI 로 공유를 끄는 경우도 있다.
+      stream.getVideoTracks()[0].addEventListener('ended', () => { stopShare(); setCapture('공유가 끝났습니다.'); });
+
+      $('shareBtn').textContent = '공유 끄기';
+      $('shareBtn').classList.add('on');
+      $('readBtn').disabled = false;
+      $('autoRead').disabled = false;
+      // 창 크기가 바뀌면 배율도 바뀐다. 캐시를 비우고 처음부터 찾게 한다.
+      await ask('forgetScale', {});
+      setCapture('공유 중. 가공 화면을 띄우고 "지금 읽기" 를 누르세요.\n처음 한 번은 배율을 찾느라 2초쯤 걸립니다.');
+    } catch (err) {
+      stopShare();
+      setCapture(err.name === 'NotAllowedError' ? '공유를 취소했습니다.' : '공유 실패: ' + err.message,
+        err.name === 'NotAllowedError' ? null : 'bad');
+    }
+  });
+
+  $('readBtn').addEventListener('click', () => grabAndRead());
+
+  $('autoRead').addEventListener('change', (e) => {
+    clearInterval(autoTimer);
+    autoTimer = null;
+    if (!e.target.checked) return;
+    // 가공은 사람이 버튼을 눌러야 진행되므로 초당 몇 번씩 볼 이유가 없다.
+    autoTimer = setInterval(() => grabAndRead('자동 읽기'), 1500);
+  });
+
+  // 파일을 끌어다 놓아도 읽는다. 공유가 안 될 때 확인용으로도 쓴다.
+  let dragDepth = 0;
+  document.addEventListener('dragenter', (e) => {
+    if (!Array.from(e.dataTransfer.types).includes('Files')) return;
+    if (++dragDepth === 1) document.body.classList.add('dragging');
+  });
+  document.addEventListener('dragleave', () => {
+    if (--dragDepth <= 0) { dragDepth = 0; document.body.classList.remove('dragging'); }
+  });
+  document.addEventListener('dragover', (e) => e.preventDefault());
+  document.addEventListener('drop', async (e) => {
+    e.preventDefault();
+    dragDepth = 0;
+    document.body.classList.remove('dragging');
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (!file || !file.type.startsWith('image/')) return;
+
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    try {
+      await img.decode();
+      // 파일마다 해상도가 다를 수 있으므로 배율을 다시 찾게 한다.
+      await ask('forgetScale', {});
+      await readImage(toGray(img, img.naturalWidth, img.naturalHeight), file.name + ' 읽는 중');
+    } catch (err) {
+      setCapture('이미지를 열지 못했습니다: ' + err.message, 'bad');
+    } finally {
+      URL.revokeObjectURL(img.src);
+    }
+  });
+
+  (async () => {
+    try {
+      const atlas = await GempagoAtlasBrowser.load('vision/templates');
+      await ask('atlas', { atlas });
+      atlasReady = true;
+      setCapture('준비됨. 화면을 공유하거나 캡처 PNG 를 끌어다 놓으세요.');
+    } catch (err) {
+      setCapture('템플릿을 불러오지 못했습니다: ' + err.message, 'bad');
+    }
+  })();
+
+  fillRange($('attempts'), 0, 9, 9);
+  fillRange($('rerolls'), 0, 6, 2);
+
+  document.addEventListener('change', (e) => {
+    if (e.target.matches('select')) { syncPresetButtons(); refresh(); }
+  });
+  // 효과 이름은 타이핑 중에도 반영한다. change 는 포커스가 빠져야 오는데,
+  // 이름만 고치고 바로 항목을 고르는 흐름이라 그때는 이미 목록이 낡아 있다.
+  let nameTimer = null;
+  document.addEventListener('input', (e) => {
+    if (!e.target.matches('input[type="text"]')) return;
+    clearTimeout(nameTimer);
+    nameTimer = setTimeout(refresh, 250);
+  });
+
+  syncPresetButtons();
+  refresh();
+})();
