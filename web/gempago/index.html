@@ -4,11 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>젬파고 - 가공 계산기</title>
-<link rel="stylesheet" href="style.css?v=2026-08-15.3">
+<link rel="stylesheet" href="style.css?v=2026-08-15.4">
 </head>
 <body>
 
 <header class="top">
+  <!-- 브릴리언트 컷 한 알. 이모지 대신 SVG 로 그린다(전역 규칙). 색은 CSS 변수를 따라간다. -->
+  <svg class="logo" viewBox="0 0 24 24" aria-hidden="true">
+    <defs>
+      <linearGradient id="gemFace" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="var(--accent-2)"/>
+        <stop offset="1" stop-color="var(--accent)"/>
+      </linearGradient>
+    </defs>
+    <path d="M7.2 2.6h9.6l4.2 6.2L12 21.6 3 8.8z" fill="url(#gemFace)"/>
+    <path d="M7.2 2.6 3 8.8h18l-4.2-6.2z" fill="#fff" opacity=".22"/>
+    <path d="M3 8.8h18L12 21.6z" fill="#000" opacity=".14"/>
+    <path d="M7.2 2.6 12 21.6l4.8-19M3 8.8h18" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width=".7"/>
+  </svg>
   <h1>젬파고</h1>
   <p class="sub">젬 가공 도우미</p>
 </header>
@@ -19,7 +32,7 @@
 
     <section class="live">
       <button type="button" id="shareBtn">화면 공유 시작</button>
-      <span class="live-state" id="liveState">로아를 1920*1080 창모드 화면공유를 해주세요.</span>
+      <span class="live-state" id="liveState">젬 가공화면을 1920*1080 창모드 화면공유를 해주세요.</span>
       <button type="button" id="readBtn" class="ghost" disabled>한 번 읽기</button>
       <label class="toggle"><input type="checkbox" id="autoRead" checked disabled> 자동</label>
     </section>
@@ -151,14 +164,14 @@
     <section class="note" id="note">
       <span class="spinner" id="noteSpin"></span>
       <strong>계산 준비 중</strong>
-      <span id="noteText">확률 표와 솔버를 불러오는 중.</span>
+      <span id="noteText"></span>
     </section>
 
   </div>
 
 </main>
 
-<script src="vision/atlas-browser.js?v=2026-08-15.3"></script>
-<script src="app.js?v=2026-08-15.3"></script>
+<script src="vision/atlas-browser.js?v=2026-08-15.4"></script>
+<script src="app.js?v=2026-08-15.4"></script>
 </body>
 </html>

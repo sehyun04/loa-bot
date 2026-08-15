@@ -1,14 +1,41 @@
+/*
+ * 보석 테마.
+ *
+ * 규칙 두 개만 지킨다.
+ * 1. 이모지 없음. 보석 모양이 필요하면 SVG 나 45도 돌린 사각형으로 만든다.
+ * 2. 장식이 판정을 가리지 않는다. 빛나는 건 답 패널 하나뿐이고 나머지는 조용하다.
+ */
 :root {
-  --bg: #14161c;
-  --panel: #1c1f27;
-  --panel-2: #232733;
-  --line: #2e3341;
-  --fg: #e5e8ef;
-  --dim: #8f97a8;
-  --accent: #6ea8fe;
-  --good: #56c98a;
-  --warn: #e0af68;
-  --bad: #f7768e;
+  --bg: #0c0a12;
+  --panel: #16131f;
+  --panel-2: #1e1a2b;
+  --line: #2b2640;
+  /* 보석 컷에서 빛이 걸리는 위쪽 모서리. */
+  --edge: #3b3357;
+  --fg: #ece9f5;
+  --dim: #948fab;
+  --accent: #a78bfa;
+  --accent-2: #6ee7f0;
+  --glow: rgba(167, 139, 250, 0.22);
+  --glow-soft: rgba(167, 139, 250, 0.10);
+  --good: #4ade80;
+  --warn: #fbbf24;
+  --bad: #fb7185;
+  --ink: #0c0a12;
+}
+
+/* 젬 계열에 따라 색이 바뀐다. 화면에 띄운 젬과 같은 색이어야 헷갈리지 않는다. */
+body[data-gem="order"] {
+  --accent: #60a5fa;
+  --accent-2: #7dd3fc;
+  --glow: rgba(96, 165, 250, 0.24);
+  --glow-soft: rgba(96, 165, 250, 0.11);
+}
+body[data-gem="chaos"] {
+  --accent: #c084fc;
+  --accent-2: #f0abfc;
+  --glow: rgba(192, 132, 252, 0.24);
+  --glow-soft: rgba(192, 132, 252, 0.11);
 }
 
 * { box-sizing: border-box; }
@@ -21,15 +48,48 @@
 
 body {
   margin: 0;
-  padding: 20px 16px 64px;
-  background: var(--bg);
+  padding: 22px 16px 64px;
   color: var(--fg);
   font: 14px/1.55 "Pretendard", "Malgun Gothic", system-ui, sans-serif;
+  /* 원석에 조명이 두 방향에서 들어온 느낌. 단색 배경이면 패널이 종이처럼 보인다. */
+  background:
+    radial-gradient(900px 620px at 10% -12%, var(--glow-soft), transparent 62%),
+    radial-gradient(760px 520px at 100% 4%, rgba(110, 231, 240, 0.07), transparent 58%),
+    var(--bg);
+  background-attachment: fixed;
 }
 
-.top { max-width: 1180px; margin: 0 auto 14px; }
-.top h1 { margin: 0; font-size: 20px; letter-spacing: -0.02em; }
-.sub { margin: 3px 0 0; color: var(--dim); font-size: 12px; }
+::selection { background: var(--accent); color: var(--ink); }
+
+/* ---- 머리 ---------------------------------------------------------------- */
+
+.top {
+  max-width: 1180px;
+  margin: 0 auto 16px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 11px;
+  align-items: center;
+}
+.logo {
+  grid-row: 1 / 3;
+  width: 30px;
+  height: 30px;
+  filter: drop-shadow(0 0 10px var(--glow));
+}
+.top h1 {
+  margin: 0;
+  font-size: 21px;
+  letter-spacing: -0.02em;
+  background: linear-gradient(100deg, var(--fg) 20%, var(--accent-2) 65%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.sub { margin: 1px 0 0; color: var(--dim); font-size: 12px; }
+
+/* ---- 판 ------------------------------------------------------------------ */
 
 /*
  * 좌우 2단. 왼쪽은 세션당 한 번 정하는 것(공유, 목표), 오른쪽은 매 턴 바뀌는 것
@@ -51,26 +111,50 @@ body {
   min-width: 0;
 }
 
-.panel {
-  background: var(--panel);
+/* 위쪽 모서리만 밝다. 보석 컷에서 빛이 걸리는 면. */
+.panel,
+.live,
+.note,
+.answer {
+  background: linear-gradient(158deg, var(--panel-2) 0%, var(--panel) 52%);
   border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 16px;
+  border-radius: 12px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 10px 28px -20px #000;
 }
-.panel h2 { margin: 0 0 10px; font-size: 13px; color: var(--accent); }
-.hint { margin: -4px 0 12px; color: var(--dim); font-size: 12px; }
 
-/* ---- 답 ---------------------------------------------------------------- */
+.panel { padding: 16px; }
+.panel h2 {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--accent);
+  letter-spacing: -0.01em;
+}
+.hint { margin: -4px 0 12px; color: var(--dim); font-size: 12px; }
+.hint:empty { display: none; }
+
+/* ---- 답 ------------------------------------------------------------------ */
 
 /* 알트탭으로 넘어왔을 때 스크롤 없이 이것만 눈에 들어와야 한다. */
 .answer {
+  position: relative;
+  overflow: hidden;
   display: grid;
   gap: 12px;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 12px;
   padding: 20px;
+  border-color: var(--edge);
 }
+/* 위에서 들어온 빛이 표면에 퍼진 느낌. 글자 뒤라 대비를 해치지 않을 만큼만. */
+.answer::before {
+  content: "";
+  position: absolute;
+  inset: -50% -15% auto -15%;
+  height: 90%;
+  background: radial-gradient(62% 100% at 50% 0%, var(--glow), transparent 72%);
+  pointer-events: none;
+}
+.answer > * { position: relative; }
 
 .verdict {
   font-size: 30px;
@@ -86,20 +170,32 @@ body {
   color: var(--dim);
   margin-top: 6px;
 }
-.verdict.commit { color: var(--good); }
-.verdict.reroll { color: var(--warn); }
+.verdict.commit { color: var(--good); text-shadow: 0 0 26px rgba(74, 222, 128, 0.35); }
+.verdict.reroll { color: var(--warn); text-shadow: 0 0 26px rgba(251, 191, 36, 0.3); }
 
 .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .opt {
-  background: var(--panel-2);
+  background: linear-gradient(152deg, var(--panel-2), var(--panel));
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 9px;
   padding: 12px 14px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 .opt .k { display: block; color: var(--dim); font-size: 12px; }
-.opt .v { font-size: 26px; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
-/* 추천 쪽만 테두리로 표시한다. 이모지나 별표 대신. */
-.opt.pick { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.opt .v {
+  font-size: 26px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+/* 추천 쪽만 빛난다. 이모지나 별표 대신. */
+.opt.pick {
+  border-color: var(--accent);
+  box-shadow:
+    inset 0 0 0 1px var(--accent),
+    inset 0 22px 40px -30px var(--accent),
+    0 0 26px -12px var(--glow);
+}
+.opt.pick .v { color: var(--accent-2); }
 
 .breakdown { width: 100%; border-collapse: collapse; font-size: 13px; }
 .breakdown th {
@@ -111,41 +207,41 @@ body {
   border-bottom: 1px solid var(--line);
 }
 .breakdown td { padding: 6px 8px 6px 0; border-bottom: 1px solid var(--line); }
+.breakdown tr:last-child td { border-bottom: 0; }
 .breakdown td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
 
 .meta { margin: 0; color: var(--dim); font-size: 12px; }
 
-/* ---- 공유 조작 줄 ------------------------------------------------------- */
+/* ---- 공유 조작 줄 --------------------------------------------------------- */
 
 .live {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 10px 14px;
+  padding: 11px 14px;
 }
 .live button {
-  background: var(--accent);
-  color: #10131a;
-  border: 1px solid var(--accent);
-  border-radius: 7px;
-  padding: 7px 14px;
+  background: linear-gradient(150deg, var(--accent-2), var(--accent));
+  color: var(--ink);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 7px 15px;
   font: inherit;
   font-weight: 600;
   cursor: pointer;
+  box-shadow: 0 0 20px -8px var(--glow);
 }
 .live button.ghost,
 .live button.on {
-  background: var(--panel-2);
+  background: linear-gradient(150deg, var(--panel-2), var(--panel));
   border-color: var(--line);
   color: var(--fg);
   font-weight: 400;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 .live button:hover:not(:disabled) { border-color: var(--accent); }
-.live button:disabled { opacity: 0.4; cursor: default; }
+.live button:disabled { opacity: 0.38; cursor: default; box-shadow: none; }
 
 /* 상태 문구가 버튼 사이에서 자리를 잡는다. 길이가 계속 바뀌기 때문. */
 .live-state { flex: 1 1 200px; color: var(--dim); font-size: 12px; }
@@ -154,8 +250,9 @@ body {
 .live-state.bad { color: var(--bad); }
 
 .toggle { display: flex; align-items: center; gap: 5px; color: var(--dim); font-size: 12px; }
+.toggle input { accent-color: var(--accent); }
 
-/* ---- 접이식 패널 -------------------------------------------------------- */
+/* ---- 접이식 패널 ---------------------------------------------------------- */
 
 .fold { padding: 0; }
 .fold > summary {
@@ -164,12 +261,28 @@ body {
   padding: 12px 16px;
   display: flex;
   align-items: baseline;
-  gap: 10px;
-  border-radius: 10px;
+  gap: 9px;
+  border-radius: 12px;
 }
 .fold > summary::-webkit-details-marker { display: none; }
-.fold > summary:hover { background: var(--panel-2); }
-.fold-title { color: var(--accent); font-size: 13px; flex: none; }
+.fold > summary:hover { background: rgba(255, 255, 255, 0.025); }
+.fold-title {
+  color: var(--accent);
+  font-size: 13px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+/* 45도 돌린 사각형 = 젬 다이아. 이모지를 안 쓰고 보석 표시를 내는 방법. */
+.fold-title::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  transform: rotate(45deg);
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  box-shadow: 0 0 8px -1px var(--glow);
+}
 .fold-sum {
   flex: 1 1 auto;
   color: var(--dim);
@@ -195,10 +308,12 @@ body {
 /* 읽기가 흔들린 패널만 눈에 띄게 한다. 평소에는 조용히 접혀 있는 게 정상. */
 .fold.attention { border-color: var(--warn); }
 .fold.attention .fold-sum { color: var(--warn); }
+.fold.attention .fold-title::before { background: var(--warn); box-shadow: none; }
 .fold.bad { border-color: var(--bad); }
 .fold.bad .fold-sum { color: var(--bad); }
+.fold.bad .fold-title::before { background: var(--bad); box-shadow: none; }
 
-/* ---- 입력 --------------------------------------------------------------- */
+/* ---- 입력 ---------------------------------------------------------------- */
 
 .row {
   display: flex;
@@ -211,37 +326,44 @@ body {
 
 select,
 input[type="text"] {
-  background: var(--panel-2);
+  background: linear-gradient(150deg, var(--panel-2), var(--panel));
   color: var(--fg);
   border: 1px solid var(--line);
-  border-radius: 6px;
-  padding: 6px 8px;
+  border-radius: 7px;
+  padding: 6px 9px;
   font: inherit;
   min-width: 132px;
 }
+select:hover,
+input[type="text"]:hover { border-color: var(--edge); }
 select:focus,
-input[type="text"]:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--glow-soft);
+}
 input[type="text"]::placeholder { color: var(--dim); }
 
 .stats { display: grid; gap: 8px; margin-bottom: 4px; }
 
 .presets { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
 .presets button {
-  background: var(--panel-2);
+  background: linear-gradient(150deg, var(--panel-2), var(--panel));
   color: var(--fg);
   border: 1px solid var(--line);
   border-radius: 999px;
-  padding: 5px 12px;
+  padding: 5px 13px;
   font: inherit;
   font-size: 12px;
   cursor: pointer;
 }
 .presets button:hover { border-color: var(--accent); }
 .presets button[aria-pressed="true"] {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #10131a;
+  background: linear-gradient(150deg, var(--accent-2), var(--accent));
+  border-color: transparent;
+  color: var(--ink);
   font-weight: 600;
+  box-shadow: 0 0 18px -8px var(--glow);
 }
 
 .picks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
@@ -249,19 +371,20 @@ input[type="text"]::placeholder { color: var(--dim); }
 
 .capture-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; }
 .capture-row button {
-  background: var(--panel-2);
+  background: linear-gradient(150deg, var(--panel-2), var(--panel));
   color: var(--fg);
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 7px;
   padding: 6px 12px;
   font: inherit;
   font-size: 13px;
   cursor: pointer;
 }
 .capture-row button:hover:not(:disabled) { border-color: var(--accent); }
-.capture-row button:disabled { opacity: 0.45; cursor: default; }
+.capture-row button:disabled { opacity: 0.42; cursor: default; }
 
 .capture-status { margin: 0; color: var(--dim); font-size: 12px; white-space: pre-line; }
+.capture-status:empty { display: none; }
 .capture-status.ok { color: var(--good); }
 .capture-status.warn { color: var(--warn); }
 .capture-status.bad { color: var(--bad); }
@@ -272,7 +395,7 @@ input[type="text"]::placeholder { color: var(--dim); }
   object-fit: contain;
   margin-top: 12px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 9px;
   background: #000;
 }
 
@@ -282,25 +405,24 @@ body.dragging::after {
   position: fixed;
   inset: 12px;
   border: 2px dashed var(--accent);
-  border-radius: 12px;
+  border-radius: 14px;
   display: grid;
   place-items: center;
   font-size: 18px;
   color: var(--accent);
-  background: rgba(20, 22, 28, 0.85);
+  background: rgba(12, 10, 18, 0.86);
   pointer-events: none;
   z-index: 10;
 }
 
+/* ---- 알림 ---------------------------------------------------------------- */
+
 .note {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 10px;
   padding: 14px 16px;
   color: var(--dim);
   font-size: 13px;
   display: flex;
-  gap: 8px;
+  gap: 9px;
   align-items: baseline;
 }
 .note strong { color: var(--fg); flex: none; }
