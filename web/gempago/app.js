@@ -30,7 +30,7 @@
     return p.toFixed(4) + '%p';
   }
 
-  const worker = new Worker('worker.js?v=2026-08-15.2');
+  const worker = new Worker('worker.js?v=2026-08-15.3');
   let seq = 0;
   const pending = new Map();
 
@@ -42,7 +42,7 @@
     ok ? p.resolve(result) : p.reject(new Error(error));
   };
   worker.onerror = (e) => {
-    setNote('계산기를 불러오지 못했습니다', e.message + ' - 로컬 서버로 열었는지 확인하세요.', true);
+    setNote('계산기를 불러오지 못했습니다', e.message + ' - 로컬 서버로 열었는지 확인하세요.', 'error');
   };
 
   function ask(type, payload, transfer) {
@@ -53,12 +53,26 @@
     });
   }
 
-  function setNote(title, text, isError) {
+  /** kind: 'loading' 이면 스피너가 돈다, 'error' 면 빨갛게. */
+  function setNote(title, text, kind) {
     $('note').hidden = false;
-    $('note').classList.toggle('error', !!isError);
+    $('note').classList.toggle('error', kind === 'error');
+    $('noteSpin').hidden = kind !== 'loading';
     $('note').querySelector('strong').textContent = title;
     $('noteText').textContent = text || '';
   }
+
+  /*
+   * "계산 중" 은 바로 띄우지 않는다. 목표당 첫 풀이만 2초 걸리고 그 뒤로는 캐시라
+   * 즉시 끝나는데, 자동 갱신이 0.7초마다 도는 동안 매번 깜빡이면 답보다 눈에 띈다.
+   */
+  let noteTimer = null;
+  function showBusy() {
+    clearTimeout(noteTimer);
+    noteTimer = setTimeout(
+      () => setNote('계산 중', '이 목표는 처음이라 한 번만 오래 걸립니다.', 'loading'), 150);
+  }
+  function clearBusy() { clearTimeout(noteTimer); noteTimer = null; }
 
   function fillRange(sel, from, to, value) {
     sel.innerHTML = '';
@@ -167,15 +181,18 @@
       `리롤 ${st.r}회`,
       COST_KO[String(st.cost)],
     ];
-    $('gemSummary').textContent = bits.filter(Boolean).join(' · ');
+    if ($('gemSummary')) $('gemSummary').textContent = bits.filter(Boolean).join(' · ');
   }
 
   function renderPickSummary() {
+    // 요약 span 은 HTML 에서 빠질 수 있다. 없으면 조용히 넘어간다.
+    const el = $('pickSummary');
+    if (!el) return;
     const texts = picks.map((sel) => (sel.value && sel.selectedOptions[0] ? sel.selectedOptions[0].textContent : null));
     const n = texts.filter(Boolean).length;
-    if (n === 4) $('pickSummary').textContent = texts.join(' / ');
-    else if (n) $('pickSummary').textContent = `${n}/4 만 채웠다 - 나머지는 직접 고르세요`;
-    else $('pickSummary').textContent = '아직 안 읽었다';
+    if (n === 4) el.textContent = texts.join(' / ');
+    else if (n) el.textContent = `${n}/4 만 채웠다 - 나머지는 직접 고르세요`;
+    else el.textContent = '';
   }
 
   /**
@@ -259,18 +276,20 @@
       renderPickSummary();
 
       if (!Object.keys(target).length) {
+        clearBusy();
         $('result').hidden = true;
         setNote('목표를 정하세요', '전부 1 이면 아무 조건이 없어서 확률이 항상 100% 입니다.');
         return;
       }
 
-      setNote('계산 중', '처음 한 번만 오래 걸립니다 (목표당 약 2초).');
+      showBusy();
       const res = await ask('evaluate', {
         state, target, maxAttempts, picks: readPicks(), slots: readSlots(),
       });
       render(state, res);
     } catch (err) {
-      setNote('계산 실패', err.message, true);
+      clearBusy();
+      setNote('계산 실패', err.message, 'error');
       $('result').hidden = true;
     } finally {
       running = false;
@@ -279,6 +298,7 @@
   }
 
   function render(state, res) {
+    clearBusy();
     $('note').hidden = true;
     $('result').hidden = false;
 
@@ -358,12 +378,15 @@
   let lastChangeAt = 0;
   let liveKind = null;
 
+  // 공유 전 안내 문구. HTML 에 적힌 것을 그대로 쓴다 - 문구는 거기서 고치면 된다.
+  const IDLE_LIVE = $('liveState').textContent;
+
   function setCapture(text, kind) {
     const el = $('captureStatus');
     el.textContent = text;
     el.className = 'capture-status' + (kind ? ' ' + kind : '');
-    // 접힌 상태에서도 첫 줄은 보인다. 나머지(판독 4줄, 자동 입력 내역)는 펼쳐야 나온다.
-    $('readSummary').textContent = String(text).split('\n')[0];
+    // 문제가 있을 때만 접힌 채로 알린다. 잘 읽히는 중에는 비어 있는 게 맞다.
+    $('readSummary').textContent = kind ? String(text).split('\n')[0] : '';
     markFold('foldRead', kind === 'bad' ? 'bad' : '');
   }
 
@@ -371,13 +394,13 @@
   function renderLive() {
     const el = $('liveState');
     let text;
-    if (!atlasReady) text = '템플릿을 불러오는 중.';
-    else if (!stream) text = '공유를 켜면 화면이 바뀔 때마다 알아서 읽는다.';
-    else if (lastScale == null) text = '가공 화면을 찾는 중. 처음 한 번은 2초쯤 걸린다.';
+    // 대기 문구는 HTML 에 적힌 것을 그대로 쓴다. 사용자가 거기서 고칠 수 있어야 한다.
+    if (!atlasReady || !stream) text = IDLE_LIVE;
+    else if (lastScale == null) text = '가공 화면을 찾는 중입니다. 처음 한 번은 2초쯤 걸립니다.';
     else {
       const sec = Math.round((Date.now() - lastChangeAt) / 1000);
-      text = `${autoTimer ? '자동 갱신 중' : '자동 꺼짐'} · 배율 ${lastScale} · `
-        + (sec < 2 ? '방금 갱신' : `${sec}초째 화면 그대로`);
+      text = `${autoTimer ? '자동으로 읽는 중' : '자동 꺼짐'} · 배율 ${lastScale} · `
+        + (sec < 2 ? '방금 갱신' : `${sec}초째 그대로`);
     }
     el.textContent = text;
     el.className = 'live-state' + (liveKind ? ' ' + liveKind : '');
@@ -608,7 +631,7 @@
 
       setCapture(
         `읽음 (배율 ${res.scale}, 앵커 ${res.anchorScore.toFixed(2)}, ${res.ms}ms)\n` + read.join('\n'),
-        missing.length ? 'warn' : 'ok'
+        missing.length ? 'warn' : null
       );
       liveKind = missing.length ? 'warn' : null;
       renderLive();
@@ -871,7 +894,6 @@
       const atlas = await GempagoAtlasBrowser.load('vision/templates');
       await ask('atlas', { atlas });
       atlasReady = true;
-      setCapture('준비됨. 화면을 공유하거나 캡처 PNG 를 끌어다 놓으세요.');
     } catch (err) {
       setCapture('템플릿을 불러오지 못했습니다: ' + err.message, 'bad');
       liveKind = 'bad';
