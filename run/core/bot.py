@@ -43,11 +43,13 @@ class LoaBot(commands.Bot):
         self.tree.on_error = self._on_app_command_error
 
     async def close(self) -> None:
+        from run.services import llm_router
         from run.services.lostark.client import close_client
         from run.services.merchant import kloa
 
         await close_client()
         await kloa.close()
+        await llm_router.close()
         await super().close()
 
     async def on_ready(self) -> None:

@@ -33,6 +33,12 @@ LOA_RATE_LIMIT_PER_MIN = int(os.getenv("LOA_RATE_LIMIT_PER_MIN", "80"))
 LOA_MAX_CONCURRENCY = int(os.getenv("LOA_MAX_CONCURRENCY", "8"))
 LOA_TIMEOUT_SECONDS = int(os.getenv("LOA_TIMEOUT_SECONDS", "10"))
 
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+# 라우팅 7개 케이스에서 opus-5와 동일하게 전부 맞았고 더 싸고 빨라서 sonnet-5를 쓴다.
+# haiku-4-5 로는 못 바꾼다 - effort를 거부하고 프롬프트 캐시 최소 길이(4096토큰)도
+# 못 넘겨서 캐시가 안 걸린다.
+ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-sonnet-5")
+
 BASE_DIR = Path(__file__).resolve().parents[2]
 RESOURCE_DIR = BASE_DIR / "resources"
 DATA_DIR = Path(os.getenv("BOT_DATA_DIR") or (BASE_DIR / "data"))

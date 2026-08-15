@@ -14,6 +14,14 @@ async def setup_all_cogs(bot: commands.Bot) -> None:
     await bot.add_cog(MarketCog(bot))
     await bot.add_cog(RefineCog(bot))
 
+    # 자연어 질문은 키가 있을 때만 붙인다. 없으면 멘션에 반응하지 않는다.
+    from run.services import llm_router
+
+    if llm_router.available():
+        from run.cogs.ask import AskCog
+
+        await bot.add_cog(AskCog(bot))
+
     # API 키가 없으면 커맨드 자체를 등록하지 않는다. 등록해두고 매번
     # "키가 없어요"를 답하는 것보다 목록에 안 뜨는 편이 덜 헷갈린다.
     from run.core import config
