@@ -30,3 +30,18 @@ bot_log*.txt
 curriculum.html
 # playwright MCP 가 남기는 스냅샷/로그
 .playwright-mcp/
+
+# 디자인 스킬(impeccable, emilkowalski/skills, taste-skill)과 그 사본.
+# 같은 내용이 하네스별로 세 벌 깔려 16MB 다. 재설치가 가능하므로 추적하지 않는다.
+# 무엇이 깔려 있었는지는 skills-lock.json 하나로 남는다.
+.claude/
+.agents/
+.codex/
+.github/agents/
+.github/hooks/
+.github/skills/
+agent/
+
+# 검출기가 HTML/CSS 를 제대로 파싱하려면 필요한 것들. 이 저장소는 npm 프로젝트가 아니다.
+node_modules/
+package-lock.json
