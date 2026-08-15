@@ -30,7 +30,7 @@
     return p.toFixed(4) + '%p';
   }
 
-  const worker = new Worker('worker.js?v=2026-08-15.13');
+  const worker = new Worker('worker.js?v=2026-08-15.14');
   let seq = 0;
   const pending = new Map();
 
@@ -226,6 +226,15 @@
    * 다만 접혀 있어도 무엇이 들어갔는지는 한 줄로 계속 보여야 한다 - 안 보이면
    * 잘못 읽은 값으로 계산된 답을 그대로 믿게 된다("조용히 틀리지 않는다").
    */
+  /*
+   * 화면을 읽었거나 사람이 젬 칸을 직접 건드리기 전에는 이 젬의 수치를 모른다.
+   *
+   * 예전에는 기본값(전부 1, 가공 9회)으로 곧장 계산해서 첫 화면에 "현재 목표 달성
+   * 확률 10.74%" 를 띄웠다. 아무것도 안 읽었는데 읽은 것처럼 보이는 숫자였다.
+   * 이 제품이 지키는 것은 "조용히 틀리지 않는다" 인데 첫 화면이 그걸 깨고 있었다.
+   */
+  let gemKnown = false;
+
   const GRADE_KO = { 5: '고급', 7: '희귀', 9: '영웅' };
   const COST_KO = { '-1': '비용 -100%', 0: '', 1: '비용 +100%' };
 
@@ -240,7 +249,8 @@
       `리롤 ${st.r}회`,
       COST_KO[String(st.cost)],
     ];
-    if ($('gemSummary')) $('gemSummary').textContent = bits.filter(Boolean).join(' · ');
+    // 모르는 젬을 아는 것처럼 요약하지 않는다. HTML 에 적힌 문구를 그대로 둔다.
+    if ($('gemSummary') && gemKnown) $('gemSummary').textContent = bits.filter(Boolean).join(' · ');
     // 젬 포인트 = 네 수치의 합. 화면에 적힌 값과 눈으로 대조하라고 같이 보여준다.
     if ($('gemPointSum')) {
       $('gemPointSum').textContent = String(STATS.reduce((a, { key }) => a + st[key], 0));
@@ -338,6 +348,17 @@
       renderGemSummary();
       renderPickSummary();
 
+      if (!gemKnown) {
+        clearBusy(null);
+        $('result').hidden = true;
+        $('note').classList.add('empty');
+        setNote('아직 읽은 젬이 없습니다',
+          '위에서 화면 공유를 켜면 젬 상태와 뜬 항목 4개를 읽어 여기에 답을 띄웁니다.'
+          + ' 캡처 PNG 를 끌어다 놓거나 "읽은 젬" 을 펼쳐 직접 넣어도 됩니다.');
+        return;
+      }
+      $('note').classList.remove('empty');
+
       if (!Object.keys(target).length) {
         clearBusy(null);
         $('result').hidden = true;
@@ -361,6 +382,18 @@
       running = false;
       if (queued) { queued = false; refresh(); }
     }
+  }
+
+  // 이 제품에서 사람이 기다리는 순간은 하나다 - 판정이 바뀔 때. 거기에만 모션을 준다.
+  // 자동 갱신이 0.7초마다 도는데 매번 재생하면 깜빡임이 된다. 실제로 달라졌을 때만.
+  let lastVerdictKey = '';
+  function replayVerdict(key) {
+    if (key === lastVerdictKey) return;
+    lastVerdictKey = key;
+    const el = $('result');
+    el.classList.remove('changed');
+    void el.offsetWidth; // 리플로우를 강제해야 같은 애니메이션이 다시 재생된다
+    el.classList.add('changed');
   }
 
   function render(state, res) {
@@ -426,6 +459,8 @@
 
     $('meta').textContent =
       `남은 가공 ${state.n}회 · 리롤 ${state.r}회 · 이 목표 전체 풀이 ${res.ms}ms`;
+
+    replayVerdict(verdict.textContent + '|' + $('valCommit').textContent + '|' + $('valReroll').textContent);
   }
 
   // ---- 화면에서 읽기 -------------------------------------------------------
@@ -608,6 +643,7 @@
         out.slotsChanged = true;
       }
       $('cur_' + slot).value = String(g.value);
+      gemKnown = true;
       out.filled.push(`${g.labelText} ${g.value}`);
     }
     return out;
@@ -985,13 +1021,18 @@
   fillRange($('rerolls'), 0, 6, 2);
 
   document.addEventListener('change', (e) => {
-    if (e.target.matches('select')) { syncPresetButtons(); refresh(); }
+    if (!e.target.matches('select')) return;
+    // 사람이 젬 칸을 직접 건드리면 그 값이 진실이다. 그때부터 답을 낸다.
+    if (e.target.closest('#foldGem')) gemKnown = true;
+    syncPresetButtons();
+    refresh();
   });
   // 효과 이름은 타이핑 중에도 반영한다. change 는 포커스가 빠져야 오는데,
   // 이름만 고치고 바로 항목을 고르는 흐름이라 그때는 이미 목록이 낡아 있다.
   let nameTimer = null;
   document.addEventListener('input', (e) => {
     if (!e.target.matches('input[type="text"]')) return;
+    if (e.target.closest('#foldGem')) gemKnown = true;
     clearTimeout(nameTimer);
     nameTimer = setTimeout(refresh, 250);
   });

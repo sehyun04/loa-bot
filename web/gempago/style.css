@@ -12,6 +12,7 @@
   --panel: #17141f;
   --panel-2: #201c2c;
   --line: #292437;
+  --edge: #3b3357;
   --fg: #ece9f5;
   --dim: #8f8aa3;
   --label: #b5afc6;
@@ -58,7 +59,37 @@ body {
   background-attachment: fixed;
 }
 
+/*
+ * 우리가 안 그린 표면도 이 디자인에 속한다. 스크롤바, 캐럿, 포커스 링은 손대지 않으면
+ * 어느 디자인에도 속하지 않는 브라우저 기본값으로 남는다. 어두운 페이지에 밝은
+ * 스크롤바가 붙는 순간 조립한 티가 난다.
+ */
 ::selection { background: var(--accent); color: var(--ink); }
+
+html {
+  scrollbar-color: var(--line) transparent;
+  scrollbar-width: thin;
+}
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border: 3px solid var(--bg);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--edge); }
+
+input, select, textarea { caret-color: var(--accent); }
+
+/*
+ * 키보드로 옮겨 다닐 때만 링을 보여준다. 예전에는 select 에 outline: none 을 주고
+ * 1px 테두리 색만 바꿨는데, 키보드 사용자에게는 지금 어디 있는지가 안 보였다.
+ */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+:focus:not(:focus-visible) { outline: none; }
 
 /* ---- 머리 ---------------------------------------------------------------- */
 
@@ -322,10 +353,7 @@ input[type="text"] {
 select:hover,
 input[type="text"]:hover { border-color: var(--line); }
 select:focus,
-input[type="text"]:focus {
-  outline: none;
-  border-color: var(--accent);
-}
+input[type="text"]:focus { border-color: var(--accent); }
 input[type="text"]::placeholder { color: var(--dim); }
 
 /* 드롭다운 목록은 브라우저가 그린다. 변수를 못 읽는 경우가 있어 값을 직접 적는다. */
@@ -378,6 +406,10 @@ option:checked { background-color: #292437; }
   -webkit-appearance: none;
 }
 #stats .stat select:hover { background-color: var(--panel-2); }
+/* 손가락으로는 30px 이 좁다. 인식이 틀렸을 때 고치러 오는 자리가 바로 여기다. */
+@media (pointer: coarse) {
+  #stats .stat select { padding: 9px 6px; }
+}
 #stats .stat select:focus { border-color: var(--accent); background-color: var(--panel-2); }
 
 /* 게임 화면의 흐려지는 가로선. */
@@ -487,6 +519,24 @@ body.dragging::after {
   gap: 10px;
   align-items: baseline;
 }
+/* 읽기 전에는 여기가 답의 자리다. 작은 알림 줄로 두면 "뭘 해야 하지" 가 안 보인다. */
+.note.empty {
+  display: grid;
+  gap: 8px;
+  padding: 28px 24px 30px;
+}
+.note.empty strong { font-size: 16px; letter-spacing: -0.02em; }
+.note.empty strong::before {
+  content: "";
+  display: block;
+  width: 7px;
+  height: 7px;
+  margin-bottom: 12px;
+  transform: rotate(45deg);
+  background: var(--accent);
+}
+.note.empty #noteText { line-height: 1.7; }
+
 .note strong { color: var(--fg); flex: none; }
 .note.error { border-color: var(--bad); }
 .note.error strong { color: var(--bad); }
@@ -502,6 +552,33 @@ body.dragging::after {
   animation: spin 0.7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/*
+ * 이 화면에서 사람이 기다리는 순간은 하나다 - 판정이 바뀔 때. 거기에만 모션을 준다.
+ * 이미 보이는 상태에서 출발해 지수 곡선으로 잦아든다(들어오는 애니메이션이 아니다).
+ * 실제로 값이 달라졌을 때만 재생한다. 자동 갱신이 0.7초마다 도는데 매번 재생하면
+ * 그건 모션이 아니라 깜빡임이다.
+ */
+.answer.changed .verdict,
+.answer.changed .opt .v {
+  animation: verdict 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.answer.changed .opt .v { animation-delay: 40ms; }
+@keyframes verdict {
+  from { opacity: 0.55; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* 색이 바뀌는 것들만 부드럽게. 레이아웃을 건드리는 전환은 두지 않는다. */
+.opt,
+.fold,
+.presets button,
+.capture-row button,
+.live button,
+select,
+input[type="text"] {
+  transition: border-color 140ms ease-out, color 140ms ease-out, background-color 140ms ease-out;
+}
 
 /* ---- 전체 로딩 ------------------------------------------------------------ */
 
@@ -552,6 +629,8 @@ body.dragging::after {
 @media (prefers-reduced-motion: reduce) {
   .busy-ring::before { animation-duration: 3s; }
   .spinner { animation-duration: 3s; }
+  .answer.changed .verdict,
+  .answer.changed .opt .v { animation: none; }
 }
 
 /* 마지막 줄 밑에 남는 여백을 지운다. 접이식 패널 안에서 특히 눈에 띈다. */
