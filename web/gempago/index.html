@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>젬파고 - 가공 계산기</title>
-<link rel="stylesheet" href="style.css?v=2026-08-15.4">
+<link rel="stylesheet" href="style.css?v=2026-08-15.5">
 </head>
 <body>
 
@@ -28,48 +28,14 @@
 
 <main class="cols">
 
-  <div class="col col-left">
-
-    <section class="live">
+    <section class="live span-all">
       <button type="button" id="shareBtn">화면 공유 시작</button>
       <span class="live-state" id="liveState">젬 가공화면을 1920*1080 창모드 화면공유를 해주세요.</span>
       <button type="button" id="readBtn" class="ghost" disabled>한 번 읽기</button>
       <label class="toggle"><input type="checkbox" id="autoRead" checked disabled> 자동</label>
     </section>
 
-    <details class="panel fold" id="foldRead">
-      <summary>
-        <span class="fold-title">읽기 상세</span>
-        <span class="fold-sum" id="readSummary"></span>
-      </summary>
-      <div class="fold-body">
-        <p class="hint">캡처한 PNG 를 이 창에 끌어다 놓아도 됩니다.</p>
-        <div class="capture-row">
-          <button type="button" id="saveFrameBtn" disabled>이 화면 저장</button>
-        </div>
-        <p class="capture-status" id="captureStatus"></p>
-        <video id="preview" muted playsinline hidden></video>
-      </div>
-    </details>
-
-    <section class="panel">
-      <h2>목표</h2>
-      <p class="hint">목표를 설정해주세요.</p>
-
-      <div class="presets" id="presets">
-        <button type="button" data-target='{"will":5,"point":5}'>의지력/포인트 5/5</button>
-        <button type="button" data-target='{"will":5,"point":5,"opt1":5,"opt2":5}'>전부 5/5/5/5</button>
-        <button type="button" data-target='{"opt1":4}'>1번 효과 4 이상</button>
-        <button type="button" data-target='{"will":4,"point":4}'>의지력/포인트 4/4</button>
-      </div>
-
-      <div class="stats" id="target"></div>
-      <p class="hint last">1 은 상관없음과 같습니다.</p>
-    </section>
-
-  </div>
-
-  <div class="col col-right">
+  <div class="col col-left">
 
     <details class="panel fold" id="foldGem">
       <summary>
@@ -128,6 +94,25 @@
       </div>
     </details>
 
+    <details class="panel fold" id="foldRead">
+      <summary>
+        <span class="fold-title">읽기 상세</span>
+        <span class="fold-sum" id="readSummary"></span>
+      </summary>
+      <div class="fold-body">
+        <p class="hint">캡처한 PNG 를 이 창에 끌어다 놓아도 됩니다.</p>
+        <div class="capture-row">
+          <button type="button" id="saveFrameBtn" disabled>이 화면 저장</button>
+        </div>
+        <p class="capture-status" id="captureStatus"></p>
+        <video id="preview" muted playsinline hidden></video>
+      </div>
+    </details>
+
+  </div>
+
+  <div class="col col-center">
+
     <details class="panel fold" id="foldPicks">
       <summary>
         <span class="fold-title">랜덤 항목 4개</span>
@@ -169,9 +154,28 @@
 
   </div>
 
+  <div class="col col-right">
+
+    <section class="panel">
+      <h2>목표</h2>
+      <p class="hint">목표를 설정해주세요.</p>
+
+      <div class="presets" id="presets">
+        <button type="button" data-target='{"will":5,"point":5}'>의지력/포인트 5/5</button>
+        <button type="button" data-target='{"will":5,"point":5,"opt1":5,"opt2":5}'>전부 5/5/5/5</button>
+        <button type="button" data-target='{"opt1":4}'>1번 효과 4 이상</button>
+        <button type="button" data-target='{"will":4,"point":4}'>의지력/포인트 4/4</button>
+      </div>
+
+      <div class="stats" id="target"></div>
+      <p class="hint last">1 은 상관없음과 같습니다.</p>
+    </section>
+
+  </div>
+
 </main>
 
-<script src="vision/atlas-browser.js?v=2026-08-15.4"></script>
-<script src="app.js?v=2026-08-15.4"></script>
+<script src="vision/atlas-browser.js?v=2026-08-15.5"></script>
+<script src="app.js?v=2026-08-15.5"></script>
 </body>
 </html>
