@@ -30,7 +30,7 @@
     return p.toFixed(4) + '%p';
   }
 
-  const worker = new Worker('worker.js?v=2026-08-14.6');
+  const worker = new Worker('worker.js?v=2026-08-15.1');
   let seq = 0;
   const pending = new Map();
 
@@ -90,6 +90,10 @@
 
   buildStatInputs($('stats'), 'cur', 1);
   buildStatInputs($('target'), 'tgt', 1);
+  // 목표가 전부 1 이면 조건이 없어서 답 대신 "목표를 정하세요" 만 뜬다. 첫 화면이
+  // 비어 있는 것보다 가장 흔한 목표를 걸어두고 사용자가 바꾸게 하는 편이 낫다.
+  $('tgt_will').value = '5';
+  $('tgt_point').value = '5';
 
   const picks = [];
   for (let i = 0; i < 4; i++) {
@@ -140,6 +144,51 @@
       const same = JSON.stringify(JSON.parse(b.dataset.target)) === cur;
       b.setAttribute('aria-pressed', same ? 'true' : 'false');
     }
+  }
+
+  // ---- 접이식 패널 요약 -----------------------------------------------------
+
+  /*
+   * 젬 상태와 항목 4개는 이제 전부 자동으로 채워지므로 평소에는 접어 둔다.
+   * 다만 접혀 있어도 무엇이 들어갔는지는 한 줄로 계속 보여야 한다 - 안 보이면
+   * 잘못 읽은 값으로 계산된 답을 그대로 믿게 된다("조용히 틀리지 않는다").
+   */
+  const GRADE_KO = { 5: '고급', 7: '희귀', 9: '영웅' };
+  const COST_KO = { '-1': '비용 -100%', 0: '', 1: '비용 +100%' };
+
+  function renderGemSummary() {
+    const s = readSlots();
+    const st = readState();
+    const names = { will: '의지', point: s.point.replace(' 포인트', ''), opt1: s.opt1, opt2: s.opt2 };
+    const bits = [
+      GRADE_KO[$('grade').value],
+      STATS.map(({ key }) => `${names[key]} ${st[key]}`).join(' / '),
+      `가공 ${st.n}회`,
+      `리롤 ${st.r}회`,
+      COST_KO[String(st.cost)],
+    ];
+    $('gemSummary').textContent = bits.filter(Boolean).join(' · ');
+  }
+
+  function renderPickSummary() {
+    const texts = picks.map((sel) => (sel.value && sel.selectedOptions[0] ? sel.selectedOptions[0].textContent : null));
+    const n = texts.filter(Boolean).length;
+    if (n === 4) $('pickSummary').textContent = texts.join(' / ');
+    else if (n) $('pickSummary').textContent = `${n}/4 만 채웠다 - 나머지는 직접 고르세요`;
+    else $('pickSummary').textContent = '아직 안 읽었다';
+  }
+
+  /**
+   * 접이식 패널에 문제 표시를 달고, 문제가 새로 생긴 순간에만 펼친다.
+   * 매번 펼치면 자동 갱신이 도는 동안 사용자가 접어도 계속 다시 열려서 못 쓴다.
+   */
+  function markFold(id, level) {
+    const el = $(id);
+    const was = el.dataset.flagged || '';
+    el.classList.toggle('attention', level === 'attention');
+    el.classList.toggle('bad', level === 'bad');
+    if (level && level !== was) el.open = true;
+    el.dataset.flagged = level || '';
   }
 
   $('presets').addEventListener('click', (e) => {
@@ -206,6 +255,8 @@
 
       syncStatLabels();
       await refreshOutcomes(state, readSlots());
+      renderGemSummary();
+      renderPickSummary();
 
       if (!Object.keys(target).length) {
         $('result').hidden = true;
@@ -300,11 +351,36 @@
   let autoTimer = null;
   let atlasReady = false;
   let reading = false;
+  // 배율 탐색이 끝나면 읽기가 60ms 라 계속 읽어도 부담이 없다. 사람이 버튼을 누르는
+  // 간격보다 촘촘하면 그만이다.
+  const AUTO_MS = 700;
+  let lastScale = null;
+  let lastChangeAt = 0;
+  let liveKind = null;
 
   function setCapture(text, kind) {
     const el = $('captureStatus');
     el.textContent = text;
     el.className = 'capture-status' + (kind ? ' ' + kind : '');
+    // 접힌 상태에서도 첫 줄은 보인다. 나머지(판독 4줄, 자동 입력 내역)는 펼쳐야 나온다.
+    $('readSummary').textContent = String(text).split('\n')[0];
+    markFold('foldRead', kind === 'bad' ? 'bad' : '');
+  }
+
+  /** 공유 줄 한 줄. 지금 살아 있는지, 화면이 바뀌었는지만 말한다. */
+  function renderLive() {
+    const el = $('liveState');
+    let text;
+    if (!atlasReady) text = '템플릿을 불러오는 중.';
+    else if (!stream) text = '공유를 켜면 화면이 바뀔 때마다 알아서 읽는다.';
+    else if (lastScale == null) text = '가공 화면을 찾는 중. 처음 한 번은 2초쯤 걸린다.';
+    else {
+      const sec = Math.round((Date.now() - lastChangeAt) / 1000);
+      text = `${autoTimer ? '자동 갱신 중' : '자동 꺼짐'} · 배율 ${lastScale} · `
+        + (sec < 2 ? '방금 갱신' : `${sec}초째 화면 그대로`);
+    }
+    el.textContent = text;
+    el.className = 'live-state' + (liveKind ? ' ' + liveKind : '');
   }
 
   /** 이미지/비디오 한 장을 회색조로. 워커로 넘길 수 있게 Float32Array 로 만든다. */
@@ -320,18 +396,22 @@
     return { width: w, height: h, data: g };
   }
 
-  async function readImage(image, label) {
+  async function readImage(image, label, quiet) {
     if (!atlasReady || reading) return;
     reading = true;
     try {
-      setCapture((label || '읽는 중') + '...');
+      // 자동 갱신은 상태줄을 건드리지 않는다. 0.7초마다 "읽는 중"으로 깜빡이면
+      // 정작 읽어낸 내용을 읽을 수가 없다.
+      if (!quiet) setCapture((label || '읽는 중') + '...');
       // 회색조 버퍼는 수 MB 라 복사하지 않고 소유권을 넘긴다.
       const res = await ask('read', { image, slots: readSlots() }, [image.data.buffer]);
-      await applyWithAutofill(res);
+      await applyWithAutofill(res, quiet);
     } catch (err) {
       setCapture('읽기 실패: ' + err.message, 'bad');
+      liveKind = 'bad';
     } finally {
       reading = false;
+      renderLive();
     }
   }
 
@@ -494,6 +574,9 @@
   function applyReading(res) {
     if (!res.found) {
       setCapture(res.reason + '\n가공 화면이 보이는 상태인지 확인하세요.', 'warn');
+      lastScale = null;
+      liveKind = 'warn';
+      renderLive();
       return;
     }
 
@@ -521,11 +604,14 @@
       } else {
         $('pickStatus').hidden = true;
       }
+      markFold('foldPicks', missing.length ? 'bad' : '');
 
       setCapture(
         `읽음 (배율 ${res.scale}, 앵커 ${res.anchorScore.toFixed(2)}, ${res.ms}ms)\n` + read.join('\n'),
         missing.length ? 'warn' : 'ok'
       );
+      liveKind = missing.length ? 'warn' : null;
+      renderLive();
       refresh();
       return;
     }
@@ -549,13 +635,47 @@
     $('pickStatus').textContent = (filled === 4
       ? '4개 다 채웠지만 확실하지 않은 항목이 있습니다. 화면과 같은지 봐 주세요.\n'
       : '항목 4개 중 자동으로 못 채운 게 있어 그 칸은 비워 뒀습니다.\n') + names.join('\n')
-      + '\n아래 결과는 지금 왼쪽에 입력된 값 기준입니다.';
+      + '\n위 결과는 지금 입력된 값 기준입니다.';
+    markFold('foldPicks', filled === 4 ? 'attention' : 'bad');
     setCapture(`읽음 (배율 ${res.scale}, ${res.ms}ms)\n` + read.join('\n'), 'warn');
+    liveKind = 'warn';
+    renderLive();
     refresh();
   }
 
+  /*
+   * 이번에 읽어낸 내용의 지문. 화면이 그대로면 입력칸을 다시 건드릴 이유가 없다.
+   *
+   * 자동 갱신이 0.7초마다 도는데 매번 덮어쓰면 사용자가 손으로 고친 값이 다음 틱에
+   * 그대로 뭉개진다. 인식이 애매해서 사람이 고쳐 넣는 경우가 바로 그 상황이라
+   * 하필 제일 필요할 때 못 쓰게 된다. 그래서 "화면이 실제로 바뀌었을 때만" 반영한다.
+   */
+  function readingKey(res) {
+    if (!res.found) return 'none:' + res.reason;
+    const parts = [];
+    for (const p of ['top', 'left', 'right', 'bottom']) {
+      const g = res.gem && res.gem[p];
+      parts.push(g ? `${g.labelText}=${g.value}${g.confident ? '' : '?'}` : '-');
+    }
+    const m = res.meta;
+    const v = (x) => (x ? `${x.value}${x.confident ? '' : '?'}` : '-');
+    parts.push(m ? `n${v(m.attemptsLeft)}/${v(m.attemptsMax)} r${v(m.reroll)} c${m.cost ? m.cost.mod : '-'}` : '-');
+    for (const o of res.options) parts.push(`${o.labelText}|${o.valueText}|${o.confident ? 1 : 0}`);
+    return parts.join(';');
+  }
+
+  let lastKey = null;
+
   /** 읽고 -> 다이아로 현재 수치·이름을 채우고 -> 모르는 효과 이름이면 채우고 -> 다시 해석한다. */
-  async function applyWithAutofill(res) {
+  async function applyWithAutofill(res, quiet) {
+    const key = readingKey(res);
+    // 수동 읽기는 지문이 같아도 다시 적용한다. 사용자가 뭔가 꼬였다고 느꼈을 때
+    // 강제로 되돌릴 수단이 하나는 있어야 한다.
+    if (quiet && key === lastKey) return;
+    lastKey = key;
+    lastChangeAt = Date.now();
+    if (res.found) lastScale = res.scale;
+
     if (!res.found) { applyReading(res); return; }
 
     // 다이아가 젬 계열이나 효과 이름을 바꿨으면 옵션 4개를 그 이름으로 다시 해석한다.
@@ -581,10 +701,14 @@
       gem.skipped.push('현재 수치 4개 전부: 이 화면 출처의 표본이 없어 숫자를 못 믿습니다.'
         + ' "이 화면 저장" 을 눌러 나온 PNG 를 몇 장 모아 주면 읽을 수 있게 됩니다.');
     }
+    let gemLevel = gem.skipped.length ? 'attention' : '';
+    if (noisy.length === 4) gemLevel = 'bad';
     if (res.sumCheck && res.sumCheck.status === 'mismatch') {
       gem.skipped.push(`수치 합 ${res.sumCheck.sum} 인데 화면의 젬 포인트는 ${res.sumCheck.gemPoint}`
         + ' - 네 수치를 직접 확인하세요');
+      gemLevel = 'bad';
     }
+    markFold('foldGem', gemLevel);
     if (gem.slotsChanged) {
       syncStatLabels();
       res = Object.assign(
@@ -614,10 +738,15 @@
     }
   }
 
-  async function grabAndRead(label) {
+  async function grabAndRead(label, quiet) {
     const v = $('preview');
-    if (!v.videoWidth) { setCapture('아직 영상이 안 들어왔습니다.', 'warn'); return; }
-    await readImage(toGray(v, v.videoWidth, v.videoHeight), label);
+    if (!v.videoWidth) { if (!quiet) setCapture('아직 영상이 안 들어왔습니다.', 'warn'); return; }
+    await readImage(toGray(v, v.videoWidth, v.videoHeight), label, quiet);
+  }
+
+  function startAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(() => grabAndRead(null, true), AUTO_MS);
   }
 
   function stopShare() {
@@ -625,6 +754,9 @@
     stream = null;
     clearInterval(autoTimer);
     autoTimer = null;
+    lastScale = null;
+    lastKey = null;
+    liveKind = null;
     $('preview').hidden = true;
     $('preview').srcObject = null;
     $('shareBtn').textContent = '화면 공유 시작';
@@ -632,7 +764,7 @@
     $('readBtn').disabled = true;
     $('saveFrameBtn').disabled = true;
     $('autoRead').disabled = true;
-    $('autoRead').checked = false;
+    renderLive();
   }
 
   $('shareBtn').addEventListener('click', async () => {
@@ -652,12 +784,17 @@
       $('readBtn').disabled = false;
       $('saveFrameBtn').disabled = false;
       $('autoRead').disabled = false;
+      $('autoRead').checked = true;
       // 창 크기가 바뀌면 배율도 바뀐다. 캐시를 비우고 처음부터 찾게 한다.
+      lastScale = null;
+      lastKey = null;
       await ask('forgetScale', {});
       // 들어오는 프레임 크기를 보여준다. 창모드 공유나 브라우저 다운스케일 때문에
       // 게임 해상도와 다른 경우가 많고, 그 차이가 인식 실패의 흔한 원인이다.
-      setCapture(`공유 중 (${v.videoWidth}x${v.videoHeight}). 가공 화면을 띄우고 "지금 읽기" 를 누르세요.`
+      setCapture(`공유 중 (${v.videoWidth}x${v.videoHeight}). 가공 화면을 띄우면 알아서 읽습니다.`
         + '\n처음 한 번은 배율을 찾느라 2초쯤 걸립니다.');
+      renderLive();
+      startAuto();
     } catch (err) {
       stopShare();
       setCapture(err.name === 'NotAllowedError' ? '공유를 취소했습니다.' : '공유 실패: ' + err.message,
@@ -694,9 +831,8 @@
   $('autoRead').addEventListener('change', (e) => {
     clearInterval(autoTimer);
     autoTimer = null;
-    if (!e.target.checked) return;
-    // 가공은 사람이 버튼을 눌러야 진행되므로 초당 몇 번씩 볼 이유가 없다.
-    autoTimer = setInterval(() => grabAndRead('자동 읽기'), 1500);
+    if (e.target.checked) startAuto();
+    renderLive();
   });
 
   // 파일을 끌어다 놓아도 읽는다. 공유가 안 될 때 확인용으로도 쓴다.
@@ -738,7 +874,9 @@
       setCapture('준비됨. 화면을 공유하거나 캡처 PNG 를 끌어다 놓으세요.');
     } catch (err) {
       setCapture('템플릿을 불러오지 못했습니다: ' + err.message, 'bad');
+      liveKind = 'bad';
     }
+    renderLive();
   })();
 
   fillRange($('attempts'), 0, 9, 9);
@@ -757,5 +895,9 @@
   });
 
   syncPresetButtons();
+  renderLive();
   refresh();
+
+  // 자동 갱신이 도는 동안 "몇 초째 화면 그대로" 가 멈춰 있으면 죽은 화면처럼 보인다.
+  setInterval(() => { if (stream) renderLive(); }, 1000);
 })();

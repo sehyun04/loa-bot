@@ -4,107 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>젬파고 - 가공 계산기</title>
-<link rel="stylesheet" href="style.css?v=2026-08-14.6">
+<link rel="stylesheet" href="style.css?v=2026-08-15.1">
 </head>
 <body>
 
 <header class="top">
   <h1>젬파고</h1>
-  <p class="sub">지금 뜬 4개로 굴릴지, 리롤할지 계산한다. 시뮬레이션이 아니라 정확한 값이다.</p>
+  <p class="sub">화면을 공유하면 알아서 읽는다. 굴릴지 리롤할지는 시뮬레이션이 아니라 정확한 확률로 답한다.</p>
 </header>
 
-<main class="grid">
+<main class="stack">
 
-  <section class="panel">
-    <h2>젬 상태</h2>
-
-    <label class="row">
-      <span>등급</span>
-      <select id="grade">
-        <option value="5">고급 (가공 5회)</option>
-        <option value="7">희귀 (가공 7회)</option>
-        <option value="9" selected>영웅 (가공 9회)</option>
-      </select>
-    </label>
-
-    <label class="row">
-      <span>젬 계열</span>
-      <select id="gemType">
-        <option value="혼돈 포인트" selected>혼돈</option>
-        <option value="질서 포인트">질서</option>
-      </select>
-    </label>
-
-    <p class="hint">1번/2번 효과 이름은 젬마다 다르다. 화면에 적힌 그대로 넣으면 아래 수치와 항목 목록이 같은 표기로 바뀐다.</p>
-    <label class="row">
-      <span>1번 효과 이름</span>
-      <input id="name_opt1" type="text" placeholder="공격력" autocomplete="off">
-    </label>
-    <label class="row">
-      <span>2번 효과 이름</span>
-      <input id="name_opt2" type="text" placeholder="아군 피해 강화" autocomplete="off">
-    </label>
-
-    <div class="stats" id="stats"></div>
-
-    <label class="row">
-      <span>남은 가공</span>
-      <select id="attempts"></select>
-    </label>
-
-    <label class="row">
-      <span>남은 리롤</span>
-      <select id="rerolls"></select>
-    </label>
-
-    <label class="row">
-      <span>가공 비용</span>
-      <select id="cost">
-        <option value="0" selected>기본</option>
-        <option value="1">+100%</option>
-        <option value="-1">-100%</option>
-      </select>
-    </label>
-  </section>
-
-  <section class="panel">
-    <h2>목표</h2>
-    <p class="hint">이 목표에 따라 리롤 판단이 통째로 바뀐다.</p>
-
-    <div class="presets" id="presets">
-      <button type="button" data-target='{"will":5,"point":5}'>의지력/포인트 5/5</button>
-      <button type="button" data-target='{"will":5,"point":5,"opt1":5,"opt2":5}'>전부 5/5/5/5</button>
-      <button type="button" data-target='{"opt1":4}'>1번 효과 4 이상</button>
-      <button type="button" data-target='{"will":4,"point":4}'>의지력/포인트 4/4</button>
-    </div>
-
-    <div class="stats" id="target"></div>
-    <p class="hint">1 은 "상관없음"과 같다 (모든 젬이 이미 1 이상).</p>
-  </section>
-
-  <section class="panel wide">
-    <h2>화면에서 읽기</h2>
-    <p class="hint">게임 화면을 공유하면 아래 4개가 자동으로 채워진다. 캡처한 PNG 를 끌어다 놓아도 된다.</p>
-
-    <div class="capture-row">
-      <button type="button" id="shareBtn">화면 공유 시작</button>
-      <button type="button" id="readBtn" disabled>지금 읽기</button>
-      <button type="button" id="saveFrameBtn" disabled>이 화면 저장</button>
-      <label class="toggle"><input type="checkbox" id="autoRead" disabled> 계속 읽기</label>
-    </div>
-
-    <p class="capture-status" id="captureStatus">템플릿을 불러오는 중.</p>
-    <video id="preview" muted playsinline hidden></video>
-  </section>
-
-  <section class="panel wide">
-    <h2>화면에 뜬 항목 4개</h2>
-    <p class="hint">"다음 항목 중 무작위로 적용됩니다" 아래 4개를 그대로 고른다.</p>
-    <div class="picks" id="picks"></div>
-    <p class="capture-status" id="pickStatus" hidden></p>
-  </section>
-
-  <section class="panel wide result" id="result" hidden>
+  <section class="answer" id="result" hidden>
     <div class="verdict" id="verdict"></div>
 
     <div class="compare">
@@ -126,14 +37,120 @@
     <p class="meta" id="meta"></p>
   </section>
 
-  <section class="panel wide note" id="note">
+  <section class="note" id="note">
     <strong>계산 준비 중</strong>
     <span id="noteText">확률 표와 솔버를 불러오는 중.</span>
   </section>
 
+  <section class="live">
+    <button type="button" id="shareBtn">화면 공유 시작</button>
+    <span class="live-state" id="liveState">공유를 켜면 화면이 바뀔 때마다 알아서 읽는다.</span>
+    <button type="button" id="readBtn" class="ghost" disabled>한 번 읽기</button>
+    <label class="toggle"><input type="checkbox" id="autoRead" checked disabled> 자동</label>
+  </section>
+
+  <details class="panel fold" id="foldGem">
+    <summary>
+      <span class="fold-title">읽은 젬</span>
+      <span class="fold-sum" id="gemSummary">아직 안 읽었다</span>
+    </summary>
+    <div class="fold-body">
+      <p class="hint">전부 화면에서 자동으로 채워진다. 틀렸을 때만 여기서 고친다.</p>
+
+      <label class="row">
+        <span>등급</span>
+        <select id="grade">
+          <option value="5">고급 (가공 5회)</option>
+          <option value="7">희귀 (가공 7회)</option>
+          <option value="9" selected>영웅 (가공 9회)</option>
+        </select>
+      </label>
+
+      <label class="row">
+        <span>젬 계열</span>
+        <select id="gemType">
+          <option value="혼돈 포인트" selected>혼돈</option>
+          <option value="질서 포인트">질서</option>
+        </select>
+      </label>
+
+      <label class="row">
+        <span>1번 효과 이름</span>
+        <input id="name_opt1" type="text" placeholder="공격력" autocomplete="off">
+      </label>
+      <label class="row">
+        <span>2번 효과 이름</span>
+        <input id="name_opt2" type="text" placeholder="아군 피해 강화" autocomplete="off">
+      </label>
+
+      <div class="stats" id="stats"></div>
+
+      <label class="row">
+        <span>남은 가공</span>
+        <select id="attempts"></select>
+      </label>
+
+      <label class="row">
+        <span>남은 리롤</span>
+        <select id="rerolls"></select>
+      </label>
+
+      <label class="row">
+        <span>가공 비용</span>
+        <select id="cost">
+          <option value="0" selected>기본</option>
+          <option value="1">+100%</option>
+          <option value="-1">-100%</option>
+        </select>
+      </label>
+    </div>
+  </details>
+
+  <details class="panel fold" id="foldPicks">
+    <summary>
+      <span class="fold-title">뜬 항목 4개</span>
+      <span class="fold-sum" id="pickSummary">아직 안 읽었다</span>
+    </summary>
+    <div class="fold-body">
+      <p class="hint">"다음 항목 중 무작위로 적용됩니다" 아래 4개를 자동으로 채운다.</p>
+      <div class="picks" id="picks"></div>
+      <p class="capture-status" id="pickStatus" hidden></p>
+    </div>
+  </details>
+
+  <section class="panel">
+    <h2>목표</h2>
+    <p class="hint">이 목표에 따라 리롤 판단이 통째로 바뀐다.</p>
+
+    <div class="presets" id="presets">
+      <button type="button" data-target='{"will":5,"point":5}'>의지력/포인트 5/5</button>
+      <button type="button" data-target='{"will":5,"point":5,"opt1":5,"opt2":5}'>전부 5/5/5/5</button>
+      <button type="button" data-target='{"opt1":4}'>1번 효과 4 이상</button>
+      <button type="button" data-target='{"will":4,"point":4}'>의지력/포인트 4/4</button>
+    </div>
+
+    <div class="stats" id="target"></div>
+    <p class="hint">1 은 "상관없음"과 같다 (모든 젬이 이미 1 이상).</p>
+  </section>
+
+  <details class="panel fold" id="foldRead">
+    <summary>
+      <span class="fold-title">읽기 상세</span>
+      <span class="fold-sum" id="readSummary">템플릿을 불러오는 중</span>
+    </summary>
+    <div class="fold-body">
+      <p class="hint">캡처한 PNG 를 이 창에 끌어다 놓아도 읽는다. 이상하게 읽는 화면이 있으면 저장해서 보내면 된다.</p>
+      <div class="capture-row">
+        <button type="button" id="saveFrameBtn" disabled>이 화면 저장</button>
+      </div>
+      <p class="capture-status" id="captureStatus">템플릿을 불러오는 중.</p>
+      <video id="preview" muted playsinline hidden></video>
+    </div>
+  </details>
+
 </main>
 
-<script src="vision/atlas-browser.js?v=2026-08-14.6"></script>
-<script src="app.js?v=2026-08-14.6"></script>
+<script src="vision/atlas-browser.js?v=2026-08-15.1"></script>
+<script src="app.js?v=2026-08-15.1"></script>
 </body>
 </html>
