@@ -1,0 +1,115 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - heading "젬파고" [level=1] [ref=e8]
+    - paragraph [ref=e9]: 젬 가공 도우미
+  - main [ref=e10]:
+    - generic [ref=e11]:
+      - button "화면 공유 시작" [ref=e12] [cursor=pointer]
+      - generic [ref=e13]: 젬 가공화면을 1920*1080 창모드 화면공유를 해주세요.
+      - button "한 번 읽기" [disabled] [ref=e14]
+      - generic [ref=e15]:
+        - checkbox "자동" [checked] [disabled] [ref=e16]
+        - text: 자동
+    - generic [ref=e17]:
+      - group [ref=e18]:
+        - generic "읽은 젬 아직 안 읽었다 펼치기" [ref=e19] [cursor=pointer]:
+          - generic [ref=e20]: 읽은 젬
+          - generic [ref=e21]: 아직 안 읽었다
+          - text: 펼치기
+        - option "1" [selected]
+        - option "2"
+        - option "3"
+        - option "4"
+        - option "5"
+        - option "1" [selected]
+        - option "2"
+        - option "3"
+        - option "4"
+        - option "5"
+        - option "1" [selected]
+        - option "2"
+        - option "3"
+        - option "4"
+        - option "5"
+        - option "1" [selected]
+        - option "2"
+        - option "3"
+        - option "4"
+        - option "5"
+        - option "고급 (가공 5회)"
+        - option "희귀 (가공 7회)"
+        - option "영웅 (가공 9회)" [selected]
+        - option "혼돈" [selected]
+        - option "질서"
+        - option "0"
+        - option "1"
+        - option "2"
+        - option "3"
+        - option "4"
+        - option "5"
+        - option "6"
+        - option "7"
+        - option "8"
+        - option "9" [selected]
+        - option "0"
+        - option "1"
+        - option "2" [selected]
+        - option "3"
+        - option "4"
+        - option "5"
+        - option "6"
+        - option "기본" [selected]
+        - option "+100%"
+        - option "-100%"
+      - group [ref=e22]:
+        - generic "읽기 상세 펼치기" [ref=e23] [cursor=pointer]:
+          - generic [ref=e24]: 읽기 상세
+          - text: 펼치기
+    - generic [ref=e25]:
+      - group [ref=e26]:
+        - generic "랜덤 항목 4개 펼치기" [ref=e27] [cursor=pointer]:
+          - generic [ref=e28]: 랜덤 항목 4개
+          - text: 펼치기
+      - strong [ref=e31]: 계산 준비 중
+    - generic [ref=e33]:
+      - heading "목표" [level=2] [ref=e34]
+      - paragraph [ref=e35]: 목표를 설정해주세요.
+      - generic [ref=e36]:
+        - button "의지력/포인트 5/5" [pressed] [ref=e37] [cursor=pointer]
+        - button "전부 5/5/5/5" [ref=e38] [cursor=pointer]
+        - button "1번 효과 4 이상" [ref=e39] [cursor=pointer]
+        - button "의지력/포인트 4/4" [ref=e40] [cursor=pointer]
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - generic [ref=e44]: 의지력 효율
+          - combobox "의지력 효율" [ref=e45]:
+            - option "1"
+            - option "2"
+            - option "3"
+            - option "4"
+            - option "5" [selected]
+        - generic [ref=e46]:
+          - generic [ref=e48]: 혼돈 포인트
+          - combobox "혼돈 포인트" [ref=e49]:
+            - option "1"
+            - option "2"
+            - option "3"
+            - option "4"
+            - option "5" [selected]
+        - generic [ref=e50]:
+          - generic [ref=e52]: 1번 효과
+          - combobox "1번 효과" [ref=e53]:
+            - option "1" [selected]
+            - option "2"
+            - option "3"
+            - option "4"
+            - option "5"
+        - generic [ref=e54]:
+          - generic [ref=e56]: 2번 효과
+          - combobox "2번 효과" [ref=e57]:
+            - option "1" [selected]
+            - option "2"
+            - option "3"
+            - option "4"
+            - option "5"
+      - paragraph [ref=e58]: 1 은 상관없음과 같습니다.

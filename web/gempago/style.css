@@ -309,6 +309,9 @@ body {
 }
 .fold[open] > summary::after { content: "접기"; }
 .fold-body { padding: 0 16px 16px; }
+/* .hint 의 음수 위쪽 여백은 .panel h2 밑에 붙으라고 준 것이다. 접이식 본문에는 h2 가
+   없어서 그 여백이 밖으로 새어 나가 제목 줄을 4px 파고든다(playwright 로 잡았다). */
+.fold-body > :first-child { margin-top: 0; }
 
 /* 읽기가 흔들린 패널만 눈에 띄게 한다. 평소에는 조용히 접혀 있는 게 정상. */
 .fold.attention { border-color: var(--warn); }
