@@ -30,7 +30,7 @@
     return p.toFixed(4) + '%p';
   }
 
-  const worker = new Worker('worker.js?v=2026-08-15.1');
+  const worker = new Worker('worker.js?v=2026-08-15.2');
   let seq = 0;
   const pending = new Map();
 
