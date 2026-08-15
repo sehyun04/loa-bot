@@ -28,3 +28,5 @@ bot_log*.txt
 # 봇과 무관한 개인 작업 문서가 작업 폴더에 섞여 들어온다. 공개 레포라
 # `git add .` 한 번에 딸려 올라가지 않게 막아둔다.
 curriculum.html
+# playwright MCP 가 남기는 스냅샷/로그
+.playwright-mcp/
