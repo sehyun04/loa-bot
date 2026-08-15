@@ -64,7 +64,7 @@ body {
 /* ---- 머리 ---------------------------------------------------------------- */
 
 .top {
-  max-width: 1180px;
+  max-width: 1340px;
   margin: 0 auto 16px;
   display: grid;
   grid-template-columns: auto 1fr;
@@ -92,18 +92,20 @@ body {
 /* ---- 판 ------------------------------------------------------------------ */
 
 /*
- * 좌우 2단. 왼쪽은 세션당 한 번 정하는 것(공유, 목표), 오른쪽은 매 턴 바뀌는 것
- * (읽은 젬, 뜬 항목, 답). 세로로 쌓으면 답이 접이식 패널 밑으로 밀리는데,
- * 옆으로 벌리면 둘 다 첫 화면에 들어온다.
+ * 좌우 3단. 가운데가 답이고 양옆이 그 답을 정하는 두 입력이다.
+ * 왼쪽 = 화면에서 읽어 온 것, 오른쪽 = 사람이 정하는 것.
+ * 세로로 쌓으면 답이 접이식 패널 밑으로 밀린다.
  */
 .cols {
-  max-width: 1180px;
+  max-width: 1340px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  grid-template-columns: minmax(0, 4fr) minmax(0, 5fr) minmax(0, 4fr);
   gap: 12px;
   align-items: start;
 }
+/* 공유 조작은 세 단 위를 가로지른다. 어느 단에도 속하지 않는 시작 버튼이다. */
+.span-all { grid-column: 1 / -1; }
 .col {
   display: grid;
   gap: 10px;
@@ -322,11 +324,15 @@ body {
   gap: 12px;
   margin-bottom: 8px;
 }
-.row > span { color: var(--dim); font-size: 13px; }
+.row > span { color: #b9b3cc; font-size: 13px; }
 
 select,
 input[type="text"] {
-  background: linear-gradient(150deg, var(--panel-2), var(--panel));
+  /* background 단축을 쓰면 background-color 가 transparent 로 돌아가는데, 네이티브
+     드롭다운 목록은 그 색으로 그려진다. 그래서 색과 그라디언트를 따로 준다.
+     이걸 놓치면 펼쳤을 때 글씨가 안 보인다. */
+  background-color: var(--panel-2);
+  background-image: linear-gradient(150deg, var(--panel-2), var(--panel));
   color: var(--fg);
   border: 1px solid var(--line);
   border-radius: 7px;
@@ -343,6 +349,13 @@ input[type="text"]:focus {
   box-shadow: 0 0 0 3px var(--glow-soft);
 }
 input[type="text"]::placeholder { color: var(--dim); }
+
+/* 드롭다운 목록은 브라우저가 그린다. 변수를 못 읽는 경우가 있어 값을 직접 적는다. */
+option {
+  background-color: #1e1a2b;
+  color: #ece9f5;
+}
+option:checked { background-color: #2b2640; }
 
 .stats { display: grid; gap: 8px; margin-bottom: 4px; }
 
@@ -448,10 +461,13 @@ body.dragging::after {
 .row.last { margin-bottom: 0; }
 .hint.last { margin-bottom: 0; }
 
-@media (max-width: 900px) {
+/* 좁아지면 답이 먼저다. 매 턴 보는 게 그것뿐이다. */
+@media (max-width: 1100px) {
+  .cols { grid-template-columns: 1fr 1fr; }
+  .col-center { grid-column: 1 / -1; order: -1; }
+}
+@media (max-width: 700px) {
   .cols { grid-template-columns: 1fr; }
-  /* 한 줄로 접히면 매 턴 보는 쪽이 먼저 와야 한다. */
-  .col-right { order: -1; }
 }
 
 @media (max-width: 560px) {
