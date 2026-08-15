@@ -24,3 +24,6 @@ __pycache__/
 
 # 로컬 실행 로그
 bot_log*.txt
+
+# playwright MCP 가 남기는 스냅샷/로그
+.playwright-mcp/
