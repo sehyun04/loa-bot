@@ -30,7 +30,7 @@
     return p.toFixed(4) + '%p';
   }
 
-  const worker = new Worker('worker.js?v=2026-08-15.11');
+  const worker = new Worker('worker.js?v=2026-08-15.12');
   let seq = 0;
   const pending = new Map();
 
@@ -63,16 +63,68 @@
   }
 
   /*
-   * "계산 중" 은 바로 띄우지 않는다. 목표당 첫 풀이만 2초 걸리고 그 뒤로는 캐시라
-   * 즉시 끝나는데, 자동 갱신이 0.7초마다 도는 동안 매번 깜빡이면 답보다 눈에 띈다.
+   * 오래 걸리는 일에는 화면 전체를 덮는다.
+   *
+   * 첫 읽기는 배율을 찾느라 1~8초, 목표 첫 풀이는 2~7초 걸린다. 그동안 아무 표시가
+   * 없으면 멈춘 것으로 읽힌다. 반대로 배율을 잡은 뒤의 읽기는 60ms 라 그때도 덮으면
+   * 0.7초마다 화면이 깜빡인다. 그래서 오래 걸릴 일에만 부르고, 그것도 250ms 뒤에야
+   * 띄운다 - 캐시에 걸려 즉시 끝나는 경우까지 덮을 이유가 없다.
    */
-  let noteTimer = null;
-  function showBusy() {
-    clearTimeout(noteTimer);
-    noteTimer = setTimeout(
-      () => setNote('계산 중', '이 목표는 처음이라 한 번만 오래 걸립니다.', 'loading'), 150);
+  const BUSY_DELAY = 250;
+  let busyTimer = null, busyTick = null, busyDepth = 0;
+  let busyLabel = '', busySub = '', busyAt = 0;
+
+  function paintBusy() {
+    $('busyText').textContent = busyLabel;
+    const sec = Math.round((Date.now() - busyAt) / 1000);
+    $('busySub').textContent = sec >= 1 ? (busySub ? busySub + ' · ' : '') + sec + '초' : busySub;
   }
-  function clearBusy() { clearTimeout(noteTimer); noteTimer = null; }
+
+  /**
+   * 겹쳐 부를 수 있다 - 템플릿 로딩과 첫 풀이가 같이 돈다. 나중에 부른 쪽이 문구를
+   * 가져간다. 안 그러면 이미 끝난 단계의 이름을 몇 초씩 보게 된다.
+   */
+  function busyOn(text, sub) {
+    busyDepth++;
+    busyLabel = text;
+    busySub = sub || '';
+    busyAt = Date.now();
+    if (!$('busy').hidden) { paintBusy(); return; }
+    if (busyTimer) return;
+    busyTimer = setTimeout(() => {
+      $('busy').hidden = false;
+      paintBusy();
+      // 숫자가 늘어야 살아 있는 것으로 보인다.
+      busyTick = setInterval(paintBusy, 1000);
+    }, BUSY_DELAY);
+  }
+
+  function busyOff() {
+    busyDepth = Math.max(0, busyDepth - 1);
+    if (busyDepth) return; // 다 끝나야 걷는다
+    busyReset();
+  }
+
+  /** 무슨 일이 있어도 갇히지 않게. 실패 경로에서도 부른다. */
+  function busyReset() {
+    busyDepth = 0;
+    clearTimeout(busyTimer); clearInterval(busyTick);
+    busyTimer = busyTick = null;
+    $('busy').hidden = true;
+  }
+
+  // 목표별 첫 풀이만 오래 걸린다. 한 번 푼 목표는 워커가 캐시하므로 덮지 않는다.
+  const solvedTargets = new Set();
+  let solveShown = false;
+  function showBusy(key) {
+    if (solvedTargets.has(key)) return;
+    solveShown = true;
+    busyOn('확률을 푸는 중', '이 목표는 처음이라 한 번만 오래 걸립니다');
+  }
+  function clearBusy(key) {
+    if (key) solvedTargets.add(key);
+    if (solveShown) { solveShown = false; busyOff(); }
+  }
 
   function fillRange(sel, from, to, value) {
     sel.innerHTML = '';
@@ -287,19 +339,22 @@
       renderPickSummary();
 
       if (!Object.keys(target).length) {
-        clearBusy();
+        clearBusy(null);
         $('result').hidden = true;
         setNote('목표를 정하세요', '전부 1 이면 아무 조건이 없어서 확률이 항상 100% 입니다.');
         return;
       }
 
-      showBusy();
+      const solveKey = JSON.stringify(target) + '|' + maxAttempts;
+      showBusy(solveKey);
       const res = await ask('evaluate', {
         state, target, maxAttempts, picks: readPicks(), slots: readSlots(),
       });
+      clearBusy(solveKey);
       render(state, res);
     } catch (err) {
-      clearBusy();
+      solveShown = false;
+      busyReset();
       setNote('계산 실패', err.message, 'error');
       $('result').hidden = true;
     } finally {
@@ -309,7 +364,6 @@
   }
 
   function render(state, res) {
-    clearBusy();
     $('note').hidden = true;
     $('result').hidden = false;
 
@@ -388,6 +442,9 @@
   let lastScale = null;
   let lastChangeAt = 0;
   let liveKind = null;
+  // 배율 탐색 안내를 이미 띄웠는가. 가공 화면이 안 보이면 자동 갱신이 0.7초마다
+  // 실패하는데, 그때마다 화면을 덮으면 아무것도 못 누르는 상태로 갇힌다.
+  let searchAnnounced = false;
 
   // 공유 전 안내 문구. HTML 에 적힌 것을 그대로 쓴다 - 문구는 거기서 고치면 된다.
   const IDLE_LIVE = $('liveState').textContent;
@@ -433,6 +490,10 @@
   async function readImage(image, label, quiet) {
     if (!atlasReady || reading) return;
     reading = true;
+    // 배율을 모르면 탐색이 붙어 몇 초 걸린다. 아는 상태의 읽기는 60ms 라 덮지 않는다.
+    // 자동 갱신은 한 번만 알린다. 직접 누른 읽기는 언제나 알린다.
+    const slow = lastScale == null && (!quiet || !searchAnnounced);
+    if (slow) { searchAnnounced = true; busyOn('가공 화면을 찾는 중', '처음 한 번만 오래 걸립니다'); }
     try {
       // 자동 갱신은 상태줄을 건드리지 않는다. 0.7초마다 "읽는 중"으로 깜빡이면
       // 정작 읽어낸 내용을 읽을 수가 없다.
@@ -445,6 +506,7 @@
       liveKind = 'bad';
     } finally {
       reading = false;
+      if (slow) busyOff();
       renderLive();
     }
   }
@@ -708,7 +770,7 @@
     if (quiet && key === lastKey) return;
     lastKey = key;
     lastChangeAt = Date.now();
-    if (res.found) lastScale = res.scale;
+    if (res.found) { lastScale = res.scale; searchAnnounced = false; }
 
     if (!res.found) { applyReading(res); return; }
 
@@ -791,6 +853,7 @@
     lastScale = null;
     lastKey = null;
     liveKind = null;
+    searchAnnounced = false;
     $('preview').hidden = true;
     $('preview').srcObject = null;
     $('shareBtn').textContent = '화면 공유 시작';
@@ -822,6 +885,7 @@
       // 창 크기가 바뀌면 배율도 바뀐다. 캐시를 비우고 처음부터 찾게 한다.
       lastScale = null;
       lastKey = null;
+      searchAnnounced = false;
       await ask('forgetScale', {});
       // 들어오는 프레임 크기를 보여준다. 창모드 공유나 브라우저 다운스케일 때문에
       // 게임 해상도와 다른 경우가 많고, 그 차이가 인식 실패의 흔한 원인이다.
@@ -891,6 +955,8 @@
     try {
       await img.decode();
       // 파일마다 해상도가 다를 수 있으므로 배율을 다시 찾게 한다.
+      lastScale = null;
+      searchAnnounced = false;
       await ask('forgetScale', {});
       await readImage(toGray(img, img.naturalWidth, img.naturalHeight), file.name + ' 읽는 중');
     } catch (err) {
@@ -902,10 +968,13 @@
 
   (async () => {
     try {
+      busyOn('준비하는 중', '');
       const atlas = await GempagoAtlasBrowser.load('vision/templates');
       await ask('atlas', { atlas });
       atlasReady = true;
+      busyOff();
     } catch (err) {
+      busyReset();
       setCapture('템플릿을 불러오지 못했습니다: ' + err.message, 'bad');
       liveKind = 'bad';
     }
