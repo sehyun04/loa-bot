@@ -307,6 +307,21 @@ body.dragging::after {
 .note.error { border-color: var(--bad); }
 .note.error strong { color: var(--bad); }
 
+/* 이모지 대신 테두리 한 조각만 돌린다. 글자 크기와 맞춰 13px. */
+.spinner {
+  flex: none;
+  align-self: center;
+  width: 13px;
+  height: 13px;
+  border: 2px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+/* 회전을 완전히 멈추면 "멈춰 있다"로 읽히므로 느리게만 돌린다. */
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
+
 /* 마지막 줄 밑에 남는 여백을 지운다. 접이식 패널 안에서 특히 눈에 띈다. */
 .row.last { margin-bottom: 0; }
 .hint.last { margin-bottom: 0; }
