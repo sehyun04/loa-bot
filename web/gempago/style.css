@@ -24,18 +24,21 @@
   --ink: #0c0a12;
 }
 
-/* 젬 계열에 따라 색이 바뀐다. 화면에 띄운 젬과 같은 색이어야 헷갈리지 않는다. */
+/* 젬 계열에 따라 색이 바뀐다. 화면에 띄운 젬과 같은 색이어야 헷갈리지 않는다.
+   질서가 빨강, 혼돈이 파랑이다. */
 body[data-gem="order"] {
-  --accent: #60a5fa;
-  --accent-2: #7dd3fc;
-  --glow: rgba(96, 165, 250, 0.24);
-  --glow-soft: rgba(96, 165, 250, 0.11);
+  --accent: #f2536b;
+  --accent-2: #ffa3b1;
+  --glow: rgba(242, 83, 107, 0.24);
+  --glow-soft: rgba(242, 83, 107, 0.11);
+  /* 강조색이 빨강이면 오류 표시가 묻힌다. 주황 쪽으로 밀어 갈라놓는다. */
+  --bad: #ff8a3d;
 }
 body[data-gem="chaos"] {
-  --accent: #c084fc;
-  --accent-2: #f0abfc;
-  --glow: rgba(192, 132, 252, 0.24);
-  --glow-soft: rgba(192, 132, 252, 0.11);
+  --accent: #4d8dfa;
+  --accent-2: #86c9ff;
+  --glow: rgba(77, 141, 250, 0.26);
+  --glow-soft: rgba(77, 141, 250, 0.12);
 }
 
 * { box-sizing: border-box; }
