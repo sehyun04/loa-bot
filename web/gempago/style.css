@@ -16,9 +16,17 @@
   --fg: #ece9f5;
   --dim: #8f8aa3;
   --label: #b5afc6;
-  --accent: #a78bfa;
-  --accent-2: #6ee7f0;
-  --glow: rgba(167, 139, 250, 0.16);
+  /*
+   * 읽기 전에는 색이 없다.
+   *
+   * 여기 있던 #a78bfa 는 어느 AI 도 기본으로 뱉는 보라(tailwind violet-400)였고,
+   * 짝이던 시안과 함께 "AI 가 만든 화면" 의 첫 번째 표식이다. 그런데 이 화면에서
+   * 색은 장식이 아니라 정보다 - 강조색이 곧 젬 계열이다. 그래서 젬을 읽기 전에는
+   * 아무 색도 주지 않는다. 뼈색으로 있다가, 젬이 들어오면 그 젬의 색으로 켜진다.
+   */
+  --accent: #ddd8cf;
+  --accent-2: #f2eee7;
+  --glow: rgba(221, 216, 207, 0.07);
   --good: #4ade80;
   --warn: #fbbf24;
   --bad: #fb7185;
@@ -145,6 +153,15 @@ input, select, textarea { caret-color: var(--accent); }
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 14px;
+}
+
+/* 젬을 읽으면 페이지 전체가 그 젬의 색으로 옮겨간다. 한 번에, 조용히. */
+body { transition: background-color 600ms ease-out; }
+.fold-title,
+.panel h2,
+.live button,
+.presets button[aria-pressed="true"] {
+  transition: color 500ms ease-out, background-color 500ms ease-out, border-color 500ms ease-out;
 }
 
 .panel { padding: 20px; }
@@ -288,13 +305,16 @@ h2 + .hint { margin-top: -8px; }
   align-items: center;
   gap: 8px;
 }
-/* 45도 돌린 사각형 = 젬 다이아. 이모지를 안 쓰고 보석 표시를 내는 방법. */
-.fold-title::before {
+/*
+ * 제목마다 점을 찍으면 그건 장식이고, 장식은 아무 말도 안 한다. 읽기가 흔들린
+ * 패널에만 찍는다 - 그때부터 이 점은 "여기 봐라" 라는 뜻이 된다.
+ */
+.fold.attention .fold-title::before,
+.fold.bad .fold-title::before {
   content: "";
   width: 5px;
   height: 5px;
   transform: rotate(45deg);
-  background: var(--accent);
 }
 .fold-sum {
   flex: 1 1 auto;
@@ -526,15 +546,6 @@ body.dragging::after {
   padding: 28px 24px 30px;
 }
 .note.empty strong { font-size: 16px; letter-spacing: -0.02em; }
-.note.empty strong::before {
-  content: "";
-  display: block;
-  width: 7px;
-  height: 7px;
-  margin-bottom: 12px;
-  transform: rotate(45deg);
-  background: var(--accent);
-}
 .note.empty #noteText { line-height: 1.7; }
 
 .note strong { color: var(--fg); flex: none; }
