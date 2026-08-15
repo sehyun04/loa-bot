@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>젬파고 - 가공 계산기</title>
-<link rel="stylesheet" href="style.css?v=2026-08-15.5">
+<link rel="stylesheet" href="style.css?v=2026-08-15.6">
 </head>
 <body>
 
@@ -45,6 +45,12 @@
       <div class="fold-body">
         <p class="hint"></p>
 
+        <div class="stats" id="stats"></div>
+        <div class="sumline">
+          <span>젬 포인트 합계</span>
+          <strong id="gemPointSum">-</strong>
+        </div>
+
         <label class="row">
           <span>젬 등급</span>
           <select id="grade">
@@ -71,7 +77,6 @@
           <input id="name_opt2" type="text" placeholder="아군 피해 강화" autocomplete="off">
         </label>
 
-        <div class="stats" id="stats"></div>
 
         <label class="row">
           <span>남은 가공</span>
@@ -175,7 +180,7 @@
 
 </main>
 
-<script src="vision/atlas-browser.js?v=2026-08-15.5"></script>
-<script src="app.js?v=2026-08-15.5"></script>
+<script src="vision/atlas-browser.js?v=2026-08-15.6"></script>
+<script src="app.js?v=2026-08-15.6"></script>
 </body>
 </html>

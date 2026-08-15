@@ -357,7 +357,85 @@ option {
 }
 option:checked { background-color: #2b2640; }
 
-.stats { display: grid; gap: 8px; margin-bottom: 4px; }
+/* 목표는 현재 수치와 헷갈리면 안 되므로 초록을 쓰지 않는다. 다이아만 공유한다. */
+#target .stat select { color: var(--accent-2); font-weight: 600; }
+
+.stats { display: grid; gap: 9px; margin-bottom: 4px; }
+
+/* ---- 수치 넷: 게임의 융합 완료 화면과 같은 모양 ---------------------------- */
+
+/* 라벨이 남는 폭을 먹고 값은 오른쪽에 붙는다. 다이아 - 이름 - 숫자. */
+.row.stat { gap: 10px; margin-bottom: 0; }
+.row.stat > span { flex: 1 1 auto; }
+
+/* 45도 돌린 사각형 = 젬 다이아. 수치마다 색이 다른 것도 게임과 같다. */
+.dia {
+  flex: none;
+  width: 11px;
+  height: 11px;
+  transform: rotate(45deg);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4),
+    0 0 9px -2px currentColor;
+}
+.stat[data-k="will"] .dia { background: linear-gradient(135deg, #ff92a3, #c0293f); color: #e2445e; }
+.stat[data-k="point"] .dia { background: linear-gradient(135deg, #ffdf9a, #d5921f); color: #eab447; }
+.stat[data-k="opt1"] .dia { background: linear-gradient(135deg, #b3ec9f, #3a9a41); color: #5dc25b; }
+.stat[data-k="opt2"] .dia { background: linear-gradient(135deg, #a6cfff, #3468d4); color: #4f8ef0; }
+
+/*
+ * 현재 수치는 게임처럼 초록 숫자로만 보인다. 그래도 select 그대로라 눌러서 고칠 수
+ * 있다 - 인식이 흔들렸을 때 손댈 곳이 여기다. 그래서 텍스트로 바꾸지 않았다.
+ */
+#stats .stat select {
+  width: 54px;
+  min-width: 0;
+  padding: 2px 5px;
+  border-color: transparent;
+  background-image: none;
+  background-color: transparent;
+  color: #a3e635;
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  text-align-last: right;
+  appearance: none;
+  -webkit-appearance: none;
+}
+#stats .stat select:hover { border-color: var(--line); background-color: var(--panel-2); }
+#stats .stat select:focus {
+  border-color: var(--accent);
+  background-color: var(--panel-2);
+  box-shadow: 0 0 0 3px var(--glow-soft);
+}
+
+/* 게임 화면의 흐려지는 가로선. */
+.sumline {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 13px 0 4px;
+  padding-top: 13px;
+}
+.sumline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--edge) 18%, var(--edge) 82%, transparent);
+}
+.sumline span { color: #b9b3cc; font-size: 13px; }
+.sumline strong {
+  color: #a3e635;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  padding-right: 5px;
+}
 
 .presets { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
 .presets button {

@@ -90,7 +90,12 @@
     container.innerHTML = '';
     for (const { key, label } of STATS) {
       const row = document.createElement('label');
-      row.className = 'row';
+      row.className = 'row stat';
+      // 게임 화면이 수치마다 다른 색 다이아를 쓴다. 같은 색이어야 대조가 빠르다.
+      row.dataset.k = key;
+      const dia = document.createElement('i');
+      dia.className = 'dia';
+      row.appendChild(dia);
       const span = document.createElement('span');
       span.textContent = label;
       const sel = document.createElement('select');
@@ -184,6 +189,10 @@
       COST_KO[String(st.cost)],
     ];
     if ($('gemSummary')) $('gemSummary').textContent = bits.filter(Boolean).join(' · ');
+    // 젬 포인트 = 네 수치의 합. 화면에 적힌 값과 눈으로 대조하라고 같이 보여준다.
+    if ($('gemPointSum')) {
+      $('gemPointSum').textContent = String(STATS.reduce((a, { key }) => a + st[key], 0));
+    }
   }
 
   function renderPickSummary() {
