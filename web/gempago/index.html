@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>젬파고 - 가공 계산기</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7.2 2.6h9.6l4.2 6.2L12 21.6 3 8.8z' fill='%234d8dfa'/%3E%3Cpath d='M7.2 2.6 3 8.8h18l-4.2-6.2z' fill='%23ffffff' opacity='.3'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=2026-08-15.11">
+<link rel="stylesheet" href="style.css?v=2026-08-15.12">
 </head>
 <body>
 
@@ -153,7 +153,7 @@
     </section>
 
     <section class="note" id="note">
-      <span class="spinner" id="noteSpin"></span>
+      <span class="spinner" id="noteSpin" hidden></span>
       <strong>계산 준비 중</strong>
       <span id="noteText"></span>
     </section>
@@ -181,7 +181,29 @@
 
 </main>
 
-<script src="vision/atlas-browser.js?v=2026-08-15.11"></script>
-<script src="app.js?v=2026-08-15.11"></script>
+<!-- 오래 걸리는 일이 돌 때만 화면 전체를 덮는다. 첫 읽기(배율 탐색)와 목표 첫 풀이가
+     각각 몇 초씩 걸리는데, 그동안 아무 표시가 없으면 멈춘 것처럼 보인다. -->
+<div class="busy" id="busy" hidden>
+  <div class="busy-card">
+    <div class="busy-ring">
+      <svg class="busy-gem" viewBox="0 0 24 24" aria-hidden="true">
+        <defs>
+          <linearGradient id="busyFace" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="var(--accent-2)"/>
+            <stop offset="1" stop-color="var(--accent)"/>
+          </linearGradient>
+        </defs>
+        <path d="M7.2 2.6h9.6l4.2 6.2L12 21.6 3 8.8z" fill="url(#busyFace)"/>
+        <path d="M7.2 2.6 3 8.8h18l-4.2-6.2z" fill="#fff" opacity=".22"/>
+        <path d="M3 8.8h18L12 21.6z" fill="#000" opacity=".14"/>
+      </svg>
+    </div>
+    <strong id="busyText">불러오는 중</strong>
+    <span id="busySub"></span>
+  </div>
+</div>
+
+<script src="vision/atlas-browser.js?v=2026-08-15.12"></script>
+<script src="app.js?v=2026-08-15.12"></script>
 </body>
 </html>
