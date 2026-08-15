@@ -30,7 +30,7 @@
     return p.toFixed(4) + '%p';
   }
 
-  const worker = new Worker('worker.js?v=2026-08-15.3');
+  const worker = new Worker('worker.js?v=2026-08-15.4');
   let seq = 0;
   const pending = new Map();
 
@@ -134,6 +134,8 @@
   // 수치 입력칸 이름도 젬에 맞춰 바꾼다. 화면과 같은 단어를 봐야 헷갈리지 않는다.
   function syncStatLabels() {
     const s = readSlots();
+    // 화면에 띄운 젬과 같은 색이어야 헷갈리지 않는다. 강조색 전체가 여기서 갈린다.
+    document.body.dataset.gem = s.point === '질서 포인트' ? 'order' : 'chaos';
     const names = { will: '의지력 효율', point: s.point, opt1: s.opt1, opt2: s.opt2 };
     for (const { key } of STATS) {
       for (const prefix of ['cur', 'tgt']) {
