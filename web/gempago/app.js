@@ -30,7 +30,7 @@
     return p.toFixed(4) + '%p';
   }
 
-  const worker = new Worker('worker.js?v=2026-08-15.14');
+  const worker = new Worker('worker.js?v=2026-08-16.1');
   let seq = 0;
   const pending = new Map();
 
@@ -191,8 +191,10 @@
   // 수치 입력칸 이름도 젬에 맞춰 바꾼다. 화면과 같은 단어를 봐야 헷갈리지 않는다.
   function syncStatLabels() {
     const s = readSlots();
-    // 화면에 띄운 젬과 같은 색이어야 헷갈리지 않는다. 강조색 전체가 여기서 갈린다.
-    document.body.dataset.gem = s.point === '질서 포인트' ? 'order' : 'chaos';
+    // 강조색이 곧 젬 계열이다. 그래서 읽기 전에는 켜지 않는다 - 모르는 젬의 색을
+    // 미리 칠하면 그건 정보가 아니라 장식이고, 화면이 이미 뭔가 안다는 인상을 준다.
+    if (gemKnown) document.body.dataset.gem = s.point === '질서 포인트' ? 'order' : 'chaos';
+    else delete document.body.dataset.gem;
     const names = { will: '의지력 효율', point: s.point, opt1: s.opt1, opt2: s.opt2 };
     for (const { key } of STATS) {
       for (const prefix of ['cur', 'tgt']) {
@@ -242,12 +244,11 @@
     const s = readSlots();
     const st = readState();
     const names = { will: '의지', point: s.point.replace(' 포인트', ''), opt1: s.opt1, opt2: s.opt2 };
+    // 가운뎃점은 한 줄에 하나까지. 전부 점으로 이으면 그 줄은 읽는 게 아니라 훑게 된다.
+    const tail = [`가공 ${st.n}회`, `리롤 ${st.r}회`, COST_KO[String(st.cost)]].filter(Boolean);
     const bits = [
       GRADE_KO[$('grade').value],
-      STATS.map(({ key }) => `${names[key]} ${st[key]}`).join(' / '),
-      `가공 ${st.n}회`,
-      `리롤 ${st.r}회`,
-      COST_KO[String(st.cost)],
+      STATS.map(({ key }) => `${names[key]} ${st[key]}`).join(' / ') + ` (${tail.join(', ')})`,
     ];
     // 모르는 젬을 아는 것처럼 요약하지 않는다. HTML 에 적힌 문구를 그대로 둔다.
     if ($('gemSummary') && gemKnown) $('gemSummary').textContent = bits.filter(Boolean).join(' · ');
@@ -458,7 +459,7 @@
     tb.parentElement.hidden = !(res.perPick && res.perPick.length);
 
     $('meta').textContent =
-      `남은 가공 ${state.n}회 · 리롤 ${state.r}회 · 이 목표 전체 풀이 ${res.ms}ms`;
+      `남은 가공 ${state.n}회, 리롤 ${state.r}회 · 이 목표 전체 풀이 ${res.ms}ms`;
 
     replayVerdict(verdict.textContent + '|' + $('valCommit').textContent + '|' + $('valReroll').textContent);
   }
@@ -502,7 +503,7 @@
     else if (lastScale == null) text = '가공 화면을 찾는 중입니다. 처음 한 번은 2초쯤 걸립니다.';
     else {
       const sec = Math.round((Date.now() - lastChangeAt) / 1000);
-      text = `${autoTimer ? '자동으로 읽는 중' : '자동 꺼짐'} · 배율 ${lastScale} · `
+      text = `${autoTimer ? '자동으로 읽는 중' : '자동 꺼짐'} · 배율 ${lastScale}, `
         + (sec < 2 ? '방금 갱신' : `${sec}초째 그대로`);
     }
     el.textContent = text;
@@ -698,7 +699,7 @@
   function noteGemState(gem) {
     if (!gem.filled.length && !gem.skipped.length) return;
     const lines = [];
-    if (gem.filled.length) lines.push('현재 수치 자동 입력: ' + gem.filled.join(' · '));
+    if (gem.filled.length) lines.push('현재 수치 자동 입력: ' + gem.filled.join(', '));
     if (gem.skipped.length) lines.push('그대로 둠: ' + gem.skipped.join(', '));
     $('captureStatus').textContent += '\n' + lines.join('\n');
   }
