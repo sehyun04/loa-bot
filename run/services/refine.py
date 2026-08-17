@@ -52,6 +52,9 @@ class RefineOutcome:
     # 천장이 없다. 그때는 계산을 도중에 끊은 것이라 max_tries 를 "확정"으로
     # 말하면 안 된다.
     has_ceiling: bool
+    # 실패 1회당 오른 폭. 화면에서 attempts 를 뒤져 역산하지 않도록 그대로 실어 보낸다
+    # - 확률이 상한에 걸린 구간에서는 역산값이 0이 나와 기운 상승까지 같이 지워진다.
+    fail_gain: float
 
     @property
     def expected_cost(self) -> float | None:
@@ -134,4 +137,5 @@ def simulate(
         first_try_rate=attempts[0].success_rate,
         cost_per_try=cost_per_try,
         has_ceiling=attempts[-1].success_rate >= 1.0,
+        fail_gain=gain,
     )
