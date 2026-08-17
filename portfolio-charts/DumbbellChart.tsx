@@ -57,8 +57,10 @@ export default function DumbbellChart({
         const isHover = hover === i
         const lo = Math.min(row.from, row.to)
         const hi = Math.max(row.from, row.to)
-        const toColor = row.emphasis ? t.rampHigh : t.rampMid
-        const fromColor = row.emphasis ? t.rampLow : t.muted
+        // 색은 "이전/이후"만 뜻한다. 강조를 색으로 주면 범례가 거짓말을 하므로
+        // (범례는 두 시점을 설명하는데 행마다 색이 달라진다) 강조는 글자 굵기로만 준다
+        const fromColor = t.rampLow
+        const toColor = t.rampHigh
 
         return (
           <div

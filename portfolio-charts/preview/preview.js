@@ -380,8 +380,8 @@ function DumbbellChart({
       const isHover = hover === i;
       const lo = Math.min(row.from, row.to);
       const hi = Math.max(row.from, row.to);
-      const toColor = row.emphasis ? t.rampHigh : t.rampMid;
-      const fromColor = row.emphasis ? t.rampLow : t.muted;
+      const fromColor = t.rampLow;
+      const toColor = t.rampHigh;
       return /* @__PURE__ */ jsxs3(
         "div",
         {
