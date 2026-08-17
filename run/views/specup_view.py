@@ -1,8 +1,10 @@
 """스펙업 우선순위 화면 (Components V2).
 
 Container 구조:
-    Container 1: 캐릭터 머리말 (Section + Thumbnail) + 기준 안내
-    Container 2: 우선순위 목록 (먼저 손댈 것 / 그다음 / 합계)
+    Container 1: 캐릭터 머리말 (Section + Thumbnail)
+    Container 2: 먼저 손댈 것 - 상위 몇 개만 근거까지 붙여서
+    Container 3: 그다음 - 한 항목당 한 줄로 압축
+    Container 4: 합계와 단서
 
 accent_colour 는 주지 않는다. 색 줄이 붙으면 기존 임베드와 똑같이 그려져서 V2 로
 옮긴 티가 안 난다 - debi-marlene 의 stats_view 도 같은 이유로 색을 뺀다.
@@ -17,15 +19,25 @@ from run.services import specup
 PRIMARY_N = 3
 
 
-def _item_block(rank: int, item: specup.SpecUpItem) -> discord.ui.TextDisplay:
+def _gold(value: float) -> str:
+    return f"  ·  **{value:,.0f}** 골드"
+
+
+def _primary_block(rank: int, item: specup.SpecUpItem) -> discord.ui.TextDisplay:
     head = f"`{rank}` **{item.label}** → {item.target}"
     if item.gold is not None:
-        head += f"  ·  **{item.gold:,.0f}** 골드"
+        head += _gold(item.gold)
 
-    notes = [f"{item.category} · {item.reason}"]
-    if item.gold_note:
-        notes.append(item.gold_note)
-    return discord.ui.TextDisplay(head + "\n" + "\n".join(f"-# {n}" for n in notes))
+    # 근거와 시세를 한 줄에 잇는다. 항목마다 -# 을 두 줄씩 달면 실제 할 일보다
+    # 설명이 더 길어져서 목록이 안 읽힌다.
+    note = " · ".join(p for p in (item.category, item.reason, item.gold_note) if p)
+    return discord.ui.TextDisplay(f"{head}\n-# {note}")
+
+
+def _compact_line(item: specup.SpecUpItem) -> str:
+    """뒤쪽 항목은 한 줄로 줄인다. 지금 당장 할 일이 아니라서 근거까지 필요하지 않다."""
+    line = f"`{item.category}` **{item.label}** → {item.target}"
+    return line + (_gold(item.gold) if item.gold is not None else "")
 
 
 def _spaced(items: list[specup.SpecUpItem], start: int) -> list[discord.ui.Item]:
@@ -34,7 +46,7 @@ def _spaced(items: list[specup.SpecUpItem], start: int) -> list[discord.ui.Item]
     for offset, item in enumerate(items):
         if out:
             out.append(discord.ui.Separator(spacing=discord.SeparatorSpacing.small))
-        out.append(_item_block(start + offset, item))
+        out.append(_primary_block(start + offset, item))
     return out
 
 
@@ -44,7 +56,7 @@ def _header(char) -> discord.ui.Section | discord.ui.TextDisplay:
         f"Lv.{char.item_level:,.2f}" if char.item_level else None,
         f"전투력 **{char.combat_power}**" if char.combat_power else None,
     ) if p)
-    text = discord.ui.TextDisplay(f"# {char.name}\n## 스펙업 우선순위\n{meta}")
+    text = discord.ui.TextDisplay(f"# {char.name}\n{meta}")
 
     # Section 은 accessory 가 필수다 - 이미지가 없으면 Section 없이 텍스트만 넣는다.
     if not char.image_url:
@@ -52,24 +64,23 @@ def _header(char) -> discord.ui.Section | discord.ui.TextDisplay:
     return discord.ui.Section(text, accessory=discord.ui.Thumbnail(media=char.image_url))
 
 
-def _gold_summary(items: tuple[specup.SpecUpItem, ...]) -> str | None:
+def _footer(items: tuple[specup.SpecUpItem, ...]) -> str:
+    lines = []
     priced = [i for i in items if i.gold is not None]
-    if len(priced) < 2:
-        return None
-    return f"-# 값이 매겨진 {len(priced)}개를 전부 올리면 **{sum(i.gold for i in priced):,.0f} 골드**예요."
+    if len(priced) >= 2:
+        lines.append(f"값이 매겨진 {len(priced)}개를 전부 올리면 **{sum(i.gold for i in priced):,.0f} 골드**예요")
+    # 기준 설명은 맨 아래로 내린다. 머리말에 두면 실제 목록보다 면책 문구가 먼저,
+    # 그리고 더 크게 보인다.
+    lines.append(
+        "같은 종류끼리 비교해서 많이 뒤처진 순서예요 · 비용 대비 효율이 아니라 균형 기준이고, "
+        "재련은 확률표가 없고 보석은 경매장이라 그쪽 시세는 아직 못 붙여요"
+    )
+    return "\n".join(f"-# {line}" for line in lines)
 
 
 def build_report_view(report: specup.SpecUpReport) -> discord.ui.LayoutView:
     view = discord.ui.LayoutView()
-
-    # === Container 1: 머리말 ===
-    head: list[discord.ui.Item] = [_header(report.character)]
-    if report.items:
-        head.append(discord.ui.TextDisplay(
-            "-# 같은 종류끼리 비교해서 **많이 뒤처진 순서**예요. 비용 대비 효율이 아니라 "
-            "균형 기준이고, 재련 확률표가 공개돼 있지 않아 재련 비용은 아직 못 붙여요."
-        ))
-    view.add_item(discord.ui.Container(*head))
+    view.add_item(discord.ui.Container(_header(report.character)))
 
     if not report.items:
         view.add_item(discord.ui.Container(discord.ui.TextDisplay(
@@ -78,23 +89,21 @@ def build_report_view(report: specup.SpecUpReport) -> discord.ui.LayoutView:
         )))
         return view
 
-    # === Container 2: 우선순위 목록 ===
-    body: list[discord.ui.Item] = [
+    primary = list(report.items[:PRIMARY_N])
+    view.add_item(discord.ui.Container(
         discord.ui.TextDisplay("### 먼저 손댈 것"),
         discord.ui.Separator(),
-        *_spaced(list(report.items[:PRIMARY_N]), start=1),
-    ]
+        *_spaced(primary, start=1),
+    ))
 
     if rest := list(report.items[PRIMARY_N:]):
-        body += [
-            discord.ui.Separator(spacing=discord.SeparatorSpacing.large),
+        # 압축한 줄들은 한 TextDisplay 에 몰아넣는다. 한 줄짜리 사이에 구분선을 끼우면
+        # 목록이 다시 늘어지고, 컴포넌트 40개 상한도 항목 수만큼 빨리 찬다.
+        view.add_item(discord.ui.Container(
             discord.ui.TextDisplay("### 그다음"),
             discord.ui.Separator(),
-            *_spaced(rest, start=PRIMARY_N + 1),
-        ]
+            discord.ui.TextDisplay("\n".join(_compact_line(i) for i in rest)),
+        ))
 
-    if summary := _gold_summary(report.items):
-        body += [discord.ui.Separator(), discord.ui.TextDisplay(summary)]
-
-    view.add_item(discord.ui.Container(*body))
+    view.add_item(discord.ui.Container(discord.ui.TextDisplay(_footer(report.items))))
     return view

@@ -68,17 +68,26 @@ def _armor_items(levels: dict[str, int]) -> list[SpecUpItem]:
 
     top = max(armor.values())
     others = ", ".join(f"{s} +{lv}" for s, lv in sorted(armor.items(), key=lambda kv: -kv[1]))
-    items = []
+
+    # 같은 단계에서 처진 부위는 한 항목으로 묶는다. 부위별로 쪼개면 "투구 +18 → +19"
+    # 같은 줄이 글자 하나 다르지 않게 넷씩 반복돼서, 화면 절반이 같은 문장이 된다.
+    # 어차피 해야 할 일도 같은 일 하나다.
+    lagging: dict[int, list[str]] = {}
     for slot, level in armor.items():
+        if top - level > 0:
+            lagging.setdefault(level, []).append(slot)
+
+    items = []
+    for level, slots in sorted(lagging.items()):
         gap = top - level
-        if gap <= 0:
-            continue
+        label = f"{slots[0]} +{level}" if len(slots) == 1 else f"방어구 {len(slots)}부위 +{level}"
+        where = " · ".join(slots) if len(slots) > 1 else None
         items.append(SpecUpItem(
             category="재련",
-            label=f"{slot} +{level}",
+            label=label,
             target=f"+{level + 1}",
             gap=gap,
-            reason=f"방어구 최고는 +{top} · {gap}단계 뒤처짐",
+            reason=" · ".join(p for p in (where, f"방어구 최고는 +{top}", f"{gap}단계 뒤처짐") if p),
         ))
     if not items:
         items.append(SpecUpItem(
@@ -159,7 +168,9 @@ async def _engraving_items(effects: list[dict], *, with_price: bool) -> list[Spe
             book = next((r for r in results if r.name.startswith("유물")), None)
             if book:
                 gold = book.unit_price * ENGRAVING_BOOKS_PER_LEVEL
-                note = f"{book.name} {ENGRAVING_BOOKS_PER_LEVEL}장 · 장당 {book.unit_price:,.0f}골드"
+                # 각인서 이름에 각인 이름이 그대로 들어가 있어서(유물 원한 각인서) 등급만
+                # 남긴다. 각인 이름은 바로 위 label 에 이미 있다.
+                note = f"유물 각인서 {ENGRAVING_BOOKS_PER_LEVEL}장 · 장당 {book.unit_price:,.0f}골드"
 
         items.append(SpecUpItem(
             category="각인",
