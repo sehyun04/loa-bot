@@ -48,3 +48,28 @@ jobs:
       - name: 배포 실패 시 로그
         if: failure()
         run: echo "서버 로그는 ssh loa 'cd loa-bot && docker compose logs --tail 100' 으로 확인하세요"
+
+      # 디스코드의 깃허브 연동은 워크플로 결과를 받고도 그리지 않고 조용히 버린다
+      # (204만 돌려준다). 그래서 배포 결과만 여기서 직접 한 줄 보낸다.
+      - name: 결과 알림
+        if: always()
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_DEPLOY_WEBHOOK }}
+          STATUS: ${{ job.status }}
+          # 커밋 메시지를 셸에 그대로 펼치면 인젝션이 되므로 환경변수로 받는다
+          SUBJECT: ${{ github.event.head_commit.message }}
+          COMMIT_URL: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          # 포크나 시크릿 미설정 환경에서 배포를 실패로 만들지 않는다
+          [ -n "$WEBHOOK" ] || exit 0
+          TITLE=$(printf '%s' "$SUBJECT" | head -1)
+          case "$STATUS" in
+            success)   HEAD="배포 완료"; LINK="$COMMIT_URL" ;;
+            cancelled) HEAD="배포 취소"; LINK="$RUN_URL" ;;
+            *)         HEAD="배포 실패"; LINK="$RUN_URL" ;;
+          esac
+          TEXT=$(printf '%s%s\n%s' "$HEAD" "${TITLE:+ · $TITLE}" "$LINK")
+          curl -sS -X POST "$WEBHOOK" \
+            -H 'Content-Type: application/json' \
+            -d "$(jq -n --arg c "$TEXT" '{content: $c}')" >/dev/null
