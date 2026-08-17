@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 
 from run.core import config, errors
-from run.services import auction, hellreward, llm_router, refine, specup
+from run.services import auction, chat_session, hellreward, llm_router, refine, specup
 from run.services.lostark import armory, market
 from run.services.merchant import schedule as sch
 from run.services.merchant import sightings
@@ -185,6 +185,10 @@ _NEEDS_LOA_API = {
 }
 
 
+def _text_of(reply: anthropic.types.Message) -> str:
+    return "".join(b.text for b in reply.content if b.type == "text").strip()
+
+
 async def _run_tool(name: str, args: dict, message: discord.Message) -> dict:
     if name in _NEEDS_LOA_API and not config.has_lostark_api():
         return {"embed": common.api_key_missing_embed()}
@@ -245,9 +249,28 @@ class AskCog(commands.Cog):
 
         log.info("질문 수신: %s", question)
 
+        channel_id = str(message.channel.id)
+        user_id = str(message.author.id)
+        msgs = chat_session.history(channel_id, user_id) + [
+            {"role": "user", "content": question}
+        ]
+
         async with message.channel.typing():
             try:
-                reply = await llm_router.route(question)
+                reply = await llm_router.route(msgs)
+                calls = [b for b in reply.content if b.type == "tool_use"]
+                text = _text_of(reply)
+
+                # 도구를 부르겠다고 정해놓고 tool_use 블록 대신 <invoke> XML을 텍스트로
+                # 흘리는 실패가 드물게 있다. 그 XML을 사용자에게 보여줄 수는 없으니
+                # 한 번 더 부른다 - 확률적 실패라 대개 두 번째에 제대로 온다.
+                if not calls and "<invoke" in text:
+                    log.warning("도구 호출이 평문으로 새어나옴, 재시도")
+                    reply = await llm_router.route(msgs)
+                    calls = [b for b in reply.content if b.type == "tool_use"]
+                    text = _text_of(reply)
+                    if not calls and "<invoke" in text:
+                        text = "잘 못 알아들었어요. 다시 한 번 말씀해주시겠어요?"
             except anthropic.RateLimitError:
                 await message.reply(
                     embed=common.notice_embed("잠시만요", "요청이 몰렸어요. 조금 뒤에 다시 물어봐 주세요."),
@@ -269,16 +292,21 @@ class AskCog(commands.Cog):
                 )
                 return
 
-            calls = [b for b in reply.content if b.type == "tool_use"]
-
             if not calls:
                 # 도구를 못 고른 경우 - 되묻거나 범위를 안내하는 문장이 온다
-                text = "".join(b.text for b in reply.content if b.type == "text").strip()
-                await message.reply(
-                    text[:_MAX_TEXT] if text else "무엇을 도와드릴까요?",
-                    mention_author=False,
-                )
+                answer = text[:_MAX_TEXT] if text else "무엇을 도와드릴까요?"
+                await message.reply(answer, mention_author=False)
+                # 되물었으면 다음 한 마디가 그 답이다. 기억해둬야 이어받을 수 있다.
+                chat_session.remember(channel_id, user_id, question, answer)
                 return
+
+            # 무엇을 요청했는지만 평문으로 남긴다. 결과는 뷰가 보여주므로 맥락에는 필요 없다.
+            chat_session.remember(
+                channel_id,
+                user_id,
+                question,
+                ", ".join(f"{c.name}({dict(c.input)})" for c in calls),
+            )
 
             for call in calls:
                 log.info("라우팅: %s(%s)", call.name, dict(call.input))

@@ -245,20 +245,22 @@ TOOLS: list[dict[str, Any]] = [
 ]
 
 
-async def route(question: str) -> anthropic.types.Message:
-    """질문 하나를 모델에 보내고 응답 메시지를 그대로 돌려준다.
+async def route(messages: list[dict]) -> anthropic.types.Message:
+    """대화 이력을 모델에 보내고 응답 메시지를 그대로 돌려준다.
 
     도구 결과를 모델에 되돌려주지 않는다 - 렌더링은 뷰가 하므로 왕복 1회로 끝난다.
+
+    thinking과 effort를 지정하지 않는다. adaptive + effort=low 조합에서 도구 호출이
+    tool_use 블록 대신 텍스트에 <invoke> XML로 새어나오는 일이 12회 중 2회 재현됐고,
+    그때 stop_reason은 tool_use인데 정작 tool_use 블록이 없어 호출이 통째로 유실된다.
+    두 옵션을 빼면 30회 중 누출 0이면서 지연 중앙값은 1.9초로 같았다(2026-08-17 실측).
+    이 모델은 thinking.type=enabled를 400으로 거부하므로 강제로 켜는 우회로도 없다.
     """
     return await _get_client().messages.create(
         model=config.ANTHROPIC_MODEL,
         max_tokens=4096,
-        # 라우팅은 짧고 정형화된 판단이라 낮은 effort가 지연시간·비용 모두 유리하다.
-        # thinking을 끄면 도구 호출이 평문으로 새어나오는 실패 모드가 있어 켜 둔다.
-        thinking={"type": "adaptive"},
-        output_config={"effort": "low"},
         # 도구 스키마와 시스템 프롬프트는 매 요청 동일하므로 캐시에 태운다
         system=[{"type": "text", "text": SYSTEM, "cache_control": {"type": "ephemeral"}}],
         tools=TOOLS,
-        messages=[{"role": "user", "content": question}],
+        messages=messages,
     )
