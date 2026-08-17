@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LLM 백엔드 교체 근거 — 차트 미리보기</title>
+    <!--
+      빌드 도구 없이 열리도록 react 와 mermaid 는 CDN 에서 받는다.
+      컴포넌트 자체는 의존성이 react 뿐이라, 쓸 프로젝트에서는 이 파일이 필요 없다.
+    -->
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@18.3.1",
+          "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+          "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+          "mermaid": "https://esm.sh/mermaid@11.4.1"
+        }
+      }
+    </script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Paperlogy, system-ui, -apple-system, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      /* 다이어그램 글자가 브라우저 기본 세리프로 떨어지지 않게 */
+      .mermaid-diagram svg,
+      svg[id^='pc-mermaid'] {
+        max-width: 100%;
+        height: auto;
+        font-family: Paperlogy, system-ui, sans-serif !important;
+      }
+      button:focus-visible,
+      [tabindex]:focus-visible {
+        outline: 2px solid #0091cc;
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./preview.js"></script>
+  </body>
+</html>
