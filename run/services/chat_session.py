@@ -35,6 +35,20 @@ def history(channel_id: str, user_id: str) -> list[dict]:
     return list(messages)
 
 
+def summarize_calls(calls: list[tuple[str, dict]]) -> str:
+    """도구 호출을 이력에 남길 한 줄로 만든다.
+
+    호출 문법을 그대로 쓰지 않는다. assistant 턴에 남은 문자열은 모델에게 "이렇게
+    답해도 된다"는 예시로 읽히는데, 하필 그 모양이 도구 호출을 평문으로 흘리는
+    실패 모드와 같다. 고치려는 실패를 이력으로 다시 가르칠 이유가 없다.
+    """
+    done = []
+    for name, args in calls:
+        pairs = ", ".join(f"{k}={v}" for k, v in args.items())
+        done.append(f"{name} 실행 - {pairs}" if pairs else f"{name} 실행")
+    return " / ".join(done)
+
+
 def remember(channel_id: str, user_id: str, user_text: str, assistant_text: str) -> None:
     if not user_text or not assistant_text:
         # 빈 content는 API가 거부한다. 반쪽짜리 턴을 남기느니 이번 턴을 통째로 버린다.
@@ -51,3 +65,7 @@ def remember(channel_id: str, user_id: str, user_text: str, assistant_text: str)
     _sessions.move_to_end(key)
     if len(_sessions) > MAX_SESSIONS:
         _sessions.popitem(last=False)
+
+
+def forget(channel_id: str, user_id: str) -> None:
+    _sessions.pop(_key(channel_id, user_id), None)

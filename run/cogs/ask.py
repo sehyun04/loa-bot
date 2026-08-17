@@ -1,4 +1,5 @@
 import logging
+import re
 
 import anthropic
 import discord
@@ -25,6 +26,12 @@ log = logging.getLogger("loabot.ask")
 # 디스코드 메시지 상한(2000자)보다 훨씬 짧게 끊는다. 라우터가 길게 답할 일이 없고,
 # 길어졌다면 그건 라우팅 실패라 잘라 보내는 편이 낫다.
 _MAX_TEXT = 400
+
+# 도구 호출이 평문으로 샐 때 나오는 태그. 출력 직전에 무조건 한 번 거른다 -
+# 탐지에 실패하더라도 이 XML이 사용자 화면에 뜨는 일만은 없어야 한다.
+_TOOL_XML = re.compile(
+    r"<\s*/?\s*(?:antml:)?(?:invoke|function_calls|parameter)\b[^>]*>", re.IGNORECASE
+)
 
 
 async def _market(item: str) -> dict:
@@ -189,6 +196,17 @@ def _text_of(reply: anthropic.types.Message) -> str:
     return "".join(b.text for b in reply.content if b.type == "text").strip()
 
 
+def _leaked_tool_call(reply: anthropic.types.Message, text: str) -> bool:
+    """도구를 부르려다 평문으로 샌 응답인지 본다.
+
+    실측된 모양은 stop_reason이 tool_use인데 정작 tool_use 블록이 없는 것이다.
+    태그 문자열만 보면 변종을 놓치므로 stop_reason을 먼저 본다.
+    """
+    if any(b.type == "tool_use" for b in reply.content):
+        return False
+    return reply.stop_reason == "tool_use" or bool(_TOOL_XML.search(text))
+
+
 async def _run_tool(name: str, args: dict, message: discord.Message) -> dict:
     if name in _NEEDS_LOA_API and not config.has_lostark_api():
         return {"embed": common.api_key_missing_embed()}
@@ -262,15 +280,23 @@ class AskCog(commands.Cog):
                 text = _text_of(reply)
 
                 # 도구를 부르겠다고 정해놓고 tool_use 블록 대신 <invoke> XML을 텍스트로
-                # 흘리는 실패가 드물게 있다. 그 XML을 사용자에게 보여줄 수는 없으니
-                # 한 번 더 부른다 - 확률적 실패라 대개 두 번째에 제대로 온다.
-                if not calls and "<invoke" in text:
+                # 흘리는 실패가 드물게 있다. 확률적이라 같은 질문을 한 번 더 물으면
+                # 대개 제대로 온다 - 2초를 한 번 더 쓸 값어치가 있다.
+                leaked = _leaked_tool_call(reply, text)
+                if leaked:
                     log.warning("도구 호출이 평문으로 새어나옴, 재시도")
                     reply = await llm_router.route(msgs)
                     calls = [b for b in reply.content if b.type == "tool_use"]
                     text = _text_of(reply)
-                    if not calls and "<invoke" in text:
-                        text = "잘 못 알아들었어요. 다시 한 번 말씀해주시겠어요?"
+                    leaked = _leaked_tool_call(reply, text)
+            except anthropic.BadRequestError as exc:
+                # 이력이 원인일 수 있다. 대화 기억보다 이번 질문에 답하는 게 우선이다.
+                log.warning("요청 거부(400): %s", exc.message)
+                chat_session.forget(channel_id, user_id)
+                reply = await llm_router.route([{"role": "user", "content": question}])
+                calls = [b for b in reply.content if b.type == "tool_use"]
+                text = _text_of(reply)
+                leaked = _leaked_tool_call(reply, text)
             except anthropic.RateLimitError:
                 await message.reply(
                     embed=common.notice_embed("잠시만요", "요청이 몰렸어요. 조금 뒤에 다시 물어봐 주세요."),
@@ -294,18 +320,24 @@ class AskCog(commands.Cog):
 
             if not calls:
                 # 도구를 못 고른 경우 - 되묻거나 범위를 안내하는 문장이 온다
-                answer = text[:_MAX_TEXT] if text else "무엇을 도와드릴까요?"
+                answer = _TOOL_XML.sub("", text).strip()[:_MAX_TEXT]
+                if leaked or not answer:
+                    # 재시도까지 샌 응답. 잔해를 기억에 남기면 다음 턴까지 오염된다.
+                    await message.reply(
+                        "잘 못 알아들었어요. 다시 한 번 말씀해주시겠어요?", mention_author=False
+                    )
+                    return
                 await message.reply(answer, mention_author=False)
                 # 되물었으면 다음 한 마디가 그 답이다. 기억해둬야 이어받을 수 있다.
                 chat_session.remember(channel_id, user_id, question, answer)
                 return
 
-            # 무엇을 요청했는지만 평문으로 남긴다. 결과는 뷰가 보여주므로 맥락에는 필요 없다.
+            # 무엇을 요청했는지만 남긴다. 결과는 뷰가 보여주므로 맥락에는 필요 없다.
             chat_session.remember(
                 channel_id,
                 user_id,
                 question,
-                ", ".join(f"{c.name}({dict(c.input)})" for c in calls),
+                chat_session.summarize_calls([(c.name, dict(c.input)) for c in calls]),
             )
 
             for call in calls:

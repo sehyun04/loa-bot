@@ -254,7 +254,10 @@ async def route(messages: list[dict]) -> anthropic.types.Message:
     tool_use 블록 대신 텍스트에 <invoke> XML로 새어나오는 일이 12회 중 2회 재현됐고,
     그때 stop_reason은 tool_use인데 정작 tool_use 블록이 없어 호출이 통째로 유실된다.
     두 옵션을 빼면 30회 중 누출 0이면서 지연 중앙값은 1.9초로 같았다(2026-08-17 실측).
-    이 모델은 thinking.type=enabled를 400으로 거부하므로 강제로 켜는 우회로도 없다.
+
+    옵션을 뺐다고 사고가 꺼진 게 아니다 - 안 적으면 adaptive가 기본이라 응답에
+    thinking 블록이 그대로 온다(실측 확인). effort=low로 되돌리지 말 것, 그게 새던
+    설정이다. 참고로 이 모델은 thinking.type=enabled를 400으로 거부한다.
     """
     return await _get_client().messages.create(
         model=config.ANTHROPIC_MODEL,
