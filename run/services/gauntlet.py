@@ -9,6 +9,7 @@
 
 성공 확률과 재료 수량은 단계마다 다르고 공개된 표가 있어서 resources 에 그대로 넣었다.
 실패 시 확률·장인의 기운이 오르는 규칙은 일반 재련과 같아서 refine.simulate 를 쓴다.
+(그 규칙이 2026-08 에 바로잡히면서 여기 나오는 시도 횟수도 같이 늘었다.)
 """
 
 import json
@@ -159,7 +160,7 @@ def plan(start: int, target: int, prices: Prices, *, artisan: float = 0.0) -> Ga
         outcome = refine.simulate(
             row["rate"],
             cost_per_try=attempt,
-            artisan=artisan if stage == start + 1 else 0.0,
+            jangin=artisan if stage == start + 1 else 0.0,
         )
         stages.append(StagePlan(
             stage=stage,
@@ -167,7 +168,7 @@ def plan(start: int, target: int, prices: Prices, *, artisan: float = 0.0) -> Ga
             attempt_gold=attempt,
             growth_gold=growth,
             expected_tries=outcome.expected_tries,
-            max_tries=outcome.max_tries,
+            max_tries=outcome.ceiling_tries,
             expected_shard=row["growth"]["shard"] + outcome.expected_tries * row["refine"]["shard"],
             expected_silver=row["growth"][SILVER_KEY] + outcome.expected_tries * row["refine"][SILVER_KEY],
         ))

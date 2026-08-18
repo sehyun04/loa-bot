@@ -74,7 +74,10 @@ def _footer(items: tuple[specup.SpecUpItem, ...]) -> str:
         lines.append(f"{len(priced)}개 전부 올리면 **{sum(i.gold for i in priced):,.0f} 골드**")
     # 기준 설명은 맨 아래에 한 줄로만 둔다. 머리말에 길게 두면 정작 목록보다 면책
     # 문구가 먼저, 그리고 더 크게 보인다.
-    lines.append("-# 같은 종류끼리 비교한 균형 기준이에요 · 재련·보석은 시세를 못 붙여요")
+    lines.append(
+        "-# 같은 종류끼리 비교한 균형 기준이에요 · 재련 골드는 거래소 최저가 기준 평균값이고 "
+        "보석은 경매장이라 아직 못 붙여요"
+    )
     return "\n".join(lines)
 
 

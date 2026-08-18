@@ -62,20 +62,24 @@ async def _roster(name: str) -> dict:
 
 
 async def _refine(
-    chance_percent: float,
-    cost_per_try: float | None = None,
-    artisan_percent: float = 0.0,
-    fail_gain_percent: float | None = None,
+    item_type: str,
+    target: int,
+    grade: str = "t4_1730",
+    jangin_percent: float = 0.0,
+    prob_from_failure_percent: float = 0.0,
 ) -> dict:
-    chance = chance_percent / 100
-    artisan = artisan_percent / 100
-    outcome = refine.simulate(
-        chance,
-        cost_per_try=cost_per_try,
-        artisan=artisan,
-        fail_gain=None if fail_gain_percent is None else fail_gain_percent / 100,
+    request = refine.Request(
+        item_type=item_type,
+        grade=grade,
+        target=target,
+        jangin=jangin_percent / 100,
+        prob_from_failure=prob_from_failure_percent / 100,
     )
-    return {"view": refine_view.build_result_view(outcome, chance, artisan)}
+    try:
+        report = await refine.report(request)
+    except ValueError as exc:
+        return {"view": common.error_view("계산할 수 없어요", str(exc))}
+    return {"view": refine_view.RefineView(report)}
 
 
 async def _hell_reward(tier: str, floor: int) -> dict:
@@ -185,6 +189,7 @@ _NEEDS_CONTEXT = {"set_card_alert", "remove_card_alert", "list_card_alerts"}
 # 로아 API 키가 없으면 아예 부를 수 없는 도구
 _NEEDS_LOA_API = {
     "get_market_price",
+    "simulate_refine",
     "get_character_spec",
     "get_roster",
     "compare_hell_reward",

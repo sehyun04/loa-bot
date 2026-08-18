@@ -130,29 +130,37 @@ TOOLS: list[dict[str, Any]] = [
         "name": "simulate_refine",
         "description": (
             "재련 성공까지 평균 몇 번 시도하고 골드가 얼마나 드는지 계산한다. "
-            "성공 확률을 알아야 계산할 수 있으므로, 확률을 모르면 되묻는다."
+            "'무기 22강 얼마나 들어', '방어구 20강 재료' 같은 질문에 사용한다. "
+            "성공 확률과 재료 수량은 봇이 표에서, 시세는 거래소에서 직접 가져오므로 "
+            "부위와 목표 단계만 있으면 된다."
         ),
         "input_schema": {
             "type": "object",
             "properties": {
-                "chance_percent": {
-                    "type": "number",
-                    "description": "실패가 쌓이지 않은 상태의 성공 확률(%). 예: 10",
+                "item_type": {
+                    "type": "string",
+                    "enum": ["weapon", "armor"],
+                    "description": "무기면 weapon, 방어구(투구·상의·하의·장갑·어깨)면 armor",
                 },
-                "cost_per_try": {
-                    "type": "number",
-                    "description": "1회 시도에 드는 골드(재료값 합계). 모르면 넣지 않는다.",
+                "target": {
+                    "type": "integer",
+                    "description": "목표 단계. '22강'이면 22 - +21에서 +22로 가는 계산이다.",
                 },
-                "artisan_percent": {
+                "grade": {
+                    "type": "string",
+                    "enum": ["t4_1730", "t4_1590", "t3_1525", "t3_1390", "t3_1250"],
+                    "description": "장비 등급. 언급이 없으면 최신 등급인 t4_1730.",
+                },
+                "jangin_percent": {
                     "type": "number",
                     "description": "지금까지 쌓인 장인의 기운(%). 언급이 없으면 0.",
                 },
-                "fail_gain_percent": {
+                "prob_from_failure_percent": {
                     "type": "number",
-                    "description": "실패 1회당 오르는 확률 폭(%). 숨결을 쓸 때만 넣는다.",
+                    "description": "실패가 쌓여 이미 올라간 확률(%). 언급이 없으면 0.",
                 },
             },
-            "required": ["chance_percent"],
+            "required": ["item_type", "target"],
         },
     },
     {

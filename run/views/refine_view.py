@@ -1,9 +1,11 @@
 """재련 기대 비용 화면 (Components V2).
 
 Container 구조:
-    Container 1: 무엇을 계산했는지 (입력 요약)
-    Container 2: 결과 (평균 / 최악)
-    Container 3: 계산 근거와 단서
+    Container 1: 무엇을 계산했는지 (부위·단계·확률)
+    Container 2: 성공까지 (평균 / 장기백)
+    Container 3: 숨결을 쓸지 말지
+    Container 4: 재료 (1회 / 평균)
+    Container 5: 단계·등급·부위를 바꾸는 조작부
 
 accent_colour 는 주지 않는다. 색 줄이 붙으면 기존 임베드와 똑같이 그려진다.
 """
@@ -11,103 +13,226 @@ accent_colour 는 주지 않는다. 색 줄이 붙으면 기존 임베드와 똑
 import discord
 
 from run.services import refine
+from run.views import common
 
 
 def _gold(value: float) -> str:
     return f"**{value:,.0f}** 골드"
 
 
-def _cost_suffix(value: float | None) -> str:
-    return f"  ·  {_gold(value)}" if value is not None else ""
+def _qty(value: float) -> str:
+    """재료 개수는 백만 단위까지 가서 그대로 쓰면 자릿수만 세게 된다."""
+    if value >= 10000:
+        return f"{value / 10000:,.1f}만"
+    return f"{value:,.0f}"
 
 
-def _header(outcome: refine.RefineOutcome, base_rate: float, artisan: float) -> str:
-    meta = [f"기본 확률 **{base_rate * 100:.1f}%**"]
-    if artisan > 0:
-        meta.append(f"장인의 기운 **{artisan * 100:.1f}%** 쌓인 상태")
-    if outcome.cost_per_try is not None:
-        meta.append(f"1회 {_gold(outcome.cost_per_try)}")
-    return "# 재련 기대 비용\n" + " · ".join(meta)
+def _pct(value: float) -> str:
+    return f"{value * 100:.2f}%"
 
 
-def _certain(outcome: refine.RefineOutcome) -> str:
-    """확률 100%로 물어본 경우. 평균과 최악이 둘 다 1번이라 나눠 적을 게 없다."""
-    return (
-        f"`확정` **1번**{_cost_suffix(outcome.expected_cost)}\n"
-        "-# 성공 확률이 100%라 실패할 일이 없어요"
-    )
+def _breath_text(breaths: dict[str, int]) -> str:
+    if not breaths:
+        return "숨결 없이"
+    return " · ".join(f"{refine.display_name(n)} {a}개" for n, a in breaths.items())
 
 
-def _average(outcome: refine.RefineOutcome) -> str:
-    return (
-        f"`평균` **{outcome.expected_tries:.1f}번**{_cost_suffix(outcome.expected_cost)}\n"
-        f"-# 절반은 {outcome.median_tries}번 안에, 열에 아홉은 {outcome.unlucky_tries}번 안에 끝나요"
-    )
+def _header(report: refine.Report) -> str:
+    table, request = report.table, report.request
+    # 헤더에 적는 확률은 숨결을 안 썼을 때다. 추천이 숨결을 쓰는 쪽이면 그렇게 올라간
+    # 확률은 숨결 칸에서 따로 보여준다 - 여기 섞으면 재련 창 숫자와 안 맞는다.
+    meta = [refine.GRADE_LABELS[table.grade], f"성공 확률 **{_pct(report.no_breath.try_prob)}**"]
+    if request.jangin > 0:
+        meta.append(f"장인의 기운 **{_pct(request.jangin)}**")
+    lines = [f"# {table.label}", " · ".join(meta)]
+
+    extra = []
+    if table.additional_prob > 0:
+        extra.append(f"기본 {_pct(table.base_prob)} + 추가 {_pct(table.additional_prob)}")
+    if request.prob_from_failure > 0:
+        extra.append(f"실패 누적 {_pct(request.prob_from_failure)}")
+    if extra:
+        lines.append("-# " + " · ".join(extra))
+    return "\n".join(lines)
 
 
-def _worst(outcome: refine.RefineOutcome) -> str:
-    if not outcome.has_ceiling:
-        return (
-            "`최악` **천장 없음**\n"
-            "-# 실패해도 성공률과 장인의 기운이 오르지 않아서, 운이 나쁘면 끝없이 들어가요"
+def _success(report: refine.Report) -> list[discord.ui.Item]:
+    best = report.recommended
+    body = [discord.ui.TextDisplay("### 성공까지"), discord.ui.Separator()]
+
+    if best.ceiling_tries == 1:
+        body.append(discord.ui.TextDisplay(
+            f"`확정` **1번** · {_gold(best.expected_cost)}\n"
+            "-# 확률이 100%라 실패할 일이 없어요"
+        ))
+        return body
+
+    body += [
+        discord.ui.TextDisplay(
+            f"`평균` **{best.expected_tries:.1f}번** · {_gold(best.expected_cost)}\n"
+            f"-# 절반은 {best.median_tries}번 안에, 열에 아홉은 {best.unlucky_tries}번 안에 끝나요"
+        ),
+        discord.ui.Separator(spacing=discord.SeparatorSpacing.small),
+        discord.ui.TextDisplay(
+            f"`장기백` **{best.ceiling_tries}번** · {_gold(best.ceiling_cost)}\n"
+            f"-# {best.ceiling_tries}번째엔 장인의 기운이 꽉 차서 확정 성공해요"
+        ),
+    ]
+    return body
+
+
+def _breath_section(report: refine.Report) -> list[discord.ui.Item] | None:
+    """숨결을 쓰는 쪽과 안 쓰는 쪽 중 뭐가 싼지."""
+    # 숨결을 못 쓰는 단계이거나, 안 써도 확정 성공이면 비교할 게 없다.
+    if not report.table.breath or report.no_breath.try_prob >= 1.0:
+        return None
+
+    best = report.recommended
+    lines = [
+        f"`추천` {_breath_text(best.breaths)} → **{_pct(best.try_prob)}** · "
+        f"{_gold(best.expected_cost)}"
+    ]
+
+    # 추천이 노숨이면 비교 대상은 숨결을 가장 많이 쓰는 쪽이다.
+    other = report.full_breath if report.best == 0 else report.no_breath
+    if other is not best:
+        gap = other.expected_cost / best.expected_cost - 1
+        label = "풀숨" if report.best == 0 else "노숨"
+        lines.append(
+            f"`{label}` {_breath_text(other.breaths)} → **{_pct(other.try_prob)}** · "
+            f"{_gold(other.expected_cost)}\n"
+            f"-# 추천보다 {gap * 100:.0f}% 더 들어요"
         )
 
-    # 천장에 닿은 이유가 두 가지다 - 기운이 꽉 찼거나(장기백), 성공률 자체가 100%가
-    # 됐거나. 둘을 뭉쳐서 "장기백"이라고 쓰면 확률이 높은 재련에서 틀린 말이 된다.
-    why = (
-        "장인의 기운이 꽉 차서 확정 성공하는 지점, 흔히 장기백이라고 부르는 그 지점이에요"
-        if outcome.attempts[-1].guaranteed
-        else "여기서 성공률이 100%에 닿아요"
-    )
-    return f"`최악` **{outcome.max_tries}번**{_cost_suffix(outcome.max_cost)}\n-# {why}"
-
-
-def _notes(outcome: refine.RefineOutcome) -> list[str]:
-    notes = []
-
-    # max_tries 가 1이면 실패 자체가 일어날 수 없어서 상승폭을 적을 이유가 없다.
-    if outcome.fail_gain > 0 and outcome.max_tries > 1:
-        gain = f"**{outcome.fail_gain * 100:.2f}%p**"
-        capped = outcome.attempts[1].success_rate <= outcome.attempts[0].success_rate
-        if capped:
-            # 기운이 이미 많이 쌓인 상태로 물어보면 성공률은 상한에 걸려 멈춰 있다.
-            # 그때도 "실패마다 오른다"고 쓰면 위에 적힌 숫자와 안 맞는다.
-            notes.append(f"성공률은 이미 상한까지 올라 더 안 오르고, 장인의 기운만 실패마다 {gain} 쌓여요")
-        else:
-            notes.append(
-                f"실패 1회당 성공률과 장인의 기운이 각각 {gain} 올라요 · "
-                f"성공률은 실패 {refine.FAIL_STACK_CAP}번까지만 오르고 기운은 끝까지 차요"
-            )
-
-    if outcome.cost_per_try is None:
-        notes.append("시도 1회에 드는 골드를 `비용`으로 넣으면 골드까지 계산해요")
-    return notes
-
-
-def build_result_view(outcome: refine.RefineOutcome, base_rate: float, artisan: float) -> discord.ui.LayoutView:
-    view = discord.ui.LayoutView()
-
-    view.add_item(discord.ui.Container(
-        discord.ui.TextDisplay(_header(outcome, base_rate, artisan)),
-    ))
-
-    body: list[discord.ui.Item] = [
-        discord.ui.TextDisplay("### 성공까지"),
+    cap = max(report.table.base_prob, 0.01)
+    lines.append(f"-# 숨결로 올릴 수 있는 확률은 기본 확률만큼({_pct(cap)}p)까지예요")
+    return [
+        discord.ui.TextDisplay("### 숨결"),
         discord.ui.Separator(),
+        discord.ui.TextDisplay("\n".join(lines)),
     ]
-    if outcome.max_tries == 1:
-        body.append(discord.ui.TextDisplay(_certain(outcome)))
-    else:
+
+
+def _materials(report: refine.Report) -> list[discord.ui.Item]:
+    table, best = report.table, report.recommended
+    # 슈퍼 익스프레스 구간처럼 골드가 0으로 깎인 재료는 적어봐야 눈만 어지럽다.
+    amounts = {n: a for n, a in table.amount.items() if a > 0}
+    once = " · ".join(f"{refine.display_name(n)} {a:,}" for n, a in amounts.items())
+
+    notes = [
+        f"1회 {_gold(best.try_cost)} (재료 {report.material_cost:,.0f} + 숨결 "
+        f"{best.try_cost - report.material_cost:,.0f})"
+        if best.breaths
+        else f"1회 {_gold(best.try_cost)}"
+    ]
+    if report.missing:
+        missing = ", ".join(refine.display_name(n) for n in report.missing)
+        notes.append(f"{missing} 시세를 못 구해서 0골드로 뒀어요 - 실제로는 더 들어요")
+    notes.append("거래소 최저가 기준")
+
+    body = [
+        discord.ui.TextDisplay("### 재료"),
+        discord.ui.Separator(),
+        discord.ui.TextDisplay(f"`1회` {once}"),
+    ]
+
+    # 평균 소모 = 1회 재료 x 평균 시도 횟수. 숨결도 매 시도 들어가니 같이 센다.
+    # 한 번에 끝나는 단계면 1회와 같은 줄이 되니 뺀다.
+    if best.expected_tries >= 1.05:
+        average = {n: a * best.expected_tries for n, a in amounts.items()}
+        for name, amount in best.breaths.items():
+            average[name] = average.get(name, 0.0) + amount * best.expected_tries
         body += [
-            discord.ui.TextDisplay(_average(outcome)),
             discord.ui.Separator(spacing=discord.SeparatorSpacing.small),
-            discord.ui.TextDisplay(_worst(outcome)),
+            discord.ui.TextDisplay("`평균` " + " · ".join(
+                f"{refine.display_name(n)} {_qty(v)}" for n, v in average.items()
+            )),
         ]
-    view.add_item(discord.ui.Container(*body))
 
-    if notes := _notes(outcome):
-        view.add_item(discord.ui.Container(
-            discord.ui.TextDisplay("\n".join(f"-# {n}" for n in notes)),
+    body.append(discord.ui.TextDisplay("\n".join(f"-# {n}" for n in notes)))
+    return body
+
+
+async def _rebuild(interaction: discord.Interaction, request: refine.Request) -> None:
+    await interaction.response.defer()
+    try:
+        report = await refine.report(request)
+    except ValueError as exc:
+        await interaction.followup.send(
+            view=common.error_view("계산할 수 없어요", str(exc)), ephemeral=True
+        )
+        return
+    await interaction.edit_original_response(view=RefineView(report))
+
+
+class _TargetSelect(discord.ui.Select):
+    def __init__(self, request: refine.Request) -> None:
+        self.request = request
+        available = refine.levels(request.item_type, request.grade)
+        super().__init__(
+            placeholder="목표 단계",
+            options=[
+                discord.SelectOption(
+                    label=f"+{level - 1} → +{level}",
+                    value=str(level),
+                    default=level == request.target,
+                )
+                for level in available
+            ],
+        )
+
+    async def callback(self, interaction: discord.Interaction) -> None:
+        await _rebuild(interaction, self.request.with_target(int(self.values[0])))
+
+
+class _GradeSelect(discord.ui.Select):
+    def __init__(self, request: refine.Request) -> None:
+        self.request = request
+        super().__init__(
+            placeholder="장비 등급",
+            options=[
+                discord.SelectOption(
+                    label=refine.GRADE_LABELS[grade],
+                    value=grade,
+                    default=grade == request.grade,
+                )
+                for grade in refine.grades(request.item_type)
+            ],
+        )
+
+    async def callback(self, interaction: discord.Interaction) -> None:
+        await _rebuild(interaction, self.request.with_grade(self.values[0]))
+
+
+class _TypeButton(discord.ui.Button):
+    def __init__(self, request: refine.Request, item_type: str) -> None:
+        self.request = request
+        self.item_type = item_type
+        current = request.item_type == item_type
+        super().__init__(
+            label=refine.ITEM_TYPE_LABELS[item_type],
+            style=discord.ButtonStyle.primary if current else discord.ButtonStyle.secondary,
+            disabled=current,
+        )
+
+    async def callback(self, interaction: discord.Interaction) -> None:
+        await _rebuild(interaction, self.request.with_item_type(self.item_type))
+
+
+class RefineView(discord.ui.LayoutView):
+    def __init__(self, report: refine.Report) -> None:
+        super().__init__(timeout=600)
+        request = report.request
+
+        self.add_item(discord.ui.Container(discord.ui.TextDisplay(_header(report))))
+        self.add_item(discord.ui.Container(*_success(report)))
+        if breath := _breath_section(report):
+            self.add_item(discord.ui.Container(*breath))
+        self.add_item(discord.ui.Container(*_materials(report)))
+        self.add_item(discord.ui.Container(
+            discord.ui.ActionRow(_TargetSelect(request)),
+            discord.ui.ActionRow(_GradeSelect(request)),
+            discord.ui.ActionRow(*(
+                _TypeButton(request, item_type) for item_type in refine.ITEM_TYPE_LABELS
+            )),
         ))
-
-    return view
