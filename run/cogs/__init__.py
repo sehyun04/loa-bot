@@ -28,9 +28,11 @@ async def setup_all_cogs(bot: commands.Bot) -> None:
 
     if config.has_lostark_api():
         from run.cogs.character import CharacterCog
+        from run.cogs.gauntlet import GauntletCog
         from run.cogs.hellreward import HellRewardCog
         from run.cogs.specup import SpecUpCog
 
         await bot.add_cog(CharacterCog(bot))
         await bot.add_cog(HellRewardCog(bot))
         await bot.add_cog(SpecUpCog(bot))
+        await bot.add_cog(GauntletCog(bot))

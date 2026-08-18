@@ -1,0 +1,450 @@
+{
+  "materials": {
+    "shard": "운명의 파편",
+    "destruction": "운명의 파괴석 결정",
+    "guardian": "운명의 수호석 결정",
+    "leapstone": "위대한 운명의 돌파석",
+    "fusion": "상급 아비도스 융화 재료"
+  },
+  "shard_pouches": [
+    {
+      "item": "운명의 파편 주머니(소)",
+      "qty": 1000
+    },
+    {
+      "item": "운명의 파편 주머니(중)",
+      "qty": 2000
+    },
+    {
+      "item": "운명의 파편 주머니(대)",
+      "qty": 3000
+    }
+  ],
+  "stages": [
+    {
+      "stage": 1,
+      "rate": 0.15,
+      "growth": {
+        "shard": 145000,
+        "silver": 1450000
+      },
+      "refine": {
+        "shard": 14500,
+        "destruction": 600,
+        "guardian": 1800,
+        "leapstone": 30,
+        "fusion": 22,
+        "gold": 5200,
+        "silver": 80000
+      }
+    },
+    {
+      "stage": 2,
+      "rate": 0.15,
+      "growth": {
+        "shard": 145000,
+        "silver": 1450000
+      },
+      "refine": {
+        "shard": 15000,
+        "destruction": 620,
+        "guardian": 1860,
+        "leapstone": 31,
+        "fusion": 23,
+        "gold": 5400,
+        "silver": 80000
+      }
+    },
+    {
+      "stage": 3,
+      "rate": 0.15,
+      "growth": {
+        "shard": 145000,
+        "silver": 1450000
+      },
+      "refine": {
+        "shard": 15630,
+        "destruction": 640,
+        "guardian": 1925,
+        "leapstone": 32,
+        "fusion": 24,
+        "gold": 5610,
+        "silver": 80000
+      }
+    },
+    {
+      "stage": 4,
+      "rate": 0.15,
+      "growth": {
+        "shard": 145000,
+        "silver": 1450000
+      },
+      "refine": {
+        "shard": 16280,
+        "destruction": 660,
+        "guardian": 1990,
+        "leapstone": 33,
+        "fusion": 25,
+        "gold": 5830,
+        "silver": 80000
+      }
+    },
+    {
+      "stage": 5,
+      "rate": 0.15,
+      "growth": {
+        "shard": 145000,
+        "silver": 1450000
+      },
+      "refine": {
+        "shard": 16960,
+        "destruction": 680,
+        "guardian": 2055,
+        "leapstone": 34,
+        "fusion": 26,
+        "gold": 6060,
+        "silver": 80000
+      }
+    },
+    {
+      "stage": 6,
+      "rate": 0.1,
+      "growth": {
+        "shard": 148000,
+        "silver": 1480000
+      },
+      "refine": {
+        "shard": 17670,
+        "destruction": 700,
+        "guardian": 2125,
+        "leapstone": 36,
+        "fusion": 27,
+        "gold": 6300,
+        "silver": 80000
+      }
+    },
+    {
+      "stage": 7,
+      "rate": 0.1,
+      "growth": {
+        "shard": 166000,
+        "silver": 1660000
+      },
+      "refine": {
+        "shard": 18410,
+        "destruction": 720,
+        "guardian": 2195,
+        "leapstone": 38,
+        "fusion": 28,
+        "gold": 6550,
+        "silver": 88000
+      }
+    },
+    {
+      "stage": 8,
+      "rate": 0.1,
+      "growth": {
+        "shard": 166000,
+        "silver": 1660000
+      },
+      "refine": {
+        "shard": 19180,
+        "destruction": 745,
+        "guardian": 2270,
+        "leapstone": 40,
+        "fusion": 29,
+        "gold": 6810,
+        "silver": 88000
+      }
+    },
+    {
+      "stage": 9,
+      "rate": 0.1,
+      "growth": {
+        "shard": 169000,
+        "silver": 1690000
+      },
+      "refine": {
+        "shard": 19980,
+        "destruction": 770,
+        "guardian": 2345,
+        "leapstone": 42,
+        "fusion": 30,
+        "gold": 7080,
+        "silver": 88000
+      }
+    },
+    {
+      "stage": 10,
+      "rate": 0.1,
+      "growth": {
+        "shard": 204000,
+        "silver": 2040000
+      },
+      "refine": {
+        "shard": 20810,
+        "destruction": 795,
+        "guardian": 2425,
+        "leapstone": 44,
+        "fusion": 31,
+        "gold": 7360,
+        "silver": 88000
+      }
+    },
+    {
+      "stage": 11,
+      "rate": 0.05,
+      "growth": {
+        "shard": 207000,
+        "silver": 2070000
+      },
+      "refine": {
+        "shard": 21680,
+        "destruction": 820,
+        "guardian": 2505,
+        "leapstone": 46,
+        "fusion": 32,
+        "gold": 7650,
+        "silver": 88000
+      }
+    },
+    {
+      "stage": 12,
+      "rate": 0.05,
+      "growth": {
+        "shard": 227000,
+        "silver": 2270000
+      },
+      "refine": {
+        "shard": 22590,
+        "destruction": 845,
+        "guardian": 2590,
+        "leapstone": 48,
+        "fusion": 33,
+        "gold": 7950,
+        "silver": 88000
+      }
+    },
+    {
+      "stage": 13,
+      "rate": 0.05,
+      "growth": {
+        "shard": 253000,
+        "silver": 2530000
+      },
+      "refine": {
+        "shard": 23530,
+        "destruction": 870,
+        "guardian": 2680,
+        "leapstone": 50,
+        "fusion": 34,
+        "gold": 8260,
+        "silver": 88000
+      }
+    },
+    {
+      "stage": 14,
+      "rate": 0.05,
+      "growth": {
+        "shard": 275000,
+        "silver": 2750000
+      },
+      "refine": {
+        "shard": 24510,
+        "destruction": 900,
+        "guardian": 2770,
+        "leapstone": 53,
+        "fusion": 36,
+        "gold": 8590,
+        "silver": 88000
+      }
+    },
+    {
+      "stage": 15,
+      "rate": 0.05,
+      "growth": {
+        "shard": 306000,
+        "silver": 3060000
+      },
+      "refine": {
+        "shard": 25530,
+        "destruction": 930,
+        "guardian": 2865,
+        "leapstone": 56,
+        "fusion": 38,
+        "gold": 8930,
+        "silver": 88000
+      }
+    },
+    {
+      "stage": 16,
+      "rate": 0.03,
+      "growth": {
+        "shard": 328000,
+        "silver": 3280000
+      },
+      "refine": {
+        "shard": 26600,
+        "destruction": 960,
+        "guardian": 2965,
+        "leapstone": 59,
+        "fusion": 40,
+        "gold": 9280,
+        "silver": 88000
+      }
+    },
+    {
+      "stage": 17,
+      "rate": 0.03,
+      "growth": {
+        "shard": 360000,
+        "silver": 3600000
+      },
+      "refine": {
+        "shard": 27710,
+        "destruction": 990,
+        "guardian": 3065,
+        "leapstone": 62,
+        "fusion": 42,
+        "gold": 9650,
+        "silver": 104000
+      }
+    },
+    {
+      "stage": 18,
+      "rate": 0.03,
+      "growth": {
+        "shard": 388000,
+        "silver": 3880000
+      },
+      "refine": {
+        "shard": 28870,
+        "destruction": 1020,
+        "guardian": 3170,
+        "leapstone": 65,
+        "fusion": 44,
+        "gold": 10030,
+        "silver": 104000
+      }
+    },
+    {
+      "stage": 19,
+      "rate": 0.03,
+      "growth": {
+        "shard": 420000,
+        "silver": 4200000
+      },
+      "refine": {
+        "shard": 30080,
+        "destruction": 1055,
+        "guardian": 3280,
+        "leapstone": 68,
+        "fusion": 46,
+        "gold": 10430,
+        "silver": 104000
+      }
+    },
+    {
+      "stage": 20,
+      "rate": 0.03,
+      "growth": {
+        "shard": 447000,
+        "silver": 4470000
+      },
+      "refine": {
+        "shard": 31340,
+        "destruction": 1090,
+        "guardian": 3390,
+        "leapstone": 72,
+        "fusion": 48,
+        "gold": 10840,
+        "silver": 144000
+      }
+    },
+    {
+      "stage": 21,
+      "rate": 0.015,
+      "growth": {
+        "shard": 480000,
+        "silver": 4800000
+      },
+      "refine": {
+        "shard": 32650,
+        "destruction": 1125,
+        "guardian": 3505,
+        "leapstone": 76,
+        "fusion": 50,
+        "gold": 11270,
+        "silver": 144000
+      }
+    },
+    {
+      "stage": 22,
+      "rate": 0.015,
+      "growth": {
+        "shard": 513000,
+        "silver": 5130000
+      },
+      "refine": {
+        "shard": 34020,
+        "destruction": 1160,
+        "guardian": 3625,
+        "leapstone": 80,
+        "fusion": 53,
+        "gold": 11720,
+        "silver": 192000
+      }
+    },
+    {
+      "stage": 23,
+      "rate": 0.015,
+      "growth": {
+        "shard": 541000,
+        "silver": 5410000
+      },
+      "refine": {
+        "shard": 35440,
+        "destruction": 1200,
+        "guardian": 3750,
+        "leapstone": 84,
+        "fusion": 56,
+        "gold": 12180,
+        "silver": 192000
+      }
+    },
+    {
+      "stage": 24,
+      "rate": 0.015,
+      "growth": {
+        "shard": 574000,
+        "silver": 5740000
+      },
+      "refine": {
+        "shard": 36920,
+        "destruction": 1240,
+        "guardian": 3880,
+        "leapstone": 89,
+        "fusion": 59,
+        "gold": 12660,
+        "silver": 240000
+      }
+    },
+    {
+      "stage": 25,
+      "rate": 0.015,
+      "growth": {
+        "shard": 607000,
+        "silver": 6070000
+      },
+      "refine": {
+        "shard": 38470,
+        "destruction": 1280,
+        "guardian": 4015,
+        "leapstone": 94,
+        "fusion": 62,
+        "gold": 13160,
+        "silver": 240000
+      }
+    }
+  ]
+}
