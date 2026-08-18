@@ -81,13 +81,13 @@ def _armor_items(levels: dict[str, int]) -> list[SpecUpItem]:
     for level, slots in sorted(lagging.items()):
         gap = top - level
         label = f"{slots[0]} +{level}" if len(slots) == 1 else f"방어구 {len(slots)}부위 +{level}"
-        where = " · ".join(slots) if len(slots) > 1 else None
+        where = ", ".join(slots) if len(slots) > 1 else None
         items.append(SpecUpItem(
             category="재련",
             label=label,
             target=f"+{level + 1}",
             gap=gap,
-            reason=" · ".join(p for p in (where, f"방어구 최고는 +{top}", f"{gap}단계 뒤처짐") if p),
+            reason=" · ".join(p for p in (where, f"방어구 최고 +{top}") if p),
         ))
     if not items:
         items.append(SpecUpItem(
@@ -117,7 +117,7 @@ def _weapon_item(levels: dict[str, int]) -> SpecUpItem | None:
         label=f"무기 +{weapon}",
         target=f"+{weapon + 1}",
         gap=gap + 1,  # 같은 폭이면 방어구보다 먼저 올리는 게 낫다
-        reason=f"방어구가 +{top} 인데 무기가 뒤처져 있어요 · 무기는 공격력에 직접 붙어요",
+        reason=f"방어구 최고 +{top} · 무기는 공격력에 직접 붙어요",
     )
 
 
@@ -132,7 +132,7 @@ def _gauntlet_item(levels: dict[str, int]) -> SpecUpItem | None:
         # 완갑은 다른 부위와 단계 스케일이 아예 달라서 뒤처진 폭을 그대로 비교할 수
         # 없다. 낮은 단계일수록 싸게 오르는 건 분명하니 낮을 때만 위로 올린다.
         gap=max(0, 5 - level),
-        reason="완갑은 재료가 따로예요 · 낮은 단계일수록 싸게 올라가요",
+        reason="재료가 따로고 낮은 단계일수록 싸게 올라요",
     )
 
 
@@ -150,7 +150,7 @@ def _gem_items(gems: list[dict]) -> list[SpecUpItem]:
         label=f"{lowest}레벨 보석 {count}개",
         target=f"{lowest + 1}레벨",
         gap=top - lowest,
-        reason=f"가장 높은 보석은 {top}레벨 · 낮은 것부터 맞추면 균형이 잡혀요",
+        reason=f"가장 높은 보석 {top}레벨 · 낮은 것부터 맞춰요",
         gold_note="보석은 경매장이라 시세를 아직 못 붙여요",
     )]
 
@@ -170,14 +170,14 @@ async def _engraving_items(effects: list[dict], *, with_price: bool) -> list[Spe
                 gold = book.unit_price * ENGRAVING_BOOKS_PER_LEVEL
                 # 각인서 이름에 각인 이름이 그대로 들어가 있어서(유물 원한 각인서) 등급만
                 # 남긴다. 각인 이름은 바로 위 label 에 이미 있다.
-                note = f"유물 각인서 {ENGRAVING_BOOKS_PER_LEVEL}장 · 장당 {book.unit_price:,.0f}골드"
+                note = f"각인서 {ENGRAVING_BOOKS_PER_LEVEL}장 · 장당 {book.unit_price:,.0f}골드"
 
         items.append(SpecUpItem(
             category="각인",
             label=f"{name} Lv.{level}",
             target=f"Lv.{level + 1}",
             gap=ENGRAVING_MAX_LEVEL - level,
-            reason=f"최고 Lv.{ENGRAVING_MAX_LEVEL} 까지 {ENGRAVING_MAX_LEVEL - level}단계 남았어요",
+            reason=f"Lv.{ENGRAVING_MAX_LEVEL} 까지 {ENGRAVING_MAX_LEVEL - level}단계",
             gold=gold,
             gold_note=note,
         ))
