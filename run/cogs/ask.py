@@ -82,11 +82,51 @@ async def _refine(
     return {"view": refine_view.RefineView(report)}
 
 
-async def _hell_reward(tier: str, floor: int) -> dict:
-    categories = hellreward.categories_for(tier, floor)
-    if len(categories) < 2:
+def _resolve_category(name: str, available: list[str]) -> str | None:
+    """상자 이름을 이 층수의 실제 카테고리로 맞춘다.
+
+    카탈로그는 '융화 재료'인데 사람은 '융화재료'라고 쓴다. 띄어쓰기만 다른 걸로
+    되묻는 건 낭비라 여기서 흡수한다.
+    """
+    text = name.strip()
+    if text in available:
+        return text
+    squished = text.replace(" ", "")
+    for c in available:
+        if c.replace(" ", "") == squished:
+            return c
+    hits = [c for c in available if squished in c.replace(" ", "")]
+    return hits[0] if len(hits) == 1 else None
+
+
+async def _hell_reward(tier: str, floor: int, categories: list[str] | None = None) -> dict:
+    available = hellreward.categories_for(tier, floor)
+    if len(available) < 2:
         return {"view": common.error_view("비교할 상자가 부족해요", "이 층수에는 상자 종류가 2개 미만이에요.")}
-    return {"view": hellreward_view.HellRewardPickView(tier, floor, categories)}
+
+    # 사용자가 뜬 상자를 말했으면 고르는 단계를 건너뛰고 바로 비교해준다
+    if categories:
+        picked, unknown = [], []
+        for raw in categories:
+            resolved = _resolve_category(raw, available)
+            if resolved is None:
+                unknown.append(raw)
+            elif resolved not in picked:
+                picked.append(resolved)
+
+        if unknown:
+            return {
+                "view": common.error_view(
+                    "모르는 상자예요",
+                    f"{', '.join(unknown)} 은(는) {floor}층에서 안 나와요.",
+                )
+            }
+        if len(picked) >= 2:
+            results = [await hellreward.evaluate(tier, floor, c) for c in picked]
+            return {"view": hellreward_view.build_result_view(tier, floor, results)}
+        # 하나만 지목했으면 비교가 성립하지 않으므로 선택 화면으로 넘긴다
+
+    return {"view": hellreward_view.HellRewardPickView(tier, floor, available)}
 
 
 async def _spec_up(name: str) -> dict:
