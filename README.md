@@ -141,7 +141,10 @@ curl -X POST http://127.0.0.1:8080/web/ask   -H "Authorization: Bearer localdevk
 
 1. Zero Trust > Networks > Tunnels 에서 터널을 만들고 토큰을 `.env` 의 `TUNNEL_TOKEN` 에 넣습니다.
 2. Public hostname 을 `http://bot:8080` 으로 걸어둡니다 (compose 네트워크 안의 이름입니다).
-3. `docker compose --profile tunnel up -d`
+3. 서버 `.env` 에 `COMPOSE_PROFILES=tunnel` 을 넣습니다. 배포 워크플로는
+   `docker compose up -d --build` 만 실행하므로 여기서 켜두지 않으면
+   `--profile` 이 안 붙어 터널이 영영 뜨지 않습니다.
+4. `docker compose up -d --build`
 
 사이트 쪽에는 그 hostname 과 키를 시크릿으로 넣습니다.
 
