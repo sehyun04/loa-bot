@@ -2,3 +2,6 @@ discord.py==2.7.1
 aiohttp>=3.14.0
 python-dotenv>=1.2.0
 anthropic>=0.116.0
+# 포트폴리오 위젯용 웹 API. 봇 프로세스 안에서 같이 뜬다.
+fastapi>=0.120.0
+uvicorn>=0.40.0

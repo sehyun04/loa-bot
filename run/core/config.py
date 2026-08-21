@@ -39,6 +39,14 @@ ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 # 못 넘겨서 캐시가 안 걸린다.
 ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-sonnet-5")
 
+# 포트폴리오 사이트의 니나브 위젯이 쓰는 HTTP API.
+# 키가 비어 있으면 서버를 아예 띄우지 않는다 - 봇만 돌리는 개발 환경에서
+# 포트가 점유되거나 인증 없는 엔드포인트가 열리는 일이 없어야 한다.
+WEB_API_KEY = os.getenv("WEB_API_KEY", "").strip() or None
+# 컨테이너 밖으로 나가는 건 터널뿐이라 0.0.0.0 이어야 한다.
+WEB_API_HOST = os.getenv("WEB_API_HOST", "0.0.0.0")
+WEB_API_PORT = int(os.getenv("WEB_API_PORT", "8080"))
+
 BASE_DIR = Path(__file__).resolve().parents[2]
 RESOURCE_DIR = BASE_DIR / "resources"
 DATA_DIR = Path(os.getenv("BOT_DATA_DIR") or (BASE_DIR / "data"))
