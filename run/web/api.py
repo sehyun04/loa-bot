@@ -86,9 +86,16 @@ def create_app():
 
 
 async def serve() -> asyncio.Task | None:
-    """봇의 이벤트 루프에 웹 서버를 얹는다. 키가 없으면 아무것도 하지 않는다."""
+    """봇의 이벤트 루프에 웹 서버를 얹는다. 켜라고 하지 않으면 뜨지 않는다.
+
+    운영은 poller.py 로 돌아간다 - 봇이 사이트로 나가서 붙기 때문에 듣는
+    소켓이 필요 없다. 이쪽은 도메인이 생겨 터널로 바꿀 때와 로컬에서
+    위젯을 고칠 때 쓴다.
+    """
+    if not config.WEB_API_SERVE:
+        return None
     if not config.WEB_API_KEY:
-        log.info("WEB_API_KEY 미설정 - 웹 API를 띄우지 않습니다.")
+        log.warning("WEB_API_SERVE=1 인데 WEB_API_KEY 가 없습니다 - 띄우지 않습니다.")
         return None
 
     import uvicorn

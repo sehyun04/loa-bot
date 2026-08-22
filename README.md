@@ -96,24 +96,43 @@ run/
 **게임 컨텐츠는 코드가 아니라 데이터입니다.** 레이드가 추가되면 `resources/homework.json` 만
 고치면 됩니다. 코드는 건드릴 필요가 없습니다.
 
-## 웹 API (포트폴리오 위젯)
+## 니나브 웹 위젯 (포트폴리오)
 
-포트폴리오 사이트 오른쪽 아래 니나브 채팅창이 이 API를 부릅니다. 디스코드 멘션 대화와
-**같은 라우터, 같은 도구 핸들러**를 씁니다 — 두 벌로 갈라지면 같은 질문에 다른 답이
-나가고, 그때 어느 쪽이 맞는지 판단할 근거가 없어집니다.
+포트폴리오 사이트 오른쪽 아래 채팅창이 이 봇을 부릅니다. 디스코드 멘션 대화와
+**같은 라우터, 같은 도구 핸들러**를 씁니다 — 두 벌로 갈라지면 같은 질문에 다른
+답이 나가고, 그때 어느 쪽이 맞는지 판단할 근거가 없어집니다.
 
-봇 프로세스 안에서 같이 뜹니다. 별도 프로세스로 빼면 로스트아크 API의 분당 한도가
-키 단위라 두 프로세스가 서로 모르는 채 같은 할당량을 깎습니다.
+### 방향을 뒤집었습니다
 
-`WEB_API_KEY` 가 비어 있으면 **아예 뜨지 않습니다.** 봇만 돌리는 개발 환경에서
-인증 없는 엔드포인트가 열리는 일이 없어야 합니다.
+```
+[브라우저] --> [Cloudflare Worker] -- 큐 --
+                                        ^
+                                        | HTTPS 롱폴링 (아웃바운드)
+                                   [오라클 봇]
+```
 
-| | |
+**봇이 사이트로 붙습니다.** 사이트가 봇을 부르지 않습니다.
+
+이 인스턴스는 인바운드 포트가 하나도 열려 있지 않습니다. `deploy/setup-server.sh`
+가 "봇은 아웃바운드만 쓴다"는 전제로 방화벽을 안 여는데, 열려면 오라클 콘솔에서
+보안목록을 고쳐야 하고 그러고도 Cloudflare 와 인스턴스 사이가 평문이라 키가
+경로에 노출됩니다. 방향을 뒤집으면 그 문제가 통째로 사라집니다 — 나가는
+연결이라 방화벽을 건드릴 이유가 없고 HTTPS 라 구간이 전부 암호화됩니다.
+
+듣는 소켓이 아예 없습니다.
+
+### 설정
+
+| 환경변수 | |
 |---|---|
-| `POST /web/ask` | `{session, message}` → `{reply, cards}` |
-| `GET /web/health` | 살아있는지와 허용 도구 목록 |
+| `WEB_API_KEY` | 사이트와 나눠 갖는 비밀값. Worker 쪽 `NINAV_KEY` 와 같아야 합니다 |
+| `NINAV_SITE_URL` | 붙을 사이트 주소. 없으면 폴러가 뜨지 않습니다 |
 
-둘 다 `Authorization: Bearer $WEB_API_KEY` 가 필요합니다.
+사이트 쪽:
+
+```bash
+wrangler secret put NINAV_KEY   # WEB_API_KEY 와 같은 값
+```
 
 ### 웹에서 뺀 도구
 
@@ -122,39 +141,34 @@ run/
 | 떠상 카드 알림 등록·해제·목록 | "누가, 어느 채널에서" 가 필요한데 그 값은 디스코드 메시지에만 있습니다. 웹 방문자에게 임의의 유저 ID를 붙이면 남의 구독을 건드릴 수 있습니다. |
 | 지옥 보상 비교 | 상자를 고르는 버튼 화면으로 시작합니다. 조작이 없으면 첫 화면에서 더 나아가지 못합니다. |
 
-라우터에게 넘기는 스키마에서도 뺍니다. 남겨두면 모델이 그걸 고르고, 토큰과 지연을
-쓰고 나서 "그건 디스코드에서만 돼요"를 돌려주게 됩니다.
+라우터에게 넘기는 스키마에서도 뺍니다. 남겨두면 모델이 그걸 고르고, 토큰과
+지연을 쓰고 나서 "그건 디스코드에서만 돼요"를 돌려주게 됩니다.
 
-### 로컬에서 띄우기
+### 비용
 
-디스코드에 붙지 않고 HTTP 부분만 돌립니다.
+앞단의 Worker 가 막습니다 — IP당 분당 6회, 하루 총량 상한. 뒤에 있는 게
+방문자 수와 무관하게 과금되는 Anthropic API 라서 두 겹으로 셉니다.
+
+### 로컬에서
+
+디스코드에 붙지 않고 사이트에 붙는 부분만 돌립니다. 사이트 쪽은
+`site/` 에서 `npx wrangler dev --port 8788` 로 띄웁니다.
 
 ```bash
-WEB_API_KEY=localdevkey python scripts/run_web_api.py
-curl -X POST http://127.0.0.1:8080/web/ask   -H "Authorization: Bearer localdevkey" -H "content-type: application/json"   -d '{"session":"local","message":"운명의 파괴석 시세"}'
+WEB_API_KEY=localdevkey NINAV_SITE_URL=http://127.0.0.1:8788   python scripts/run_ninav_poller.py
 ```
 
-### 사이트와 연결
+### 도메인이 생기면
 
-인바운드 포트를 열지 않습니다. `deploy/setup-server.sh` 가 "봇은 아웃바운드만 쓴다"는
-전제로 방화벽을 안 여는데, Cloudflare Tunnel 은 그 전제를 깨지 않습니다.
+Cloudflare Tunnel 로 바꿀 수 있습니다. 답을 만드는 `run/web/service.py` 는
+전송과 분리돼 있어서, 폴러를 끄고 이미 있는 HTTP 서버를 켜면 같은 답이 나갑니다.
 
 1. Zero Trust > Networks > Tunnels 에서 터널을 만들고 토큰을 `.env` 의 `TUNNEL_TOKEN` 에 넣습니다.
-2. Public hostname 을 `http://bot:8080` 으로 걸어둡니다 (compose 네트워크 안의 이름입니다).
-3. 서버 `.env` 에 `COMPOSE_PROFILES=tunnel` 을 넣습니다. 배포 워크플로는
-   `docker compose up -d --build` 만 실행하므로 여기서 켜두지 않으면
-   `--profile` 이 안 붙어 터널이 영영 뜨지 않습니다.
-4. `docker compose up -d --build`
-
-사이트 쪽에는 그 hostname 과 키를 시크릿으로 넣습니다.
-
-```bash
-wrangler secret put NINAV_ORIGIN   # https://<터널 호스트명>
-wrangler secret put NINAV_KEY      # WEB_API_KEY 와 같은 값
-```
-
-비용과 남용은 사이트 앞단의 Worker 가 막습니다 — IP당 분당 6회, 하루 총량 상한.
-여기 있는 검사(세션당 분당 20회)는 그게 뚫렸을 때를 위한 두 번째 방어선입니다.
+2. Public hostname 을 `http://bot:8080` 으로 겁니다 (compose 네트워크 안의 이름입니다).
+3. `.env` 에서 `NINAV_SITE_URL` 을 지우고 `WEB_API_SERVE=1`, `COMPOSE_PROFILES=tunnel` 을 넣습니다.
+   배포 워크플로는 `docker compose up -d --build` 만 실행하므로 `COMPOSE_PROFILES` 를
+   여기서 켜두지 않으면 `--profile` 이 안 붙어 터널이 영영 뜨지 않습니다.
+4. 사이트 쪽 Worker 를 프록시 방식으로 되돌리고 `NINAV_ORIGIN` 시크릿을 넣습니다.
 
 ## 배포 (Oracle Cloud)
 

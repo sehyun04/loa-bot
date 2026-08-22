@@ -17,6 +17,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+# 이 스크립트의 목적이 서버를 띄우는 것이라 여기서 켠다.
+# 운영은 폴링(run/web/poller.py)으로 돌아가므로 기본값이 꺼짐이다.
+os.environ.setdefault("WEB_API_SERVE", "1")
+
 from run.core import config  # noqa: E402
 
 
