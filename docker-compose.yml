@@ -19,25 +19,3 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-
-  # 포트폴리오 사이트가 봇의 웹 API를 부르는 통로.
-  #
-  # 아웃바운드 연결이라 오라클 방화벽에 인바운드를 열지 않아도 된다 -
-  # deploy/setup-server.sh 가 "봇은 아웃바운드만 쓴다"는 전제로 포트를 안 여는데,
-  # 그 전제를 깨지 않는 유일한 방법이다.
-  #
-  # bot 컨테이너의 8080 은 이 compose 네트워크 안에서만 보인다. 호스트에도
-  # 노출하지 않으므로 서버에 들어온 사람도 포트로는 못 붙는다.
-  #
-  # TUNNEL_TOKEN 이 없으면 뜨지 않는다:
-  #   docker compose --profile tunnel up -d
-  cloudflared:
-    image: cloudflare/cloudflared:latest
-    container_name: loa-bot-tunnel
-    restart: unless-stopped
-    command: tunnel --no-autoupdate run
-    environment:
-      TUNNEL_TOKEN: ${TUNNEL_TOKEN}
-    depends_on:
-      - bot
-    profiles: ["tunnel"]

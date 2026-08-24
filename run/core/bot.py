@@ -1,4 +1,3 @@
-import asyncio
 import logging
 
 import discord
@@ -24,7 +23,6 @@ class LoaBot(commands.Bot):
             else None,
         )
         self._ready_once = False
-        self._web_tasks: list[asyncio.Task] = []
 
     async def setup_hook(self) -> None:
         applied = await db.amigrate()
@@ -44,20 +42,10 @@ class LoaBot(commands.Bot):
         await setup_all_cogs(self)
         self.tree.on_error = self._on_app_command_error
 
-        # 웹 연결은 cog 로드 뒤에 띄운다 - 도구 핸들러가 ask.py에 있어서
-        # 그게 import 되기 전에 질문이 들어오면 첫 건만 실패한다.
-        from run.web import api as web_api
-        from run.web import poller as web_poller
-
-        self._web_tasks = [t for t in (await web_poller.serve(), await web_api.serve()) if t]
-
     async def close(self) -> None:
         from run.services import llm_router
         from run.services.lostark.client import close_client
         from run.services.merchant import kloa
-
-        for task in self._web_tasks:
-            task.cancel()
 
         await close_client()
         await kloa.close()

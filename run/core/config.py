@@ -39,24 +39,6 @@ ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 # 못 넘겨서 캐시가 안 걸린다.
 ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-sonnet-5")
 
-# 포트폴리오 사이트의 니나브 위젯과 나눠 갖는 비밀값.
-# 비어 있으면 웹 연결을 아예 시도하지 않는다 - 봇만 돌리는 개발 환경에서
-# 인증 없는 엔드포인트가 열리거나 엉뚱한 곳에 붙는 일이 없어야 한다.
-WEB_API_KEY = os.getenv("WEB_API_KEY", "").strip() or None
-
-# 사이트 주소. 이 값이 있으면 봇이 사이트로 붙어 질문을 받아온다.
-#
-# 인바운드를 열지 않으려고 방향을 뒤집었다. 오라클 인스턴스는 포트가 하나도
-# 열려 있지 않고, 열려면 콘솔에서 보안목록을 고쳐야 하는 데다 그러고도
-# Cloudflare 와의 구간이 평문이라 키가 경로에 노출된다.
-NINAV_SITE_URL = os.getenv("NINAV_SITE_URL", "").strip() or None
-
-# 반대로 사이트가 우리를 부르게 하는 방식(터널). 도메인이 생기면 이쪽으로 바꾼다.
-# 기본이 꺼짐인 이유: 운영에서는 폴링을 쓰므로 듣는 소켓이 아예 없어야 한다.
-WEB_API_SERVE = os.getenv("WEB_API_SERVE", "").strip() == "1"
-WEB_API_HOST = os.getenv("WEB_API_HOST", "0.0.0.0")
-WEB_API_PORT = int(os.getenv("WEB_API_PORT", "8080"))
-
 BASE_DIR = Path(__file__).resolve().parents[2]
 RESOURCE_DIR = BASE_DIR / "resources"
 DATA_DIR = Path(os.getenv("BOT_DATA_DIR") or (BASE_DIR / "data"))
