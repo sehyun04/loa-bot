@@ -11,23 +11,28 @@ from run.views import character_view, common
 log = logging.getLogger("loabot.character")
 
 
-def _error_embed(exc: Exception) -> discord.Embed:
+def _error_view(exc: Exception) -> discord.ui.LayoutView:
+    """`/스펙` 은 성공 화면이 아직 임베드지만 오류는 여기로 통일한다.
+
+    `/원정대` 가 V2 라 오류만 임베드로 두면 한 파일에 오류 경로가 두 벌 생긴다.
+    오류 화면은 어차피 알림 상자 한 장이라 둘을 맞춰도 티가 나지 않는다.
+    """
     if isinstance(exc, errors.ApiKeyMissing):
-        return common.api_key_missing_embed()
+        return common.api_key_missing_view()
     if isinstance(exc, errors.ApiKeyInvalid):
-        return common.error_embed(
+        return common.error_view(
             "API 키가 거부됐어요", "키가 만료됐거나 형식이 잘못됐어요. 관리자에게 알려주세요."
         )
     if isinstance(exc, errors.CharacterNotFound):
-        return common.notice_embed(
+        return common.notice_view(
             "캐릭터를 찾을 수 없어요", "닉네임 철자를 확인해주세요. 대소문자와 띄어쓰기까지 정확해야 해요."
         )
     if isinstance(exc, errors.Maintenance):
-        return common.notice_embed("점검 중이에요", "로스트아크 API가 점검 중이라 잠시 후에 다시 시도해주세요.")
+        return common.notice_view("점검 중이에요", "로스트아크 API가 점검 중이라 잠시 후에 다시 시도해주세요.")
     if isinstance(exc, errors.RateLimited):
-        return common.notice_embed("잠깐 붐비고 있어요", "요청이 몰려서 잠시 후 다시 시도해주세요.")
+        return common.notice_view("잠깐 붐비고 있어요", "요청이 몰려서 잠시 후 다시 시도해주세요.")
     if isinstance(exc, errors.LoaApiError):
-        return common.error_embed("조회에 실패했어요", str(exc))
+        return common.error_view("조회에 실패했어요", str(exc))
     raise exc
 
 
@@ -42,7 +47,7 @@ class CharacterCog(commands.Cog):
         try:
             char = await armory.fetch_character(닉네임.strip())
         except Exception as exc:
-            await interaction.followup.send(embed=_error_embed(exc))
+            await interaction.followup.send(view=_error_view(exc))
             return
         await interaction.followup.send(embed=character_view.character_embed(char))
 
@@ -54,6 +59,6 @@ class CharacterCog(commands.Cog):
         try:
             rows = await armory.fetch_siblings(name)
         except Exception as exc:
-            await interaction.followup.send(embed=_error_embed(exc))
+            await interaction.followup.send(view=_error_view(exc))
             return
-        await interaction.followup.send(embed=character_view.siblings_embed(name, rows))
+        await interaction.followup.send(view=character_view.siblings_view(name, rows))

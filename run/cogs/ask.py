@@ -58,7 +58,7 @@ async def _spec(name: str) -> dict:
 
 async def _roster(name: str) -> dict:
     rows = await armory.fetch_siblings(name.strip())
-    return {"embed": character_view.siblings_embed(name.strip(), rows)}
+    return {"view": character_view.siblings_view(name.strip(), rows)}
 
 
 async def _refine(
