@@ -10,6 +10,12 @@ on:
       - '.env.example'
   workflow_dispatch:
 
+# push 트리거가 조용히 안 걸린 적이 있다. 2026-08-25 에 main 을 재작성해 force-push 한
+# 뒤로 87621b2 / 358d284 / 11f96ab 세 번 다 run 자체가 생기지 않았다(Actions 는 켜져
+# 있고 워크플로도 active, workflow_dispatch 는 정상 동작). 원인은 확인하지 못했다.
+# 푸시한 뒤에는 `gh run list --workflow=deploy.yml` 로 run 이 실제로 생겼는지 보고,
+# 없으면 `gh workflow run deploy.yml --ref main` 으로 직접 돌린다.
+
 # 배포가 겹치면 서버에서 git pull 과 빌드가 뒤엉킨다. 뒤에 온 것만 남긴다.
 concurrency:
   group: deploy
