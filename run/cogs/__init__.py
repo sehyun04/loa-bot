@@ -5,9 +5,7 @@ async def setup_all_cogs(bot: commands.Bot) -> None:
     from run.cogs.homework import HomeworkCog
     from run.cogs.market import MarketCog
     from run.cogs.merchant import MerchantCog
-    from run.cogs.status import StatusCog
 
-    await bot.add_cog(StatusCog(bot))
     await bot.add_cog(MerchantCog(bot))
     await bot.add_cog(HomeworkCog(bot))
     await bot.add_cog(MarketCog(bot))

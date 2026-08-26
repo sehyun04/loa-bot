@@ -166,7 +166,6 @@ def build_merchant_view(
     now: datetime,
     server: str | None = None,
     sightings: tuple[Sighting, ...] = (),
-    reports_block: str | None = None,
 ) -> discord.ui.LayoutView:
     active = sch.active_window(now)
     upcoming = sch.next_window(now)
@@ -222,9 +221,6 @@ def build_merchant_view(
             c.add_item(discord.ui.TextDisplay(_region_text(r, seen, with_icon)))
             if idx < len(page_regions) - 1:
                 c.add_item(discord.ui.Separator(spacing=_SMALL))
-        if reports_block:
-            c.add_item(discord.ui.Separator(spacing=_LARGE))
-            c.add_item(discord.ui.TextDisplay(f"### {server} 디스코드 제보\n{reports_block}"))
         c.add_item(discord.ui.Separator(spacing=_SMALL))
         c.add_item(discord.ui.TextDisplay(footer))
         return c
@@ -236,18 +232,6 @@ def build_merchant_view(
         pages = [build_page(p, with_icon=False) for p in region_pages]
 
     return MerchantPager(pages)
-
-
-def reports_text(reports: list) -> str:
-    if not reports:
-        return "아직 제보가 없어요. `/떠상제보` 로 알려주세요."
-    lines = []
-    for r in reports[:10]:
-        head = f"**{r.region}**" + (f" · {r.npc}" if r.npc else "")
-        if r.items:
-            head += f"\n  {', '.join(r.items[:5])}"
-        lines.append(head)
-    return "\n".join(lines)
 
 
 def upcoming_view(
@@ -262,14 +246,14 @@ def upcoming_view(
         f"({window.start.strftime('%H:%M')} ~ {window.end.strftime('%H:%M')})"
     )
     region_lines = f"\n{_ROW_GAP}\n".join(f"{_pin()}{r.name} · {r.npc}" for r in regions)
-    footer = f"-# {server} · 발견하면 /떠상제보 로 공유해주세요" if server else "-# 발견하면 /떠상제보 로 공유해주세요"
 
     c = discord.ui.Container(accent_colour=common.BRAND)
     c.add_item(discord.ui.TextDisplay(heading))
     c.add_item(discord.ui.Separator(spacing=_LARGE))
     c.add_item(discord.ui.TextDisplay(f"### 등장 가능 지역\n{region_lines}"))
-    c.add_item(discord.ui.Separator(spacing=_SMALL))
-    c.add_item(discord.ui.TextDisplay(footer))
+    if server:
+        c.add_item(discord.ui.Separator(spacing=_SMALL))
+        c.add_item(discord.ui.TextDisplay(f"-# 대상 서버 · {server}"))
 
     view = discord.ui.LayoutView()
     view.add_item(c)

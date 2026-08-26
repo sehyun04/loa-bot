@@ -26,21 +26,6 @@ class MerchantCog(commands.Cog):
         self.notify_loop.cancel()
         self.card_alert_loop.cancel()
 
-    async def _region_choices(
-        self, interaction: discord.Interaction, current: str
-    ) -> list[app_commands.Choice[str]]:
-        # 정적 데이터라 API를 타지 않는다
-        text = current.strip().lower()
-        out = []
-        for region in sch.all_regions():
-            label = f"{region.name} ({region.npc})"
-            if text and text not in label.lower():
-                continue
-            out.append(app_commands.Choice(name=label, value=region.name))
-            if len(out) >= 25:
-                break
-        return out
-
     async def _card_choices(
         self, interaction: discord.Interaction, current: str
     ) -> list[app_commands.Choice[str]]:
@@ -54,8 +39,8 @@ class MerchantCog(commands.Cog):
                 break
         return out
 
-    @app_commands.command(name="떠상", description="떠돌이 상인 등장 시간과 제보를 봅니다")
-    @app_commands.describe(서버="제보를 볼 서버")
+    @app_commands.command(name="떠상", description="떠돌이 상인 등장 시간과 판매 품목을 봅니다")
+    @app_commands.describe(서버="판매 품목을 볼 서버")
     @app_commands.choices(서버=SERVER_CHOICES)
     async def merchant(
         self, interaction: discord.Interaction, 서버: app_commands.Choice[str] | None = None
@@ -63,66 +48,13 @@ class MerchantCog(commands.Cog):
         await interaction.response.defer()
         now = timez.now()
 
-        # 등장 시각·지역은 계산되지만 '무엇을 파는지'는 서버마다 달라 제보로만 알 수 있다
+        # 등장 시각·지역은 계산되지만 '무엇을 파는지'는 서버마다 달라 kloa 제보로만 알 수 있다
         seen = await kloa.sightings(서버.value, now) if 서버 else ()
 
-        reports_block = None
-        window = sch.active_window(now)
-        if 서버 and window:
-            reports = await sightings.active(window.id, 서버.value)
-            if reports:
-                reports_block = merchant_view.reports_text(reports)
-
-        view = merchant_view.build_merchant_view(now, 서버.value if 서버 else None, seen, reports_block)
+        view = merchant_view.build_merchant_view(now, 서버.value if 서버 else None, seen)
         message = await interaction.followup.send(view=view, wait=True)
         if isinstance(view, merchant_view.MerchantPager):
             view.message = message
-
-    @app_commands.command(name="떠상제보", description="떠돌이 상인 위치를 공유합니다")
-    @app_commands.describe(서버="발견한 서버", 지역="상인이 있는 지역", 품목="파는 물건 (쉼표로 구분)")
-    @app_commands.choices(서버=SERVER_CHOICES)
-    async def report(
-        self,
-        interaction: discord.Interaction,
-        서버: app_commands.Choice[str],
-        지역: str,
-        품목: str | None = None,
-    ) -> None:
-        now = timez.now()
-        window = sch.active_window(now)
-        if window is None:
-            upcoming = sch.next_window(now)
-            await interaction.response.send_message(
-                view=common.notice_view(
-                    "지금은 떠상 시간이 아니에요",
-                    f"다음 등장 {timez.to_discord_timestamp(upcoming.start, 'R')} 이후에 제보해주세요.",
-                ),
-                ephemeral=True,
-            )
-            return
-
-        region = next((r for r in sch.all_regions() if r.name == 지역), None)
-        items = [x.strip() for x in (품목 or "").split(",") if x.strip()]
-
-        await sightings.add(
-            window_id=window.id,
-            server=서버.value,
-            region=지역,
-            npc=region.npc if region else None,
-            items=items,
-            reporter_id=str(interaction.user.id),
-            guild_id=str(interaction.guild_id) if interaction.guild_id else None,
-        )
-
-        desc = f"**{서버.value}** · {지역}" + (f" · {region.npc}" if region else "")
-        if items:
-            desc += f"\n판매 품목 · {', '.join(items)}"
-        desc += f"\n-# 이 제보는 {window.end.strftime('%H:%M')} 까지 유효해요"
-        await interaction.response.send_message(view=common.base_view("제보 고마워요", desc))
-
-    @report.autocomplete("지역")
-    async def report_autocomplete(self, interaction: discord.Interaction, current: str):
-        return await self._region_choices(interaction, current)
 
     @app_commands.command(name="떠상알림", description="떠상 등장 알림을 이 채널에서 나에게 멘션으로 받습니다")
     @app_commands.describe(서버="알림받을 서버", 알림설정="등장 몇 분 전에 알림을 받을지 (기본 10분)")
@@ -291,16 +223,12 @@ class MerchantCog(commands.Cog):
 
         for server, server_wants in by_server.items():
             seen = await kloa.sightings(server, now)
-            reports = await sightings.active(window.id, server)
 
             # 카드 이름 -> (지역, 상인). 같은 카드가 여러 지역에 겹쳐 뜨는 일은 없어 먼저 찾은 걸 쓴다
             found: dict[str, tuple[str, str | None]] = {}
             for s in seen:
                 for name in s.items:
                     found.setdefault(name, (s.region_name, s.npc))
-            for r in reports:
-                for name in r.items:
-                    found.setdefault(name, (r.region, r.npc))
             if not found:
                 continue
 
