@@ -29,3 +29,22 @@
 ## 원격
 
 원격 푸시는 저장소 주인이 검증한 뒤에 한다. **먼저 푸시하지 말 것.**
+
+## 배포
+
+`main` 에 푸시하면 오라클 서버에 배포된다. 다만 **GitHub 의 push 트리거가 2026-08-25
+부터 안 걸린다.** 브랜치를 새로 만들어 밀어도 이벤트 피드에 아무것도 안 잡히고,
+`deploy.yml` 의 `on.push` 도 run 을 만들지 않는다. Actions 는 켜져 있고 워크플로도
+active 이며 `workflow_dispatch` 는 정상이라 레포 설정 문제가 아니다. 원인은 GitHub
+쪽이고 여기서 고칠 수 없다.
+
+그래서 `scripts/githooks/pre-push` 가 main 푸시를 감지해 워크플로를 직접 돌린다.
+클론한 뒤 **한 번은 켜야 한다.**
+
+```bash
+git config core.hooksPath scripts/githooks
+```
+
+훅이 없거나 안 돌았으면 배포도 안 된 것이다. `gh run list --workflow=deploy.yml` 로
+run 이 생겼는지 보고, 없으면 `gh workflow run deploy.yml --ref main` 으로 돌린다.
+**푸시했다고 배포됐다고 단정하지 마라.**

@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# main 으로 푸시하면 배포 워크플로를 직접 돌린다.
+#
+# GitHub 이 2026-08-25 이후 이 레포의 push 이벤트를 내보내지 않는다. 브랜치를 새로
+# 만들어 밀어도 이벤트 피드에 아무것도 안 잡히고, 그래서 deploy.yml 의 on.push 가
+# 걸리지 않는다. Actions 는 켜져 있고 워크플로도 active 이며 workflow_dispatch 는
+# 정상이라 레포 설정 문제가 아니다 - 손댈 수 있는 자리가 여기밖에 없다.
+#
+# push 트리거가 되살아나도 중복 배포는 문제되지 않는다. deploy.yml 의 concurrency
+# 그룹이 하나라 겹치면 뒤에 온 것만 남는다.
+
+set -uo pipefail
+
+remote="$1"
+zero=0000000000000000000000000000000000000000
+
+while read -r _local_ref local_sha remote_ref _remote_sha; do
+    [ "$remote_ref" = "refs/heads/main" ] || continue
+    [ "$local_sha" = "$zero" ] && continue
+
+    if ! command -v gh >/dev/null 2>&1; then
+        echo "pre-push: gh 가 없어 배포를 걸지 못했다. gh workflow run deploy.yml --ref main" >&2
+        continue
+    fi
+
+    # 훅은 푸시가 끝나기 전에 돈다. 원격 main 이 실제로 움직인 걸 확인한 뒤에
+    # 워크플로를 돌려야 서버가 이전 커밋을 배포하지 않는다.
+    (
+        for _ in $(seq 30); do
+            sleep 2
+            [ "$(git ls-remote "$remote" refs/heads/main 2>/dev/null | cut -f1)" = "$local_sha" ] || continue
+            if gh workflow run deploy.yml --ref main >/dev/null 2>&1; then
+                echo "pre-push: 배포 워크플로 실행 (${local_sha:0:7})"
+            else
+                echo "pre-push: 배포 실행 실패. gh workflow run deploy.yml --ref main" >&2
+            fi
+            exit 0
+        done
+        echo "pre-push: 원격 main 이 갱신되지 않아 배포를 걸지 않았다" >&2
+    ) &
+done
+
+exit 0
