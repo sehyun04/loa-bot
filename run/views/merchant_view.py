@@ -232,29 +232,3 @@ def build_merchant_view(
         pages = [build_page(p, with_icon=False) for p in region_pages]
 
     return MerchantPager(pages)
-
-
-def upcoming_view(
-    window: sch.Window, server: str | None, mention_user_ids: list[str] | None = None
-) -> discord.ui.LayoutView:
-    """/떠상알림 사전 알림. 뭐가 뜰지는 등장 전엔 랜덤이라 지역 후보만 보여준다."""
-    regions = sorted(sch.regions_for(window.groups), key=lambda x: (x.group, x.name))
-    mentions = " ".join(f"<@{uid}>" for uid in mention_user_ids) + "\n" if mention_user_ids else ""
-    heading = (
-        f"{mentions}## 곧 떠돌이 상인이 나와요 — {_groups_text(window.groups)}\n"
-        f"{timez.to_discord_timestamp(window.start, 'R')} 등장 "
-        f"({window.start.strftime('%H:%M')} ~ {window.end.strftime('%H:%M')})"
-    )
-    region_lines = f"\n{_ROW_GAP}\n".join(f"{_pin()}{r.name} · {r.npc}" for r in regions)
-
-    c = discord.ui.Container(accent_colour=common.BRAND)
-    c.add_item(discord.ui.TextDisplay(heading))
-    c.add_item(discord.ui.Separator(spacing=_LARGE))
-    c.add_item(discord.ui.TextDisplay(f"### 등장 가능 지역\n{region_lines}"))
-    if server:
-        c.add_item(discord.ui.Separator(spacing=_SMALL))
-        c.add_item(discord.ui.TextDisplay(f"-# 대상 서버 · {server}"))
-
-    view = discord.ui.LayoutView()
-    view.add_item(c)
-    return view
