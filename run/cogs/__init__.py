@@ -2,6 +2,7 @@ from discord.ext import commands
 
 
 async def setup_all_cogs(bot: commands.Bot) -> None:
+    from run.cogs.gemnave import GemnaveCog
     from run.cogs.homework import HomeworkCog
     from run.cogs.market import MarketCog
     from run.cogs.merchant import MerchantCog
@@ -9,6 +10,8 @@ async def setup_all_cogs(bot: commands.Bot) -> None:
     await bot.add_cog(MerchantCog(bot))
     await bot.add_cog(HomeworkCog(bot))
     await bot.add_cog(MarketCog(bot))
+    # 링크 한 장이라 API 키도 외부 호출도 없다. 조건 없이 붙인다.
+    await bot.add_cog(GemnaveCog(bot))
 
     # 자연어 질문은 키가 있을 때만 붙인다. 없으면 멘션에 반응하지 않는다.
     from run.services import llm_router
