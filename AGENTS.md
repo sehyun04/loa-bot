@@ -36,11 +36,15 @@
 
 ## 배포
 
-`main` 에 푸시하면 오라클 서버에 배포된다. 다만 **GitHub 의 push 트리거가 2026-08-25
-부터 안 걸린다.** 브랜치를 새로 만들어 밀어도 이벤트 피드에 아무것도 안 잡히고,
-`deploy.yml` 의 `on.push` 도 run 을 만들지 않는다. Actions 는 켜져 있고 워크플로도
-active 이며 `workflow_dispatch` 는 정상이라 레포 설정 문제가 아니다. 원인은 GitHub
-쪽이고 여기서 고칠 수 없다.
+`main` 에 푸시하면 오라클 서버에 배포된다.
+
+**2026-08-25 부터 GitHub 의 push 트리거가 안 걸렸다.** 브랜치를 새로 만들어 밀어도
+이벤트 피드에 아무것도 안 잡히고, `deploy.yml` 의 `on.push` 도 run 을 만들지 않았다.
+Actions 는 켜져 있고 워크플로도 active 이며 `workflow_dispatch` 는 정상이었다.
+
+**2026-08-29 에 다시 걸리기 시작했다.** 이날 민 두 번(`a1b76ff`, `411ae88`) 모두
+`push` 트리거로 run 이 생겼다. 고친 것은 없고 GitHub 쪽에서 조용히 돌아온 것으로
+보인다. 표본이 둘뿐이라 아래 훅은 그대로 둔다 - 겹쳐도 손해가 없다.
 
 그래서 `scripts/githooks/pre-push` 가 main 푸시를 감지해 워크플로를 직접 돌린다.
 클론한 뒤 **한 번은 켜야 한다.**
@@ -52,3 +56,7 @@ git config core.hooksPath scripts/githooks
 훅이 없거나 안 돌았으면 배포도 안 된 것이다. `gh run list --workflow=deploy.yml` 로
 run 이 생겼는지 보고, 없으면 `gh workflow run deploy.yml --ref main` 으로 돌린다.
 **푸시했다고 배포됐다고 단정하지 마라.**
+
+push 트리거가 살아 있는 동안은 푸시 한 번에 run 이 두 개(`push` + 훅의
+`workflow_dispatch`) 생긴다. `concurrency` 그룹이 하나라 줄을 서서 돌 뿐이라
+결과는 같다. 훅을 걷어내는 것은 push 트리거가 한동안 멀쩡한 걸 보고 나서다.
