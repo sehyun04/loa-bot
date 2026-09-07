@@ -232,3 +232,69 @@ def build_merchant_view(
         pages = [build_page(p, with_icon=False) for p in region_pages]
 
     return MerchantPager(pages)
+
+
+def build_item_view(
+    now: datetime,
+    item_name: str,
+    regions: tuple[sch.Region, ...],
+    sightings: tuple[Sighting, ...] = (),
+) -> discord.ui.LayoutView:
+    """특정 물건을 언제까지 살 수 있는지에 초점을 맞춘 화면.
+
+    build_merchant_view는 '지금 열린 창'을 통째로 보여주므로, 찾는 물건이 지금
+    안 도는 그룹에 있으면 화면 어디에도 안 나온다. 사용자는 없다는 사실조차
+    못 읽는다. 그래서 물건을 지목한 질문에는 그 물건의 그룹만 보고 답한다.
+    """
+    groups = sorted({r.group for r in regions})
+    active = sch.active_window_for(now, groups)
+    upcoming = sch.next_window_for(now, groups)
+    seen = {s.region_id: s for s in sightings}
+
+    where = " · ".join(f"{_pin()}{r.name}" for r in sorted(regions, key=lambda x: x.name))
+
+    if active:
+        confirmed = [r for r in regions if r.id in seen]
+        if confirmed:
+            # 제보로 실제 등장이 확인된 경우에만 단정한다
+            head = (
+                f"## {item_name} · 지금 떴어요\n"
+                f"{timez.to_discord_timestamp(active.end, 'R')} 에 사라져요 "
+                f"(종료 {timez.to_discord_timestamp(active.end, 't')})"
+            )
+            body = "### 뜬 곳\n" + " · ".join(f"{_pin()}{r.name}" for r in confirmed)
+            footer = "-# 제보 출처: kloa.gg"
+            accent = _GRADE_COLOR.get(
+                max((g for s in seen.values() for g in _grades_of(s)), default=-1), common.BRAND
+            )
+        else:
+            head = (
+                f"## {item_name} · 살 수 있는 시간대예요\n"
+                f"{timez.to_discord_timestamp(active.end, 'R')} 에 창이 닫혀요 "
+                f"(종료 {timez.to_discord_timestamp(active.end, 't')})"
+            )
+            body = f"### 파는 곳\n{where}"
+            footer = "-# 지역이 열려도 품목은 랜덤이라 확정은 아니에요. 서버를 넣으면 실제 제보를 봐요"
+            accent = common.BRAND
+    else:
+        head = f"## {item_name} · 지금은 못 사요"
+        if upcoming:
+            head += (
+                f"\n다음 기회 {timez.to_discord_timestamp(upcoming.start, 'R')} "
+                f"({timez.to_discord_timestamp(upcoming.start, 't')} ~ "
+                f"{timez.to_discord_timestamp(upcoming.end, 't')})"
+            )
+        body = f"### 파는 곳\n{where}"
+        footer = "-# 이 지역들이 도는 창이 아니에요. 지역이 열려도 품목은 랜덤이에요"
+        accent = common.MUTED
+
+    container = discord.ui.Container(accent_colour=accent)
+    container.add_item(discord.ui.TextDisplay(head))
+    container.add_item(discord.ui.Separator(spacing=_LARGE))
+    container.add_item(discord.ui.TextDisplay(body))
+    container.add_item(discord.ui.Separator(spacing=_SMALL))
+    container.add_item(discord.ui.TextDisplay(footer))
+
+    view = discord.ui.LayoutView()
+    view.add_item(container)
+    return view

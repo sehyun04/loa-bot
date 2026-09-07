@@ -186,15 +186,18 @@ def _windows_on(day: date_cls) -> list[Window]:
     return sorted(windows, key=lambda w: w.start)
 
 
-def _nearby_windows(ref: datetime) -> list[Window]:
+def _nearby_windows(ref: datetime, ahead: int = 1) -> list[Window]:
     """전날 윈도우를 반드시 포함한다.
 
     22시 시작 윈도우는 다음날 03:30에 끝난다. 새벽에 조회하면 적용할 스케줄은
     '오늘'이 아니라 '어제' 항목이므로, 오늘 날짜만 보면 활성 윈도우를 놓친다.
+
+    ahead를 늘리는 건 특정 그룹만 걸러 볼 때다. 전체로 보면 다음 창이 6시간 안에
+    반드시 오지만, 그룹 하나로 좁히면 요일 편성에 따라 하루를 넘길 수 있다.
     """
     base = ref.astimezone(KST).date()
     windows: list[Window] = []
-    for offset in (-1, 0, 1):
+    for offset in range(-1, ahead + 1):
         windows.extend(_windows_on(base + timedelta(days=offset)))
     return sorted(windows, key=lambda w: w.start)
 
@@ -210,3 +213,46 @@ def next_window(ref: datetime) -> Window:
 def regions_for(groups: tuple[int, ...] | list[int]) -> tuple[Region, ...]:
     wanted = set(groups)
     return tuple(r for r in all_regions() if r.group in wanted)
+
+
+# 스케줄이 주 단위로 반복하므로 일주일을 보면 어떤 그룹이든 반드시 한 번은 걸린다
+_WEEK = 7
+
+
+def active_window_for(ref: datetime, groups: tuple[int, ...] | list[int]) -> Window | None:
+    """지금 열려 있는 창 중 해당 그룹을 품은 것."""
+    wanted = set(groups)
+    return next(
+        (w for w in _nearby_windows(ref) if w.contains(ref) and wanted & set(w.groups)),
+        None,
+    )
+
+
+def next_window_for(ref: datetime, groups: tuple[int, ...] | list[int]) -> Window | None:
+    """해당 그룹이 도는 다음 창."""
+    wanted = set(groups)
+    return next(
+        (w for w in _nearby_windows(ref, ahead=_WEEK) if w.start > ref and wanted & set(w.groups)),
+        None,
+    )
+
+
+@lru_cache(maxsize=1)
+def _sellers_index() -> dict[str, tuple[Region, ...]]:
+    """아이템 이름 → 그걸 파는 지역들. 같은 이름이 여러 지역에 걸린다."""
+    out: dict[str, list[Region]] = {}
+    for r in all_regions():
+        for i in r.items:
+            if i.hidden:
+                continue
+            out.setdefault(i.name, []).append(r)
+    return {name: tuple(regions) for name, regions in out.items()}
+
+
+def item_catalog() -> tuple[str, ...]:
+    """떠상이 파는 모든 물건 이름. 카드뿐 아니라 호감도 아이템까지 포함한다."""
+    return tuple(sorted(_sellers_index()))
+
+
+def regions_selling(name: str) -> tuple[Region, ...]:
+    return _sellers_index().get(name, ())

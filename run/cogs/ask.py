@@ -8,6 +8,7 @@ from discord.ext import commands
 from run.core import config, errors
 from run.services import auction, chat_session, hellreward, llm_router, refine, specup
 from run.services.lostark import armory, market
+from run.services.merchant import kloa
 from run.services.merchant import schedule as sch
 from run.services.merchant import sightings
 from run.services.merchant import wants as wants_svc
@@ -17,6 +18,7 @@ from run.views import (
     common,
     hellreward_view,
     market_view,
+    merchant_view,
     refine_view,
     specup_view,
 )
@@ -137,14 +139,11 @@ async def _spec_up(name: str) -> dict:
     return {"view": specup_view.build_report_view(report)}
 
 
-def _resolve_card(name: str) -> str | list[str]:
-    """카드 이름을 실제 카탈로그 값으로 맞춘다.
+# 카탈로그는 '발탄'만 들고 있는데 사람은 '발탄 카드'라고 부른다
+_KIND_SUFFIX = re.compile(r"\s*(?:카드|아이템)$")
 
-    133종 목록을 스키마에 넣으면 매 요청 토큰을 먹으므로, 모델은 자유 문자열로
-    보내고 여기서 대조한다. 후보가 여럿이면 그대로 돌려줘 사용자가 고르게 한다.
-    """
-    names = sch.card_names()
-    text = name.strip()
+
+def _match_name(text: str, names: tuple[str, ...]) -> str | list[str]:
     if text in names:
         return text
     squished = text.replace(" ", "")
@@ -153,6 +152,48 @@ def _resolve_card(name: str) -> str | list[str]:
         return exact[0]
     partial = [n for n in names if squished in n.replace(" ", "")]
     return partial[0] if len(partial) == 1 else partial
+
+
+def _resolve_name(name: str, names: tuple[str, ...]) -> str | list[str]:
+    """사용자가 쓴 이름을 실제 카탈로그 값으로 맞춘다.
+
+    목록을 스키마에 넣으면 매 요청 토큰을 먹으므로(카드만 133종이다), 모델은 자유
+    문자열로 보내고 여기서 대조한다. 후보가 여럿이면 그대로 돌려줘 사용자가 고르게 한다.
+    """
+    text = name.strip()
+    hit = _match_name(text, names)
+    if isinstance(hit, str) or hit:
+        return hit
+
+    stripped = _KIND_SUFFIX.sub("", text)
+    return _match_name(stripped, names) if stripped and stripped != text else hit
+
+
+def _resolve_card(name: str) -> str | list[str]:
+    return _resolve_name(name, sch.card_names())
+
+
+async def _merchant(server: str | None = None, item: str | None = None) -> dict:
+    now = timez.now()
+    # 등장 시각·지역은 계산으로 나오지만 '무엇을 파는지'는 서버마다 달라 kloa 제보로만 안다
+    seen = await kloa.sightings(server, now) if server else ()
+
+    if not item:
+        return {"view": merchant_view.build_merchant_view(now, server, seen)}
+
+    resolved = _resolve_name(item, sch.item_catalog())
+    if isinstance(resolved, list):
+        if not resolved:
+            return {
+                "view": common.error_view(
+                    "모르는 물건이에요", f"'{item}'은(는) 떠상이 파는 목록에 없어요."
+                )
+            }
+        preview = ", ".join(resolved[:8])
+        return {"view": common.notice_view("어떤 걸 찾으세요", f"비슷한 게 여러 개예요: {preview}")}
+
+    regions = sch.regions_selling(resolved)
+    return {"view": merchant_view.build_item_view(now, resolved, regions, seen)}
 
 
 async def _card_alert_set(message: discord.Message, server: str, card: str) -> dict:
@@ -220,6 +261,7 @@ _HANDLERS = {
     "set_card_alert": _card_alert_set,
     "remove_card_alert": _card_alert_remove,
     "list_card_alerts": _card_alert_list,
+    "get_merchant": _merchant,
 }
 
 # 쓰기 계열은 누가/어디서 요청했는지가 필요하다. 이 값은 모델이 아니라
@@ -388,4 +430,9 @@ class AskCog(commands.Cog):
             for call in calls:
                 log.info("라우팅: %s(%s)", call.name, dict(call.input))
                 payload = await _run_tool(call.name, dict(call.input), message)
-                await message.reply(**payload, mention_author=False)
+                sent = await message.reply(**payload, mention_author=False)
+                # 페이저는 타임아웃에 버튼을 끄려고 자기 메시지를 들고 있어야 한다.
+                # 슬래시 커맨드 쪽과 달리 여기선 안 넘겨줘서 버튼이 영영 살아 있었다.
+                view = payload.get("view")
+                if isinstance(view, merchant_view.MerchantPager):
+                    view.message = sent
