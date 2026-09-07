@@ -58,6 +58,41 @@ class HelpCoversCommandsTest(unittest.TestCase):
             self.assertIn(c["group"], groups, c["name"])
 
 
+class CommandToolMapTest(unittest.TestCase):
+    """커맨드마다 적어둔 담당 도구가 실제로 있는지.
+
+    이름이 틀리면 봇은 '커맨드를 직접 쳐주세요'라고 안내한다 - 되는 기능을 안 된다고
+    말하는 셈이라 조용히 틀린다. 도구를 지웠을 때도 여기서 걸린다.
+    """
+
+    def test_named_tools_exist(self) -> None:
+        from run.cogs import ask
+
+        for c in help_svc.commands():
+            if c["tool"]:
+                self.assertIn(c["tool"], ask._HANDLERS, c["name"])
+
+    def test_slash_only_matches_missing_tool(self) -> None:
+        self.assertEqual(
+            {c["name"] for c in help_svc.slash_only()},
+            {c["name"] for c in help_svc.visible() if not c["tool"]},
+        )
+
+    def test_slash_only_is_marked_in_the_sheet(self) -> None:
+        sheet = help_svc.fact_sheet()
+        for c in help_svc.slash_only():
+            block = sheet.split(f"`{c['usage']}`")[1].split(chr(10) + "- ")[0]
+            self.assertIn(help_svc.SLASH_ONLY, block, c["name"])
+
+    def test_routable_commands_are_not_marked(self) -> None:
+        sheet = help_svc.fact_sheet()
+        for c in help_svc.visible():
+            if not c["tool"]:
+                continue
+            block = sheet.split(f"`{c['usage']}`")[1].split(chr(10) + "- ")[0]
+            self.assertNotIn(help_svc.SLASH_ONLY, block, c["name"])
+
+
 class FactSheetTest(unittest.TestCase):
     def test_mentions_every_visible_command(self) -> None:
         sheet = help_svc.fact_sheet()
@@ -105,6 +140,26 @@ class HelpViewTest(unittest.TestCase):
         # 키 자체는 discord.py 가 항상 넣으므로 값이 비어 있는지를 본다.
         for payload in help_view.build_overview().to_components():
             self.assertIsNone(payload.get("accent_color"))
+
+
+class UnquoteTest(unittest.TestCase):
+    """답변 전체가 따옴표에 감싸여 오면 화면에 따옴표가 그대로 찍힌다."""
+
+    def test_strips_wrapping_quotes(self) -> None:
+        for text in ('"숙제는 못 해요."', "“숙제는 못 해요.”", "'숙제는 못 해요.'"):
+            self.assertEqual(ask._unquote(text), "숙제는 못 해요.")
+
+    def test_keeps_plain_text(self) -> None:
+        self.assertEqual(ask._unquote("숙제는 못 해요."), "숙제는 못 해요.")
+
+    def test_keeps_inner_quotes(self) -> None:
+        # 인용이 섞인 본문까지 벗기면 문장이 망가진다
+        text = '"발탄"은 루테란 동부에서 팔아요'
+        self.assertEqual(ask._unquote(text), text)
+
+    def test_survives_degenerate_input(self) -> None:
+        for text in ("", '"', '""'):
+            self.assertEqual(ask._unquote(text), text)
 
 
 class HelpRoutingTest(unittest.IsolatedAsyncioTestCase):

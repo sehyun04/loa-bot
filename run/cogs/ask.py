@@ -325,6 +325,20 @@ _NEEDS_LOA_API = {
 }
 
 
+# 답변 전체가 따옴표에 감싸여 오는 일이 있다. 그대로 보내면 화면에 따옴표가 찍힌다.
+_QUOTE_PAIRS = (('"', '"'), ("“", "”"), ("'", "'"), ("‘", "’"))
+
+
+def _unquote(text: str) -> str:
+    for opening, closing in _QUOTE_PAIRS:
+        if len(text) > 2 and text.startswith(opening) and text.endswith(closing):
+            # 벗긴 안쪽에 같은 따옴표가 또 있으면 인용이 아니라 본문이다
+            inner = text[1:-1]
+            if opening not in inner and closing not in inner:
+                return inner.strip()
+    return text
+
+
 def _text_of(reply: anthropic.types.Message) -> str:
     return "".join(b.text for b in reply.content if b.type == "text").strip()
 
@@ -451,7 +465,7 @@ class AskCog(commands.Cog):
                 )
                 return
 
-            answer = _TOOL_XML.sub("", text).strip()[:_MAX_TEXT]
+            answer = _unquote(_TOOL_XML.sub("", text).strip())[:_MAX_TEXT]
 
             if not calls:
                 # 도구를 못 고른 경우 - 되묻거나 범위를 안내하는 문장이 온다

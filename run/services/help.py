@@ -57,6 +57,15 @@ def grouped() -> list[tuple[str, list[dict]]]:
     return out
 
 
+# tool 이 비어 있으면 라우터가 부를 수단이 없다. 대신 해주겠다고 답하면 아무 일도
+# 안 일어나므로, 자료에서부터 '커맨드로만 된다'고 못박아 둔다.
+SLASH_ONLY = "말로는 대신 못 해드려요. 이 커맨드를 직접 쳐주셔야 해요."
+
+
+def slash_only() -> tuple[dict, ...]:
+    return tuple(c for c in visible() if not c.get("tool"))
+
+
 @lru_cache(maxsize=1)
 def fact_sheet() -> str:
     """시스템 프롬프트에 실을 평문. 캐시에 태우므로 길이보다 정확도가 우선이다."""
@@ -68,4 +77,6 @@ def fact_sheet() -> str:
         for c in rows:
             lines.append(f"- `{c['usage']}` - {c['summary']}")
             lines += [f"  - {n}" for n in c["notes"]]
+            if not c.get("tool"):
+                lines.append(f"  - {SLASH_ONLY}")
     return "\n".join(lines)
