@@ -419,26 +419,35 @@ class AskCog(commands.Cog):
                 )
                 return
 
+            answer = _TOOL_XML.sub("", text).strip()[:_MAX_TEXT]
+
             if not calls:
                 # 도구를 못 고른 경우 - 되묻거나 범위를 안내하는 문장이 온다
-                answer = _TOOL_XML.sub("", text).strip()[:_MAX_TEXT]
                 if leaked or not answer:
                     # 재시도까지 샌 응답. 잔해를 기억에 남기면 다음 턴까지 오염된다.
                     await message.reply(
                         "잘 못 알아들었어요. 다시 한 번 말씀해주시겠어요?", mention_author=False
                     )
                     return
+                log.info("문장 답변: %s", answer)
                 await message.reply(answer, mention_author=False)
                 # 되물었으면 다음 한 마디가 그 답이다. 기억해둬야 이어받을 수 있다.
                 chat_session.remember(channel_id, user_id, question, answer)
                 return
 
-            # 무엇을 요청했는지만 남긴다. 결과는 뷰가 보여주므로 맥락에는 필요 없다.
+            # 도구를 부르면서 말도 같이 하는 경우가 있다. 문장을 버리면 "누가 만들었어"에
+            # 기능 목록만 튀어나오는 식이 된다 - 물어본 것과 화면이 어긋난다.
+            if answer:
+                log.info("문장 답변(도구와 함께): %s", answer)
+                await message.reply(answer, mention_author=False)
+
+            # 무엇을 요청했는지 남긴다. 결과는 뷰가 보여주므로 맥락에는 필요 없다.
+            spoken = chat_session.summarize_calls([(c.name, dict(c.input)) for c in calls])
             chat_session.remember(
                 channel_id,
                 user_id,
                 question,
-                chat_session.summarize_calls([(c.name, dict(c.input)) for c in calls]),
+                f"{answer}\n{spoken}" if answer else spoken,
             )
 
             for call in calls:

@@ -64,6 +64,12 @@ class FactSheetTest(unittest.TestCase):
         for c in help_svc.visible():
             self.assertIn(c["usage"], sheet, c["name"])
 
+    def test_carries_every_bot_fact(self) -> None:
+        # 만든 사람 같은 봇 자신에 대한 사실이 빠지면 "주인이 누구냐"에 얼버무린다
+        sheet = help_svc.fact_sheet()
+        for fact in help_svc.bot_facts()["facts"]:
+            self.assertIn(fact, sheet)
+
     def test_router_prompt_carries_the_sheet(self) -> None:
         from run.services import llm_router
 
