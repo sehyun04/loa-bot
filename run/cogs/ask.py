@@ -7,6 +7,7 @@ from discord.ext import commands
 
 from run.core import config, errors
 from run.services import auction, chat_session, hellreward, llm_router, refine, specup
+from run.services import help as help_svc
 from run.services.lostark import armory, market
 from run.services.merchant import kloa
 from run.services.merchant import schedule as sch
@@ -17,6 +18,7 @@ from run.views import (
     character_view,
     common,
     hellreward_view,
+    help_view,
     market_view,
     merchant_view,
     refine_view,
@@ -242,6 +244,17 @@ async def _card_alert_remove(message: discord.Message, server: str, card: str) -
     return {"view": common.notice_view("등록되어 있지 않아요", f"**{server}** · {resolved}는 등록한 적이 없어요.")}
 
 
+async def _help(topic: str | None = None) -> dict:
+    if not topic:
+        return {"view": help_view.build_overview()}
+
+    resolved = _resolve_name(topic.lstrip("/"), tuple(c["name"] for c in help_svc.visible()))
+    if isinstance(resolved, list):
+        # 모르는 커맨드를 지어내 설명하느니 전체를 보여준다
+        return {"view": help_view.build_overview()}
+    return {"view": help_view.build_topic(help_svc.command(resolved))}
+
+
 async def _card_alert_list(message: discord.Message) -> dict:
     items = await wants_svc.for_user(str(message.author.id))
     if not items:
@@ -262,6 +275,7 @@ _HANDLERS = {
     "remove_card_alert": _card_alert_remove,
     "list_card_alerts": _card_alert_list,
     "get_merchant": _merchant,
+    "get_help": _help,
 }
 
 # 쓰기 계열은 누가/어디서 요청했는지가 필요하다. 이 값은 모델이 아니라
