@@ -10,6 +10,7 @@ from typing import Any
 import anthropic
 
 from run.core import config
+from run.services import gauntlet as gt
 from run.services import hellreward as hr
 from run.services import help as help_svc
 from run.services.merchant import schedule as sch
@@ -337,6 +338,52 @@ TOOLS: list[dict[str, Any]] = [
             },
             "required": [],
         },
+    },
+    {
+        "name": "calculate_gauntlet",
+        "description": (
+            "완갑을 목표 단계까지 재련하는 데 골드가 얼마나 드는지 계산한다. "
+            "'완갑 20강 얼마 들어', '완갑 지금 12인데 15까지 가려면' 같은 질문에 사용한다. "
+            "단계별 확률과 재료는 봇이 표에서, 시세는 거래소에서 직접 가져온다. "
+            "'완갑 20강 얼마'처럼 목표 하나만 말하면 그 단계로 올라가는 비용을 묻는 것이다 "
+            "- current 를 19, target 을 20 으로 넣는다. simulate_refine 의 '22강'과 같은 읽기다. "
+            "지금 단계를 따로 말했을 때만 그 값을 current 에 넣는다. "
+            "장비 재련(무기·방어구)은 simulate_refine 이다."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "current": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": gt.max_stage() - 1,
+                    "description": (
+                        "지금 완갑 재련 단계. 목표만 말했으면 목표보다 1 낮은 값을 넣는다."
+                    ),
+                },
+                "target": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": gt.max_stage(),
+                    "description": "올리고 싶은 단계. 언급이 없으면 넣지 않는다 - 빼면 한 단계만 계산한다.",
+                },
+                "artisan_percent": {
+                    "type": "number",
+                    "description": "지금 단계에 쌓인 장인의 기운(%). 언급이 없으면 0.",
+                },
+            },
+            "required": ["current"],
+        },
+    },
+    {
+        "name": "open_gemnave",
+        "description": (
+            "젬 가공 계산기(젬나브) 주소를 안내한다. "
+            "'젬나브 열어줘', '젬 가공 계산기 어디', '젬 굴릴지 리롤할지 알려줘' 같은 "
+            "요청에 사용한다. 계산은 웹에서 하므로 봇은 주소만 준다 - "
+            "젬 가공 결과를 직접 계산해 주지는 못한다."
+        ),
+        "input_schema": {"type": "object", "properties": {}},
     },
     {
         "name": "get_help",

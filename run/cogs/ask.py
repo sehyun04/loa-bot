@@ -6,7 +6,15 @@ import discord
 from discord.ext import commands
 
 from run.core import config, errors
-from run.services import auction, chat_session, hellreward, llm_router, refine, specup
+from run.services import (
+    auction,
+    chat_session,
+    gauntlet,
+    hellreward,
+    llm_router,
+    refine,
+    specup,
+)
 from run.services import help as help_svc
 from run.services.lostark import armory, market
 from run.services.merchant import kloa
@@ -17,6 +25,8 @@ from run.utils import timez
 from run.views import (
     character_view,
     common,
+    gauntlet_view,
+    gemnave_view,
     hellreward_view,
     help_view,
     market_view,
@@ -84,6 +94,24 @@ async def _refine(
     except ValueError as exc:
         return {"view": common.error_view("계산할 수 없어요", str(exc))}
     return {"view": refine_view.RefineView(report)}
+
+
+async def _gauntlet(
+    current: int, target: int | None = None, artisan_percent: float = 0.0
+) -> dict:
+    try:
+        plan = await gauntlet.estimate(
+            current,
+            target if target is not None else current + 1,
+            artisan=artisan_percent / 100,
+        )
+    except ValueError as exc:
+        return {"view": common.error_view("계산할 수 없어요", str(exc))}
+    return {"view": gauntlet_view.build_view(plan)}
+
+
+async def _gemnave() -> dict:
+    return {"view": gemnave_view.build_view()}
 
 
 def _resolve_category(name: str, available: list[str]) -> str | None:
@@ -276,6 +304,8 @@ _HANDLERS = {
     "list_card_alerts": _card_alert_list,
     "get_merchant": _merchant,
     "get_help": _help,
+    "calculate_gauntlet": _gauntlet,
+    "open_gemnave": _gemnave,
 }
 
 # 쓰기 계열은 누가/어디서 요청했는지가 필요하다. 이 값은 모델이 아니라
@@ -290,6 +320,8 @@ _NEEDS_LOA_API = {
     "get_roster",
     "compare_hell_reward",
     "diagnose_spec_up",
+    # 완갑은 재료 시세로 골드를 뽑는다
+    "calculate_gauntlet",
 }
 
 
