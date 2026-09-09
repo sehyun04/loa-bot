@@ -50,24 +50,24 @@ _TOOL_XML = re.compile(
 
 async def _market(item: str) -> dict:
     items = await market.search(item.strip())
-    return {"embed": market_view.market_embed(item.strip(), items)}
+    return {"view": market_view.price_view(item.strip(), items)}
 
 
 async def _auction(bid: int, party_size: int, market_price: int | None = None) -> dict:
     if bid <= 0:
-        return {"embed": common.error_embed("숫자를 다시 봐주시겠어요", "낙찰가는 1골드 이상이어야 해요.")}
+        return {"view": common.error_view("숫자를 다시 봐주시겠어요", "낙찰가는 1골드 이상이어야 해요.")}
     result = auction.calculate(bid, party_size)
     break_even = (
         auction.break_even_bid(market_price, party_size)
         if market_price and market_price > 0
         else None
     )
-    return {"embed": market_view.auction_embed(result, break_even)}
+    return {"view": market_view.auction_view(result, break_even)}
 
 
 async def _spec(name: str) -> dict:
     char = await armory.fetch_character(name.strip())
-    return {"embed": character_view.character_embed(char)}
+    return {"view": character_view.spec_view(char)}
 
 
 async def _roster(name: str) -> dict:
@@ -366,25 +366,25 @@ def _leaked_tool_call(reply: anthropic.types.Message, text: str) -> bool:
 
 async def _run_tool(name: str, args: dict, message: discord.Message) -> dict:
     if name in _NEEDS_LOA_API and not config.has_lostark_api():
-        return {"embed": common.api_key_missing_embed()}
+        return {"view": common.api_key_missing_view()}
 
     handler = _HANDLERS.get(name)
     if handler is None:
         log.warning("알 수 없는 도구: %s", name)
-        return {"embed": common.error_embed("그건 제가 할 수 없어요", "제가 아직 다루지 못하는 일이에요.")}
+        return {"view": common.error_view("그건 제가 할 수 없어요", "제가 아직 다루지 못하는 일이에요.")}
 
     try:
         if name in _NEEDS_CONTEXT:
             return await handler(message, **args)
         return await handler(**args)
     except errors.Maintenance:
-        return {"embed": common.notice_embed("지금은 점검 중이에요", "조금 뒤에 다시 물어봐 주시면 살펴볼게요.")}
+        return {"view": common.notice_view("지금은 점검 중이에요", "조금 뒤에 다시 물어봐 주시면 살펴볼게요.")}
     except errors.LoaApiError as exc:
-        return {"embed": common.error_embed("조회하지 못했어요", str(exc))}
+        return {"view": common.error_view("조회하지 못했어요", str(exc))}
     except (TypeError, ValueError) as exc:
         # 모델이 인자를 잘못 채운 경우. 스택트레이스 대신 사람이 읽을 메시지를 준다.
         log.info("도구 인자 오류 %s(%s): %s", name, args, exc)
-        return {"embed": common.error_embed("계산할 수 없어요", str(exc))}
+        return {"view": common.error_view("계산할 수 없어요", str(exc))}
 
 
 class AskCog(commands.Cog):

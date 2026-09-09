@@ -12,10 +12,10 @@ log = logging.getLogger("loabot.character")
 
 
 def _error_view(exc: Exception) -> discord.ui.LayoutView:
-    """`/스펙` 은 성공 화면이 아직 임베드지만 오류는 여기로 통일한다.
+    """`/스펙` 과 `/원정대` 가 같은 오류 화면을 쓴다.
 
-    `/원정대` 가 V2 라 오류만 임베드로 두면 한 파일에 오류 경로가 두 벌 생긴다.
-    오류 화면은 어차피 알림 상자 한 장이라 둘을 맞춰도 티가 나지 않는다.
+    두 커맨드가 부르는 API 가 같아서 실패하는 이유도 같다. 커맨드마다 분기를 두면
+    한쪽만 고치고 다른 쪽을 빠뜨린다.
     """
     if isinstance(exc, errors.ApiKeyMissing):
         return common.api_key_missing_view()
@@ -49,7 +49,7 @@ class CharacterCog(commands.Cog):
         except Exception as exc:
             await interaction.followup.send(view=_error_view(exc))
             return
-        await interaction.followup.send(embed=character_view.character_embed(char))
+        await interaction.followup.send(view=character_view.spec_view(char))
 
     @app_commands.command(name="원정대", description="같은 계정의 캐릭터 목록을 봅니다")
     @app_commands.describe(닉네임="기준이 될 캐릭터 이름")

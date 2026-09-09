@@ -85,7 +85,7 @@ run/
   core/     config · bot · db · errors · 
   cogs/     슬래시 커맨드 (얇게 유지)
   services/ 데이터·외부 API
-  views/    디스코드 임베드·버튼
+  views/    응답 화면 (Components V2)
   web/      포트폴리오 사이트용 HTTP API
   utils/    KST 시각 계산
 ```

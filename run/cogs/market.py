@@ -47,7 +47,7 @@ class MarketCog(commands.Cog):
     async def price(self, interaction: discord.Interaction, 아이템: str) -> None:
         await interaction.response.defer()
         if not config.has_lostark_api():
-            await interaction.followup.send(embed=common.api_key_missing_embed())
+            await interaction.followup.send(view=common.api_key_missing_view())
             return
 
         from run.services.lostark import market
@@ -57,15 +57,15 @@ class MarketCog(commands.Cog):
             items = await market.search(query)
         except errors.Maintenance:
             await interaction.followup.send(
-                embed=common.notice_embed("지금은 점검 중이에요", "조금 뒤에 다시 물어봐 주시면 살펴볼게요.")
+                view=common.notice_view("지금은 점검 중이에요", "조금 뒤에 다시 물어봐 주시면 살펴볼게요.")
             )
             return
         except errors.LoaApiError as exc:
-            await interaction.followup.send(embed=common.error_embed("조회하지 못했어요", str(exc)))
+            await interaction.followup.send(view=common.error_view("조회하지 못했어요", str(exc)))
             return
 
         _remember(str(interaction.user.id), query)
-        await interaction.followup.send(embed=market_view.market_embed(query, items))
+        await interaction.followup.send(view=market_view.price_view(query, items))
 
     @price.autocomplete("아이템")
     async def price_autocomplete(
@@ -107,7 +107,7 @@ class MarketCog(commands.Cog):
         party_size = 인원.value if 인원 else 8
         if 낙찰가 <= 0:
             await interaction.response.send_message(
-                embed=common.error_embed("숫자를 다시 봐주시겠어요", "낙찰가는 1골드 이상이어야 해요."),
+                view=common.error_view("숫자를 다시 봐주시겠어요", "낙찰가는 1골드 이상이어야 해요."),
                 ephemeral=True,
             )
             return
@@ -115,5 +115,5 @@ class MarketCog(commands.Cog):
         result = auction.calculate(낙찰가, party_size)
         break_even = auction.break_even_bid(시세, party_size) if 시세 and 시세 > 0 else None
         await interaction.response.send_message(
-            embed=market_view.auction_embed(result, break_even)
+            view=market_view.auction_view(result, break_even)
         )
