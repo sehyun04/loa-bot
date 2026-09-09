@@ -8,7 +8,7 @@ from run.views import common
 def market_embed(query: str, items: list[MarketItem]) -> discord.Embed:
     if not items:
         return common.notice_embed(
-            "검색 결과가 없어요", f"`{query}` 로 찾은 아이템이 없어요. 이름을 정확히 입력해주세요."
+            "찾지 못했어요", f"`{query}` 라는 이름은 거래소에서 찾지 못했어요. 철자를 한 번만 더 봐주시겠어요."
         )
 
     embed = common.base_embed(f"거래소 시세 — {query}", f"{len(items)}건")

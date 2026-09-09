@@ -123,7 +123,7 @@ class LoaBot(commands.Bot):
             return
 
         log.exception("커맨드 오류: /%s", name, exc_info=original)
-        embed = common.error_embed("문제가 생겼어요", "잠시 후 다시 시도해주세요.")
+        embed = common.error_embed("문제가 생겼어요", "제 쪽에서 무언가 어긋났어요. 조금 뒤에 다시 시도해 주시겠어요.")
         try:
             if interaction.response.is_done():
                 await interaction.followup.send(embed=embed, ephemeral=True)

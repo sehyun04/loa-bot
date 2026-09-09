@@ -20,7 +20,7 @@ class SpecUpCog(commands.Cog):
             report = await specup.diagnose(닉네임)
         except errors.CharacterNotFound:
             await interaction.followup.send(
-                view=common.error_view("캐릭터를 못 찾았어요", f"`{닉네임}` 이름을 다시 확인해주세요."),
+                view=common.error_view("그 캐릭터를 찾지 못했어요", f"`{닉네임}`... 철자를 한 번만 더 봐주시겠어요."),
                 ephemeral=True,
             )
             return

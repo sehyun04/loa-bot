@@ -28,11 +28,11 @@ def _error_view(exc: Exception) -> discord.ui.LayoutView:
             "캐릭터를 찾을 수 없어요", "닉네임 철자를 확인해주세요. 대소문자와 띄어쓰기까지 정확해야 해요."
         )
     if isinstance(exc, errors.Maintenance):
-        return common.notice_view("점검 중이에요", "로스트아크 API가 점검 중이라 잠시 후에 다시 시도해주세요.")
+        return common.notice_view("지금은 점검 중이에요", "로스트아크가 잠시 문을 닫아 두었어요. 조금 뒤에 다시 찾아와 주세요.")
     if isinstance(exc, errors.RateLimited):
-        return common.notice_view("잠깐 붐비고 있어요", "요청이 몰려서 잠시 후 다시 시도해주세요.")
+        return common.notice_view("잠깐 붐비고 있어요", "요청이 몰렸어요. 숨을 고르고 잠시 뒤에 다시 불러주세요.")
     if isinstance(exc, errors.LoaApiError):
-        return common.error_view("조회에 실패했어요", str(exc))
+        return common.error_view("조회하지 못했어요", str(exc))
     raise exc
 
 

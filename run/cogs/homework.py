@@ -31,7 +31,7 @@ class HomeworkCog(commands.Cog):
         if not chars:
             await interaction.response.send_message(
                 view=common.notice_view(
-                    "등록된 캐릭터가 없어요", "`/숙제설정` 으로 캐릭터를 먼저 등록해주세요."
+                    "아직 등록한 캐릭터가 없어요", "`/숙제설정` 으로 캐릭터를 먼저 알려주세요."
                 ),
                 ephemeral=True,
             )
@@ -42,7 +42,7 @@ class HomeworkCog(commands.Cog):
             await interaction.response.send_message(
                 view=common.notice_view(
                     f"{target} 은 등록된 캐릭터가 아니에요",
-                    "`/숙제설정` 으로 먼저 등록해주세요.",
+                    "`/숙제설정` 으로 먼저 알려주세요.",
                 ),
                 ephemeral=True,
             )
@@ -75,11 +75,11 @@ class HomeworkCog(commands.Cog):
             siblings = await armory.fetch_siblings(닉네임.strip())
         except errors.CharacterNotFound:
             await interaction.followup.send(
-                embed=common.notice_embed("캐릭터를 찾을 수 없어요", "닉네임을 다시 확인해주세요.")
+                embed=common.notice_embed("그 캐릭터를 찾지 못했어요", "닉네임을 한 번만 더 봐주시겠어요.")
             )
             return
         except errors.LoaApiError as exc:
-            await interaction.followup.send(embed=common.error_embed("조회 실패", str(exc)))
+            await interaction.followup.send(embed=common.error_embed("조회하지 못했어요", str(exc)))
             return
 
         user_id = str(interaction.user.id)

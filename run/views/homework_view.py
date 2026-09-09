@@ -280,7 +280,7 @@ def homework_layout(
     if not tasks:
         return common.notice_view(
             f"{character} 의 숙제가 비어 있어요",
-            "`/숙제설정` 으로 캐릭터를 다시 등록해주세요.",
+            "`/숙제설정` 으로 캐릭터를 다시 알려주세요.",
         )
 
     item_level = _item_level_of(roster, character)
@@ -329,7 +329,7 @@ async def _rerender(interaction: discord.Interaction, user_id: str, character: s
     except discord.HTTPException:
         # V2 전환 전에 보낸 임베드 메시지는 V2로 갈아끼울 수 없다(메시지 플래그가
         # 고정이다). 옛 메시지의 버튼을 누른 경우이므로 새로 열라고 안내한다.
-        notice = common.notice_view("이 메시지는 옛 형식이에요", "`/숙제` 를 다시 열어주세요.")
+        notice = common.notice_view("오래된 메시지예요", "`/숙제` 를 다시 열어주시면 새로 보여드릴게요.")
         # edit이 실패하면 인터랙션이 응답되지 않은 채로 남는다. followup부터 부르면
         # 404가 나므로 어느 쪽인지 확인하고 보낸다.
         if interaction.response.is_done():

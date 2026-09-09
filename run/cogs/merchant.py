@@ -69,7 +69,7 @@ class MerchantCog(commands.Cog):
 
         if 카드 not in sch.card_names():
             await interaction.response.send_message(
-                view=common.error_view("모르는 카드예요", "목록에서 골라주세요. 자동완성을 써보세요."),
+                view=common.error_view("모르는 카드예요", "자동완성에 뜨는 이름 중에서 골라주시겠어요."),
                 ephemeral=True,
             )
             return
@@ -114,12 +114,12 @@ class MerchantCog(commands.Cog):
         removed = await wants_svc.remove(str(interaction.user.id), 서버.value, 카드)
         if removed:
             await interaction.response.send_message(
-                view=common.notice_view("알림을 껐어요", f"**{서버.value}** · {카드} 알림을 더는 보내지 않아요."),
+                view=common.notice_view("이제 지켜보지 않을게요", f"**{서버.value}** · {카드} 알림을 더는 보내지 않아요."),
                 ephemeral=True,
             )
         else:
             await interaction.response.send_message(
-                view=common.notice_view("등록되어 있지 않아요", f"**{서버.value}** · {카드}는 등록한 적이 없어요."),
+                view=common.notice_view("걸어두신 적이 없어요", f"**{서버.value}** · {카드}는 등록한 적이 없어요."),
                 ephemeral=True,
             )
 
@@ -147,7 +147,7 @@ class MerchantCog(commands.Cog):
         items = await wants_svc.for_user(str(interaction.user.id))
         if not items:
             await interaction.response.send_message(
-                view=common.notice_view("등록된 카드 알림이 없어요", "`/떠상카드알림`으로 등록해보세요."),
+                view=common.notice_view("아직 걸어두신 알림이 없어요", "`/떠상카드알림` 으로 기다리는 카드를 알려주세요."),
                 ephemeral=True,
             )
             return

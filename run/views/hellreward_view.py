@@ -66,7 +66,7 @@ def build_result_view(tier: str, floor: int, results: list[hellreward.CategoryVa
     lines = [f"## 지옥 보상 효율\n{tier} · {floor}층 ({stage})"]
     if priced:
         best = priced[0]
-        lines.append(f"**{best.category}**이(가) 제일 이득이에요.")
+        lines.append(f"제일 이득인 건 **{best.category}** 예요.")
     for i, cv in enumerate(priced, start=1):
         lines.append(_format_category_line(i, cv, tier))
     for cv in unpriced:
