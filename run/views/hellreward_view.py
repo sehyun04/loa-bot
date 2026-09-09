@@ -49,7 +49,7 @@ class HellRewardPickView(discord.ui.LayoutView):
         text = discord.ui.TextDisplay(
             f"## 지옥 보상 효율\n"
             f"{tier} · {floor}층 ({stage})\n"
-            f"뜬 보상 상자를 아래에서 전부 골라주세요."
+            f"뜬 보상 상자를 아래에서 골라주시면 어느 쪽이 나은지 견주어 볼게요."
         )
         self.add_item(discord.ui.Container(
             text,

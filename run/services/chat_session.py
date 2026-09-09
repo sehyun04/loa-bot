@@ -1,38 +1,49 @@
-"""멘션 대화의 최근 이력을 채널+사람 단위로 잠깐 들고 있는다.
+"""멘션 대화의 최근 이력을 채널+사람 단위로 들고 있는다.
 
 봇이 "어떤 서버인가요" 하고 되물었을 때 사용자가 "루페온" 한 마디로 답할 수 있어야 한다.
 채널마다, 그리고 사람마다 따로 묶는다 - 같은 채널에서 두 명이 동시에 써도 섞이지 않는다.
 
-봇은 단일 프로세스라 메모리에 두면 충분하다. 재시작하면 사라지지만 몇 분짜리
-대화 맥락이라 잃어도 무해하다.
+SQLite 에 둔다. 메모리에만 두면 배포할 때마다 모두의 대화가 한꺼번에 끊기는데,
+main 에 푸시할 때마다 컨테이너가 새로 뜨므로 하루에도 여러 번이다. 되물어 놓고
+사용자가 답하는 사이에 배포가 끼면 봇이 자기가 뭘 물었는지 모른다.
 """
 
+import json
+import logging
 import time
-from collections import OrderedDict
 
-TTL_SECONDS = 900.0  # 15분 넘게 조용하면 다른 얘기로 본다
-MAX_TURNS = 6
-MAX_SESSIONS = 500
+from run.core import db
 
-# "채널:사람" -> (마지막 사용 시각, 메시지 목록)
-_sessions: OrderedDict[str, tuple[float, list[dict]]] = OrderedDict()
+log = logging.getLogger("loabot.chat")
+
+# 한 판 하는 동안은 이어지되 어제 얘기까지 끌고 오지는 않는 길이. 오래된 맥락이
+# 남아 있으면 새 질문에 엉뚱한 값(세 시간 전에 말한 서버 같은)이 딸려 들어간다.
+TTL_SECONDS = 6 * 3600
+MAX_TURNS = 8
+_PRUNE_INTERVAL = 3600.0
+
+_last_prune = 0.0
 
 
-def _key(channel_id: str, user_id: str) -> str:
-    return f"{channel_id}:{user_id}"
-
-
-def history(channel_id: str, user_id: str) -> list[dict]:
-    key = _key(channel_id, user_id)
-    entry = _sessions.get(key)
-    if entry is None:
+async def history(channel_id: str, user_id: str) -> list[dict]:
+    row = await db.aquery_one(
+        "SELECT messages, updated_at FROM chat_sessions WHERE channel_id=? AND user_id=?",
+        (channel_id, user_id),
+    )
+    if row is None:
+        return []
+    if int(time.time()) - row["updated_at"] > TTL_SECONDS:
+        await forget(channel_id, user_id)
         return []
 
-    touched_at, messages = entry
-    if time.monotonic() - touched_at > TTL_SECONDS:
-        del _sessions[key]
+    try:
+        messages = json.loads(row["messages"])
+    except (json.JSONDecodeError, TypeError):
+        # 맥락 하나 잃는 게 깨진 이력으로 400 을 맞는 것보다 낫다
+        log.warning("이력을 읽지 못해 버림: %s:%s", channel_id, user_id)
+        await forget(channel_id, user_id)
         return []
-    return list(messages)
+    return messages if isinstance(messages, list) else []
 
 
 def summarize_calls(calls: list[tuple[str, dict]]) -> str:
@@ -49,23 +60,42 @@ def summarize_calls(calls: list[tuple[str, dict]]) -> str:
     return " / ".join(done)
 
 
-def remember(channel_id: str, user_id: str, user_text: str, assistant_text: str) -> None:
+async def remember(channel_id: str, user_id: str, user_text: str, assistant_text: str) -> None:
     if not user_text or not assistant_text:
         # 빈 content는 API가 거부한다. 반쪽짜리 턴을 남기느니 이번 턴을 통째로 버린다.
         return
 
-    messages = history(channel_id, user_id)
+    messages = await history(channel_id, user_id)
     messages.append({"role": "user", "content": user_text})
     messages.append({"role": "assistant", "content": assistant_text})
 
     # 이력을 전부 평문으로 두는 이유: 여기서 앞을 잘라내도 안전하다. tool_use 블록을
     # 그대로 쌓으면 자르는 지점이 tool_result와의 짝을 깨서 API가 400을 낸다.
-    key = _key(channel_id, user_id)
-    _sessions[key] = (time.monotonic(), messages[-MAX_TURNS * 2 :])
-    _sessions.move_to_end(key)
-    if len(_sessions) > MAX_SESSIONS:
-        _sessions.popitem(last=False)
+    messages = messages[-MAX_TURNS * 2 :]
+
+    now = int(time.time())
+    await db.aexecute(
+        "INSERT INTO chat_sessions (channel_id, user_id, messages, updated_at) "
+        "VALUES (?,?,?,?) "
+        "ON CONFLICT(channel_id, user_id) DO UPDATE SET "
+        "  messages=excluded.messages, updated_at=excluded.updated_at",
+        (channel_id, user_id, json.dumps(messages, ensure_ascii=False), now),
+    )
+    await _maybe_prune(now)
 
 
-def forget(channel_id: str, user_id: str) -> None:
-    _sessions.pop(_key(channel_id, user_id), None)
+async def forget(channel_id: str, user_id: str) -> None:
+    await db.aexecute(
+        "DELETE FROM chat_sessions WHERE channel_id=? AND user_id=?", (channel_id, user_id)
+    )
+
+
+async def _maybe_prune(now: int) -> None:
+    """만료된 줄을 치운다. 남의 대화를 필요 이상으로 오래 들고 있지 않는다."""
+    global _last_prune
+    if now - _last_prune < _PRUNE_INTERVAL:
+        return
+    _last_prune = now
+    removed = await db.aexecute("DELETE FROM chat_sessions WHERE updated_at < ?", (now - TTL_SECONDS,))
+    if removed:
+        log.info("만료된 대화 이력 %d건 정리", removed)

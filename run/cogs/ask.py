@@ -134,7 +134,7 @@ def _resolve_category(name: str, available: list[str]) -> str | None:
 async def _hell_reward(tier: str, floor: int, categories: list[str] | None = None) -> dict:
     available = hellreward.categories_for(tier, floor)
     if len(available) < 2:
-        return {"view": common.error_view("비교할 상자가 부족해요", "이 층수에는 상자 종류가 2개 미만이에요.")}
+        return {"view": common.error_view("견줄 상자가 하나뿐이에요", "이 층에서는 상자가 한 종류만 나와서 비교할 것이 없어요.")}
 
     # 사용자가 뜬 상자를 말했으면 고르는 단계를 건너뛰고 바로 비교해준다
     if categories:
@@ -220,7 +220,12 @@ async def _merchant(server: str | None = None, item: str | None = None) -> dict:
                 )
             }
         preview = ", ".join(resolved[:8])
-        return {"view": common.notice_view("어떤 걸 찾으시나요", f"비슷한 게 여러 개예요: {preview}")}
+        return {
+            "view": common.notice_view(
+                "어느 쪽일까요",
+                f"비슷한 이름이 여럿이라 하나만 골라 말씀해 주시겠어요.\n{preview}",
+            )
+        }
 
     regions = sch.regions_selling(resolved)
     return {"view": merchant_view.build_item_view(now, resolved, regions, seen)}
@@ -228,14 +233,19 @@ async def _merchant(server: str | None = None, item: str | None = None) -> dict:
 
 async def _card_alert_set(message: discord.Message, server: str, card: str) -> dict:
     if message.guild is None:
-        return {"view": common.error_view("여기선 안 돼요", "서버 채널에서만 등록할 수 있어요.")}
+        return {"view": common.error_view("여기서는 걸어드릴 수 없어요", "카드 알림은 서버 채널에서만 등록할 수 있어요.")}
 
     resolved = _resolve_card(card)
     if isinstance(resolved, list):
         if not resolved:
             return {"view": common.error_view("모르는 카드예요", f"'{card}'... 제가 아는 카드 목록에는 없어요.")}
         preview = ", ".join(resolved[:8])
-        return {"view": common.notice_view("어떤 카드일까요", f"비슷한 게 여러 개예요: {preview}")}
+        return {
+            "view": common.notice_view(
+                "어느 카드일까요",
+                f"비슷한 이름이 여럿이라 하나만 골라 말씀해 주시겠어요.\n{preview}",
+            )
+        }
 
     user_id = str(message.author.id)
     await wants_svc.add(
@@ -416,7 +426,7 @@ class AskCog(commands.Cog):
 
         channel_id = str(message.channel.id)
         user_id = str(message.author.id)
-        msgs = chat_session.history(channel_id, user_id) + [
+        msgs = await chat_session.history(channel_id, user_id) + [
             {"role": "user", "content": question}
         ]
 
@@ -439,7 +449,7 @@ class AskCog(commands.Cog):
             except anthropic.BadRequestError as exc:
                 # 이력이 원인일 수 있다. 대화 기억보다 이번 질문에 답하는 게 우선이다.
                 log.warning("요청 거부(400): %s", exc.message)
-                chat_session.forget(channel_id, user_id)
+                await chat_session.forget(channel_id, user_id)
                 reply = await llm_router.route([{"role": "user", "content": question}])
                 calls = [b for b in reply.content if b.type == "tool_use"]
                 text = _text_of(reply)
@@ -478,7 +488,7 @@ class AskCog(commands.Cog):
                 log.info("문장 답변: %s", answer)
                 await message.reply(answer, mention_author=False)
                 # 되물었으면 다음 한 마디가 그 답이다. 기억해둬야 이어받을 수 있다.
-                chat_session.remember(channel_id, user_id, question, answer)
+                await chat_session.remember(channel_id, user_id, question, answer)
                 return
 
             # 도구를 부르면서 말도 같이 하는 경우가 있다. 문장을 버리면 "누가 만들었어"에
@@ -489,7 +499,7 @@ class AskCog(commands.Cog):
 
             # 무엇을 요청했는지 남긴다. 결과는 뷰가 보여주므로 맥락에는 필요 없다.
             spoken = chat_session.summarize_calls([(c.name, dict(c.input)) for c in calls])
-            chat_session.remember(
+            await chat_session.remember(
                 channel_id,
                 user_id,
                 question,
