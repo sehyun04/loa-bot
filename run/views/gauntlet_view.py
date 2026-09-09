@@ -86,7 +86,7 @@ def _materials(plan: gauntlet.GauntletPlan) -> str:
     lines = [
         f"운명의 파편 {_man(plan.expected_shard, '개')} · 실링 {_man(plan.expected_silver, '')}",
         # 성장과 재련을 한 덩어리로 보면 왜 파편이 이렇게 많이 드는지가 설명되지 않는다.
-        "-# 성장(파편·실링)은 단계마다 한 번, 재련 재료는 시도할 때마다 나가요",
+        "-# 성장(파편·실링)은 단계마다 한 번, 재련 재료는 시도할 때마다 나가",
     ]
 
     prices = plan.prices
@@ -102,7 +102,7 @@ def _materials(plan: gauntlet.GauntletPlan) -> str:
         pouch = f" · 파편은 {prices.shard_pouch} 환산" if prices.shard_pouch else ""
         lines.append(f"-# 개당 시세 {seen}{pouch}")
     if prices.missing:
-        lines.append(f"-# 거래소에서 {' · '.join(prices.missing)} 를 못 찾아서 그만큼은 빠져 있어요")
+        lines.append(f"-# 거래소에서 {' · '.join(prices.missing)} 를 못 찾아서 그만큼은 빠져 있어")
     return "\n".join(lines)
 
 

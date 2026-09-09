@@ -40,7 +40,7 @@ def stage_row(stage: int) -> dict:
     """stage 단계로 올리는 재련 한 줄. 표의 'N단계' 는 +N 으로 가는 시도를 말한다."""
     rows = _table()["stages"]
     if not 1 <= stage <= len(rows):
-        raise ValueError(f"완갑 재련 단계는 1~{len(rows)} 이에요")
+        raise ValueError(f"완갑 재련 단계는 1~{len(rows)} 이야")
     return rows[stage - 1]
 
 
@@ -148,7 +148,7 @@ class GauntletPlan:
 def plan(start: int, target: int, prices: Prices, *, artisan: float = 0.0) -> GauntletPlan:
     """start 단계에서 target 단계까지. 시세를 인자로 받아 계산부만 따로 돌려볼 수 있게 한다."""
     if not 0 <= start < target <= max_stage():
-        raise ValueError(f"단계는 0 이상 {max_stage()} 이하여야 하고, 목표가 더 높아야 해요")
+        raise ValueError(f"단계는 0 이상 {max_stage()} 이하여야 하고, 목표가 더 높아야 해")
 
     stages = []
     for stage in range(start + 1, target + 1):

@@ -175,7 +175,7 @@ def build_merchant_view(
         # 지금 없을 땐 지역/카드 후보를 잔뜩 늘어놔봐야 어차피 못 사는 정보라 소음이다.
         # 다음 등장 시각만 짧게.
         heading = (
-            "## 지금은 떠돌이 상인이 없어요\n"
+            "## 지금은 떠돌이 상인이 없어\n"
             f"다음 등장 {timez.to_discord_timestamp(upcoming.start, 'R')} "
             f"({timez.to_discord_timestamp(upcoming.start, 't')}) · {_groups_text(upcoming.groups)}"
         )
@@ -187,7 +187,7 @@ def build_merchant_view(
     regions = sch.regions_for(active.groups)
     heading = (
         f"## 떠돌이 상인 등장 중 — {_groups_text(active.groups)}\n"
-        f"{timez.to_discord_timestamp(active.end, 'R')} 에 사라져요 "
+        f"{timez.to_discord_timestamp(active.end, 'R')} 에 사라져 "
         f"(종료 {timez.to_discord_timestamp(active.end, 't')})"
         f"\n**다음 등장** · {timez.to_discord_timestamp(upcoming.start, 'R')} "
         f"· {_groups_text(upcoming.groups)}"
@@ -202,12 +202,12 @@ def build_merchant_view(
     title = f"{server} 판매 품목" if seen else "등장 가능 지역"
 
     if seen:
-        footer = "-# 제보 출처: kloa.gg · 파는 물건은 서버마다 달라요"
+        footer = "-# 제보 출처: kloa.gg · 파는 물건은 서버마다 달라"
     elif server:
-        footer = f"-# {server}에 아직 제보가 없어요. 아래는 나올 수 있는 카드예요"
+        footer = f"-# {server}에 아직 제보가 없어. 아래는 나올 수 있는 카드야"
     else:
         # 서버를 안 넣으면 어느 서버든 같은 화면이라, 왜 그런지와 어떻게 하는지를 같이 알린다
-        footer = "-# 등장 시각·지역은 전 서버 공통이에요. 서버를 넣으면 실제 파는 물건을 봐요"
+        footer = "-# 등장 시각·지역은 전 서버 공통이야. 서버를 넣으면 실제 파는 물건을 볼 수 있어"
 
     sorted_regions = sorted(regions, key=lambda x: (x.group, x.name))
     region_pages = _paginate(sorted_regions)
@@ -258,8 +258,8 @@ def build_item_view(
         if confirmed:
             # 제보로 실제 등장이 확인된 경우에만 단정한다
             head = (
-                f"## {item_name} · 지금 떴어요\n"
-                f"{timez.to_discord_timestamp(active.end, 'R')} 에 사라져요 "
+                f"## {item_name} · 지금 떴어\n"
+                f"{timez.to_discord_timestamp(active.end, 'R')} 에 사라져 "
                 f"(종료 {timez.to_discord_timestamp(active.end, 't')})"
             )
             body = "### 뜬 곳\n" + " · ".join(f"{_pin()}{r.name}" for r in confirmed)
@@ -269,15 +269,15 @@ def build_item_view(
             )
         else:
             head = (
-                f"## {item_name} · 살 수 있는 시간대예요\n"
-                f"{timez.to_discord_timestamp(active.end, 'R')} 에 창이 닫혀요 "
+                f"## {item_name} · 지금 살 수 있어\n"
+                f"{timez.to_discord_timestamp(active.end, 'R')} 에 창이 닫혀 "
                 f"(종료 {timez.to_discord_timestamp(active.end, 't')})"
             )
             body = f"### 파는 곳\n{where}"
-            footer = "-# 지역이 열려도 품목은 랜덤이라 확정은 아니에요. 서버를 넣으면 실제 제보를 봐요"
+            footer = "-# 지역이 열려도 품목은 랜덤이라 확정은 아니야. 서버를 넣으면 실제 제보를 볼 수 있어"
             accent = common.BRAND
     else:
-        head = f"## {item_name} · 지금은 못 사요"
+        head = f"## {item_name} · 지금은 살 수 없어"
         if upcoming:
             head += (
                 f"\n다음 기회 {timez.to_discord_timestamp(upcoming.start, 'R')} "
@@ -285,7 +285,7 @@ def build_item_view(
                 f"{timez.to_discord_timestamp(upcoming.end, 't')})"
             )
         body = f"### 파는 곳\n{where}"
-        footer = "-# 이 지역들이 도는 창이 아니에요. 지역이 열려도 품목은 랜덤이에요"
+        footer = "-# 이 지역들이 도는 창이 아니야. 지역이 열려도 품목은 랜덤이야"
         accent = common.MUTED
 
     container = discord.ui.Container(accent_colour=accent)

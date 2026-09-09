@@ -73,17 +73,17 @@ def notice_view(title: str, description: str) -> discord.ui.LayoutView:
 
 def api_key_missing_embed() -> discord.Embed:
     return error_embed(
-        "로스트아크 API 키가 없어요",
-        "이 기능은 공식 API가 필요해요.\n"
-        "`.env`의 `LOSTARK_API_KEY`를 채우면 바로 쓸 수 있어요.\n"
+        "로스트아크 API 키가 없어",
+        "이 기능은 공식 API가 필요해.\n"
+        "`.env`의 `LOSTARK_API_KEY`를 채우면 바로 쓸 수 있어.\n"
         "발급: https://developer-lostark.game.onstove.com/clients",
     )
 
 
 def api_key_missing_view() -> discord.ui.LayoutView:
     return error_view(
-        "로스트아크 API 키가 없어요",
-        "이 기능은 공식 API가 필요해요.\n"
-        "`.env`의 `LOSTARK_API_KEY`를 채우면 바로 쓸 수 있어요.\n"
+        "로스트아크 API 키가 없어",
+        "이 기능은 공식 API가 필요해.\n"
+        "`.env`의 `LOSTARK_API_KEY`를 채우면 바로 쓸 수 있어.\n"
         "발급: https://developer-lostark.game.onstove.com/clients",
     )

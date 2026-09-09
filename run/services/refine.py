@@ -242,10 +242,10 @@ def get_table(
     if raw is None:
         available = levels(item_type, grade)
         if not available:
-            raise ValueError("그 장비 등급은 표에 없어요")
+            raise ValueError("그 장비 등급은 표에 없어")
         label = GRADE_LABELS.get(grade, grade)
         raise ValueError(
-            f"{label} 등급에는 {available[0]}~{available[-1]}단계만 있어요 (넣은 값: {target})"
+            f"{label} 등급에는 {available[0]}~{available[-1]}단계만 있어 (넣은 값: {target})"
         )
 
     base_prob = raw["baseProb"]
@@ -376,15 +376,15 @@ def _simulate(
                 ceiling_cost=ceiling_cost,
             )
 
-    raise ValueError("계산이 끝나지 않았어요 - 재련 표를 확인해 주세요")
+    raise ValueError("계산이 끝나지 않았어 - 재련 표를 확인해 줘")
 
 
 def simulate(base_prob: float, *, cost_per_try: float = 0.0, jangin: float = 0.0) -> Strategy:
     """표에 없는 재련(완갑처럼 단계표를 따로 들고 있는 쪽)을 같은 규칙으로 돌린다."""
     if not 0 < base_prob <= 1:
-        raise ValueError("성공 확률은 0 초과 1 이하여야 해요")
+        raise ValueError("성공 확률은 0 초과 1 이하여야 해")
     if not 0 <= jangin < 1:
-        raise ValueError("장인의 기운은 0 이상 100% 미만이어야 해요")
+        raise ValueError("장인의 기운은 0 이상 100% 미만이어야 해")
 
     table = RefineTable(
         item_type="weapon",
@@ -431,7 +431,7 @@ def evaluate(
     움직이는 걸 생각하면, 사람이 따라할 수 있는 "이 조합으로 계속 간다" 쪽이 낫다.
     """
     if not 0 <= request.jangin < 1:
-        raise ValueError("장인의 기운은 0 이상 100% 미만이어야 해요")
+        raise ValueError("장인의 기운은 0 이상 100% 미만이어야 해")
 
     table = get_table(
         request.item_type, request.grade, request.target, extra_prob=request.extra_prob

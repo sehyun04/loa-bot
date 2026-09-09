@@ -29,7 +29,7 @@ class GauntletCog(commands.Cog):
             plan = await gauntlet.estimate(현재, 목표 if 목표 is not None else 현재 + 1, artisan=기운 / 100)
         except ValueError as exc:
             await interaction.followup.send(
-                view=common.error_view("계산할 수 없어요", str(exc)), ephemeral=True
+                view=common.error_view("계산할 수 없어", str(exc)), ephemeral=True
             )
             return
 

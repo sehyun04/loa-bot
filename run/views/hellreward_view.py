@@ -26,7 +26,7 @@ class _CategorySelect(discord.ui.Select):
         self.tier = tier
         self.floor = floor
         super().__init__(
-            placeholder="뜬 보상 상자를 전부 골라주세요 (2개 이상)",
+            placeholder="뜬 보상 상자를 전부 골라줘 (2개 이상)",
             options=[discord.SelectOption(label=c, value=c) for c in categories],
             min_values=2,
             max_values=len(categories),
@@ -49,7 +49,7 @@ class HellRewardPickView(discord.ui.LayoutView):
         text = discord.ui.TextDisplay(
             f"## 지옥 보상 효율\n"
             f"{tier} · {floor}층 ({stage})\n"
-            f"뜬 보상 상자를 아래에서 골라주시면 어느 쪽이 나은지 견주어 볼게요."
+            f"뜬 보상 상자를 아래에서 골라줘. 어느 쪽이 나은지 견줘줄게."
         )
         self.add_item(discord.ui.Container(
             text,
@@ -66,7 +66,7 @@ def build_result_view(tier: str, floor: int, results: list[hellreward.CategoryVa
     lines = [f"## 지옥 보상 효율\n{tier} · {floor}층 ({stage})"]
     if priced:
         best = priced[0]
-        lines.append(f"제일 이득인 건 **{best.category}** 예요.")
+        lines.append(f"제일 이득인 건 **{best.category}**.")
     for i, cv in enumerate(priced, start=1):
         lines.append(_format_category_line(i, cv, tier))
     for cv in unpriced:

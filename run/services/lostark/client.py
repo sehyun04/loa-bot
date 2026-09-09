@@ -78,7 +78,7 @@ class LostArkClient:
 
                 if resp.status == 401:
                     log.error("로스트아크 API 키가 거부됐습니다 (401)")
-                    raise errors.ApiKeyInvalid("API 키가 유효하지 않아요")
+                    raise errors.ApiKeyInvalid("API 키가 유효하지 않아")
 
                 if resp.status == 429:
                     reset = resp.headers.get("X-RateLimit-Reset")
@@ -92,7 +92,7 @@ class LostArkClient:
                     raise errors.Maintenance()
 
                 if resp.status == 404:
-                    raise errors.LoaApiError(f"찾을 수 없어요 ({resp.status})")
+                    raise errors.LoaApiError(f"찾을 수 없어 ({resp.status})")
 
                 body = (await resp.text())[:200]
                 raise errors.LoaApiError(f"API 오류 {resp.status}: {body}")
@@ -110,7 +110,7 @@ class LostArkClient:
         except aiohttp.ClientError as exc:
             raise errors.LoaApiError(f"네트워크 오류: {exc}") from exc
         except TimeoutError as exc:
-            raise errors.LoaApiError("응답 시간이 초과됐어요") from exc
+            raise errors.LoaApiError("응답 시간이 초과됐어") from exc
 
     async def get(
         self, path: str, *, params: dict | None = None, ttl: float = 0, cache_key: str | None = None
@@ -136,7 +136,7 @@ _client: LostArkClient | None = None
 
 def get_client() -> LostArkClient:
     if not config.has_lostark_api():
-        raise errors.ApiKeyMissing("LOSTARK_API_KEY가 설정되지 않았어요")
+        raise errors.ApiKeyMissing("LOSTARK_API_KEY가 설정되지 않았어")
     global _client
     if _client is None:
         _client = LostArkClient(config.LOSTARK_API_KEY)

@@ -106,7 +106,7 @@ def spec_view(char: Character) -> discord.ui.LayoutView:
     # 아이템 레벨만 오고 각인도 보석도 비어 있는 캐릭터가 있다. 머리말만 덩그러니
     # 남으면 조회가 반쯤 실패한 것처럼 보여서, 비었다는 걸 말로 밝힌다.
     if not body:
-        body.append(discord.ui.TextDisplay("각인이며 보석이며, 세부 정보는 받아오지 못했어요."))
+        body.append(discord.ui.TextDisplay("각인이며 보석이며, 세부 정보는 받아오지 못했어."))
 
     if tail := " · ".join(p for p in (
         f"칭호 {char.title}" if char.title else None,
@@ -140,7 +140,7 @@ def _by_server(siblings: list[Sibling]) -> list[tuple[str, list[Sibling]]]:
 
 def siblings_view(owner: str, siblings: list[Sibling]) -> discord.ui.LayoutView:
     if not siblings:
-        return common.notice_view("원정대가 비어 있어요", f"{owner} 의 캐릭터를 찾지 못했어요.")
+        return common.notice_view("원정대가 비어 있어", f"{owner} 의 캐릭터를 찾지 못했어.")
 
     groups = _by_server(siblings)
 
@@ -183,10 +183,10 @@ def siblings_view(owner: str, siblings: list[Sibling]) -> discord.ui.LayoutView:
 
     notes = []
     if len(groups) > 1:
-        notes.append("아이템 레벨 높은 순 · 로아 원정대는 서버 단위라 서버가 곧 원정대 구분이에요")
+        notes.append("아이템 레벨 높은 순 · 로아 원정대는 서버 단위라 서버가 곧 원정대 구분이야")
     if dropped:
         # 서버가 통째로 빠지면 머리말의 서버 수와 화면이 어긋난다. 어디가 빠졌는지 밝힌다.
-        notes.append(f"캐릭터가 적은 서버 {len(dropped)}곳({' · '.join(dropped)})은 생략했어요")
+        notes.append(f"캐릭터가 적은 서버 {len(dropped)}곳({' · '.join(dropped)})은 생략했어")
     if notes:
         body += [
             discord.ui.Separator(spacing=discord.SeparatorSpacing.large),

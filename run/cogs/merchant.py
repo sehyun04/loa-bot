@@ -64,12 +64,12 @@ class MerchantCog(commands.Cog):
         카드: str,
     ) -> None:
         if interaction.guild_id is None:
-            await interaction.response.send_message("서버 채널에서만 쓸 수 있어요.", ephemeral=True)
+            await interaction.response.send_message("서버 채널에서만 쓸 수 있어.", ephemeral=True)
             return
 
         if 카드 not in sch.card_names():
             await interaction.response.send_message(
-                view=common.error_view("모르는 카드예요", "자동완성에 뜨는 이름 중에서 골라주시겠어요."),
+                view=common.error_view("모르는 카드야", "자동완성에 뜨는 이름 중에서 골라줄래?"),
                 ephemeral=True,
             )
             return
@@ -91,9 +91,9 @@ class MerchantCog(commands.Cog):
 
         await interaction.response.send_message(
             view=common.base_view(
-                "카드 알림을 등록했어요",
-                f"**{서버.value}**에서 **{카드}**가 뜨면 이 채널에서 멘션해드릴게요.\n"
-                "해제하려면 `/떠상카드해제`를 써주세요.",
+                "카드 알림을 걸어뒀어",
+                f"**{서버.value}** · **{카드}**\n"
+                "이게 뜨면 이 채널에서 불러줄게. 그만두려면 `/떠상카드해제` 를 써줘.",
             ),
             ephemeral=True,
         )
@@ -114,12 +114,12 @@ class MerchantCog(commands.Cog):
         removed = await wants_svc.remove(str(interaction.user.id), 서버.value, 카드)
         if removed:
             await interaction.response.send_message(
-                view=common.notice_view("이제 지켜보지 않을게요", f"**{서버.value}** · {카드} 알림을 더는 보내지 않아요."),
+                view=common.notice_view("이제 지켜보지 않을게", f"**{서버.value}** · {카드} 알림은 더 보내지 않을게."),
                 ephemeral=True,
             )
         else:
             await interaction.response.send_message(
-                view=common.notice_view("걸어두신 적이 없어요", f"**{서버.value}** · {카드}는 등록한 적이 없어요."),
+                view=common.notice_view("걸어둔 적이 없어", f"**{서버.value}** · {카드}... 걸어둔 적이 없어."),
                 ephemeral=True,
             )
 
@@ -147,7 +147,7 @@ class MerchantCog(commands.Cog):
         items = await wants_svc.for_user(str(interaction.user.id))
         if not items:
             await interaction.response.send_message(
-                view=common.notice_view("아직 걸어두신 알림이 없어요", "`/떠상카드알림` 으로 기다리는 카드를 알려주세요."),
+                view=common.notice_view("아직 걸어둔 알림이 없어", "`/떠상카드알림` 으로 기다리는 카드를 알려줘."),
                 ephemeral=True,
             )
             return
@@ -203,9 +203,9 @@ class MerchantCog(commands.Cog):
                 icon = item.emoji if item else ""
                 location_text = region_name + (f" · {npc}" if npc else "")
                 text = (
-                    f"<@{want.user_id}> {icon} **{want.card_name}** 카드가 떴어요!\n{location_text}"
+                    f"<@{want.user_id}> {icon} **{want.card_name}** 카드가 떴어!\n{location_text}"
                     if icon
-                    else f"<@{want.user_id}> **{want.card_name}** 카드가 떴어요!\n{location_text}"
+                    else f"<@{want.user_id}> **{want.card_name}** 카드가 떴어!\n{location_text}"
                 )
                 try:
                     await channel.send(text)

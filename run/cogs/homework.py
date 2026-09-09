@@ -31,7 +31,7 @@ class HomeworkCog(commands.Cog):
         if not chars:
             await interaction.response.send_message(
                 view=common.notice_view(
-                    "아직 등록한 캐릭터가 없어요", "`/숙제설정` 으로 캐릭터를 먼저 알려주세요."
+                    "아직 등록한 캐릭터가 없어", "`/숙제설정` 으로 캐릭터를 먼저 알려줘."
                 ),
                 ephemeral=True,
             )
@@ -41,8 +41,8 @@ class HomeworkCog(commands.Cog):
         if not any(c["character_name"] == target for c in chars):
             await interaction.response.send_message(
                 view=common.notice_view(
-                    f"{target} 은 등록된 캐릭터가 아니에요",
-                    "`/숙제설정` 으로 먼저 알려주세요.",
+                    f"{target} 은 등록한 캐릭터가 아니야",
+                    "`/숙제설정` 으로 먼저 알려줘.",
                 ),
                 ephemeral=True,
             )
@@ -75,11 +75,11 @@ class HomeworkCog(commands.Cog):
             siblings = await armory.fetch_siblings(닉네임.strip())
         except errors.CharacterNotFound:
             await interaction.followup.send(
-                embed=common.notice_embed("그 캐릭터를 찾지 못했어요", "닉네임을 한 번만 더 봐주시겠어요.")
+                embed=common.notice_embed("그 캐릭터를 찾지 못했어", "닉네임을 한 번만 더 봐줄래?")
             )
             return
         except errors.LoaApiError as exc:
-            await interaction.followup.send(embed=common.error_embed("조회하지 못했어요", str(exc)))
+            await interaction.followup.send(embed=common.error_embed("가져오지 못했어", str(exc)))
             return
 
         user_id = str(interaction.user.id)
@@ -93,9 +93,9 @@ class HomeworkCog(commands.Cog):
             registered += 1
 
         embed = common.base_embed(
-            "숙제 캐릭터를 등록했어요",
-            f"{registered}개 캐릭터를 등록하고, 아이템 레벨에 맞는 컨텐츠를 자동으로 골랐어요.\n"
-            "`/숙제` 로 체크리스트를 열어보세요.",
+            "숙제 캐릭터를 등록했어",
+            f"{registered}개 캐릭터를 등록하고, 아이템 레벨에 맞는 컨텐츠를 자동으로 골랐어.\n"
+            "`/숙제` 로 체크리스트를 열어봐.",
         )
         top = siblings[:5]
         if top:

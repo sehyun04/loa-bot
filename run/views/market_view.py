@@ -94,7 +94,7 @@ def _hero(item: MarketItem) -> discord.ui.Item:
 
 def _head(query: str, items: list[MarketItem]) -> discord.ui.Item:
     """이름이 정확히 맞는 게 없을 때의 머리말. 답을 고르지 않고 검색어만 세운다."""
-    text = discord.ui.TextDisplay(f"# {query}\n거래소에서 {len(items)}건 찾았어요")
+    text = discord.ui.TextDisplay(f"# {query}\n거래소에서 {len(items)}건 찾았어")
     icon = next((i.icon for i in items if i.icon), None)
     if not icon:
         return text
@@ -112,17 +112,17 @@ def _footnote(items: list[MarketItem], ranked: bool) -> str:
     if ranked:
         notes[0] = "거래소 최저가 오름차순"
     if any(i.bundle_count > 1 for i in items):
-        notes.append("묶음 상품은 개당 가격으로 견주세요")
+        notes.append("묶음 상품은 개당 가격으로 견줘")
     return "-# " + " · ".join(notes)
 
 
 def price_view(query: str, items: list[MarketItem]) -> discord.ui.LayoutView:
     if not items:
         return common.notice_view(
-            "찾지 못했어요",
+            "찾지 못했어",
             # 이름 뒤에 조사를 붙이면 받침에 따라 '이라는/라는' 이 갈린다. 줄표로 끊어
             # 조사가 안 붙게 한다.
-            f"`{query}` — 거래소에서 이 이름을 찾지 못했어요. 철자를 한 번만 더 봐주시겠어요.",
+            f"`{query}` — 거래소에서 이 이름을 찾지 못했어. 철자를 한 번만 더 봐줄래?",
         )
 
     view = discord.ui.LayoutView()
@@ -166,12 +166,12 @@ def _cost(result: BidResult) -> list[discord.ui.Item]:
         discord.ui.Separator(),
         discord.ui.TextDisplay(
             f"`내 부담` {_gold(result.winner_cost)}\n"
-            f"-# 낙찰가에서 내 몫 {result.share_per_member:,}골드를 도로 받아요"
+            f"-# 낙찰가에서 내 몫 {result.share_per_member:,}골드를 도로 받아"
         ),
         discord.ui.Separator(spacing=_SMALL),
         discord.ui.TextDisplay(
             f"`1인당 분배금` {_gold(result.share_per_member)}\n"
-            f"-# 낙찰자까지 {result.party_size}명이 똑같이 나눠 가져요"
+            f"-# 낙찰자까지 {result.party_size}명이 똑같이 나눠 가져"
         ),
     ]
 
@@ -179,17 +179,17 @@ def _cost(result: BidResult) -> list[discord.ui.Item]:
 def _break_even(result: BidResult, break_even: int) -> list[discord.ui.Item]:
     gap = break_even - result.bid
     if gap > 0:
-        verdict = f"**{gap:,}골드** 더 불러도 남아요"
+        verdict = f"**{gap:,}골드** 더 불러도 남아"
     elif gap == 0:
-        verdict = "딱 여기까지예요"
+        verdict = "딱 여기까지야"
     else:
-        verdict = f"이미 **{-gap:,}골드** 넘겼어요"
+        verdict = f"이미 **{-gap:,}골드** 넘겼어"
     return [
         discord.ui.TextDisplay("### 손익분기"),
         discord.ui.Separator(),
         discord.ui.TextDisplay(
             f"`한계 입찰가` {_gold(break_even)} · {verdict}\n"
-            f"-# 거래소에 팔아 수수료 {MARKET_FEE:.0%} 를 떼고 남는 돈과 같아지는 지점이에요"
+            f"-# 거래소에 팔아 수수료 {MARKET_FEE:.0%} 를 떼고 남는 돈과 같아지는 지점이야"
         ),
     ]
 

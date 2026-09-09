@@ -124,7 +124,7 @@ class CategoryValue:
 def floor_to_stage(floor: int) -> str:
     """1~9층은 기본 단계, 10~19는 1단계... 100층만 최고 단계."""
     if not (1 <= floor <= 100):
-        raise ValueError("층수는 1~100 사이여야 해요")
+        raise ValueError("층수는 1~100 사이여야 해")
     if floor == 100:
         return "max"
     if floor < 10:

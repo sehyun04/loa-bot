@@ -29,7 +29,7 @@ def build_overview() -> discord.ui.LayoutView:
             body.append(discord.ui.Separator(spacing=discord.SeparatorSpacing.small))
 
     body.append(discord.ui.Separator(spacing=discord.SeparatorSpacing.large))
-    body.append(discord.ui.TextDisplay("-# 저를 멘션하고 말로 물어보셔도 돼요"))
+    body.append(discord.ui.TextDisplay("-# 나를 멘션하고 말로 물어봐도 돼"))
 
     view = discord.ui.LayoutView()
     view.add_item(discord.ui.Container(*body))

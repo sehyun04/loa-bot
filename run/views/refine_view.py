@@ -63,19 +63,19 @@ def _success(report: refine.Report) -> list[discord.ui.Item]:
     if best.ceiling_tries == 1:
         body.append(discord.ui.TextDisplay(
             f"`확정` **1번** · {_gold(best.expected_cost)}\n"
-            "-# 확률이 100%라 실패할 일이 없어요"
+            "-# 확률이 100%라 실패할 일이 없어"
         ))
         return body
 
     body += [
         discord.ui.TextDisplay(
             f"`평균` **{best.expected_tries:.1f}번** · {_gold(best.expected_cost)}\n"
-            f"-# 절반은 {best.median_tries}번 안에, 열에 아홉은 {best.unlucky_tries}번 안에 끝나요"
+            f"-# 절반은 {best.median_tries}번 안에, 열에 아홉은 {best.unlucky_tries}번 안에 끝나"
         ),
         discord.ui.Separator(spacing=discord.SeparatorSpacing.small),
         discord.ui.TextDisplay(
             f"`장기백` **{best.ceiling_tries}번** · {_gold(best.ceiling_cost)}\n"
-            f"-# {best.ceiling_tries}번째엔 장인의 기운이 꽉 차서 확정 성공해요"
+            f"-# {best.ceiling_tries}번째엔 장인의 기운이 꽉 차서 확정 성공해"
         ),
     ]
     return body
@@ -101,11 +101,11 @@ def _breath_section(report: refine.Report) -> list[discord.ui.Item] | None:
         lines.append(
             f"`{label}` {_breath_text(other.breaths)} → **{_pct(other.try_prob)}** · "
             f"{_gold(other.expected_cost)}\n"
-            f"-# 추천보다 {gap * 100:.0f}% 더 들어요"
+            f"-# 추천보다 {gap * 100:.0f}% 더 들어"
         )
 
     cap = max(report.table.base_prob, 0.01)
-    lines.append(f"-# 숨결로 올릴 수 있는 확률은 기본 확률만큼({_pct(cap)}p)까지예요")
+    lines.append(f"-# 숨결로 올릴 수 있는 확률은 기본 확률만큼({_pct(cap)}p)까지야")
     return [
         discord.ui.TextDisplay("### 숨결"),
         discord.ui.Separator(),
@@ -127,7 +127,7 @@ def _materials(report: refine.Report) -> list[discord.ui.Item]:
     ]
     if report.missing:
         missing = ", ".join(refine.display_name(n) for n in report.missing)
-        notes.append(f"{missing} 시세를 못 구해서 0골드로 뒀어요 - 실제로는 더 들어요")
+        notes.append(f"{missing} 시세를 못 구해서 0골드로 뒀어 - 실제로는 더 들어")
     notes.append("거래소 최저가 기준")
 
     body = [
@@ -159,7 +159,7 @@ async def _rebuild(interaction: discord.Interaction, request: refine.Request) ->
         report = await refine.report(request)
     except ValueError as exc:
         await interaction.followup.send(
-            view=common.error_view("계산할 수 없어요", str(exc)), ephemeral=True
+            view=common.error_view("계산할 수 없어", str(exc)), ephemeral=True
         )
         return
     await interaction.edit_original_response(view=RefineView(report))

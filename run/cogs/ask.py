@@ -55,7 +55,7 @@ async def _market(item: str) -> dict:
 
 async def _auction(bid: int, party_size: int, market_price: int | None = None) -> dict:
     if bid <= 0:
-        return {"view": common.error_view("숫자를 다시 봐주시겠어요", "낙찰가는 1골드 이상이어야 해요.")}
+        return {"view": common.error_view("숫자를 다시 봐줄래?", "낙찰가는 1골드 이상이어야 해.")}
     result = auction.calculate(bid, party_size)
     break_even = (
         auction.break_even_bid(market_price, party_size)
@@ -92,7 +92,7 @@ async def _refine(
     try:
         report = await refine.report(request)
     except ValueError as exc:
-        return {"view": common.error_view("계산할 수 없어요", str(exc))}
+        return {"view": common.error_view("계산할 수 없어", str(exc))}
     return {"view": refine_view.RefineView(report)}
 
 
@@ -106,7 +106,7 @@ async def _gauntlet(
             artisan=artisan_percent / 100,
         )
     except ValueError as exc:
-        return {"view": common.error_view("계산할 수 없어요", str(exc))}
+        return {"view": common.error_view("계산할 수 없어", str(exc))}
     return {"view": gauntlet_view.build_view(plan)}
 
 
@@ -134,7 +134,7 @@ def _resolve_category(name: str, available: list[str]) -> str | None:
 async def _hell_reward(tier: str, floor: int, categories: list[str] | None = None) -> dict:
     available = hellreward.categories_for(tier, floor)
     if len(available) < 2:
-        return {"view": common.error_view("견줄 상자가 하나뿐이에요", "이 층에서는 상자가 한 종류만 나와서 비교할 것이 없어요.")}
+        return {"view": common.error_view("견줄 상자가 하나뿐이야", "이 층에서는 상자가 한 종류만 나와서 견줄 게 없어.")}
 
     # 사용자가 뜬 상자를 말했으면 고르는 단계를 건너뛰고 바로 비교해준다
     if categories:
@@ -149,8 +149,8 @@ async def _hell_reward(tier: str, floor: int, categories: list[str] | None = Non
         if unknown:
             return {
                 "view": common.error_view(
-                    "모르는 상자예요",
-                    f"{floor}층에서 나오는 상자가 아니에요: {', '.join(unknown)}",
+                    "모르는 상자야",
+                    f"{floor}층에서 나오는 상자가 아니야: {', '.join(unknown)}",
                 )
             }
         if len(picked) >= 2:
@@ -165,7 +165,7 @@ async def _spec_up(name: str) -> dict:
     try:
         report = await specup.diagnose(name.strip())
     except errors.CharacterNotFound:
-        return {"view": common.error_view("그 캐릭터를 찾지 못했어요", f"`{name}`... 철자를 한 번만 더 봐주시겠어요.")}
+        return {"view": common.error_view("그 캐릭터를 찾지 못했어", f"`{name}`... 철자를 한 번만 더 봐줄래?")}
     return {"view": specup_view.build_report_view(report)}
 
 
@@ -216,14 +216,14 @@ async def _merchant(server: str | None = None, item: str | None = None) -> dict:
         if not resolved:
             return {
                 "view": common.error_view(
-                    "모르는 이름이에요", f"'{item}'... 떠상이 파는 목록에는 없는 이름이에요."
+                    "모르는 이름이야", f"'{item}'... 떠상이 파는 목록에는 없는 이름이야."
                 )
             }
         preview = ", ".join(resolved[:8])
         return {
             "view": common.notice_view(
-                "어느 쪽일까요",
-                f"비슷한 이름이 여럿이라 하나만 골라 말씀해 주시겠어요.\n{preview}",
+                "어느 쪽일까?",
+                f"비슷한 이름이 여럿이야. 하나만 골라서 말해줄래?\n{preview}",
             )
         }
 
@@ -233,17 +233,17 @@ async def _merchant(server: str | None = None, item: str | None = None) -> dict:
 
 async def _card_alert_set(message: discord.Message, server: str, card: str) -> dict:
     if message.guild is None:
-        return {"view": common.error_view("여기서는 걸어드릴 수 없어요", "카드 알림은 서버 채널에서만 등록할 수 있어요.")}
+        return {"view": common.error_view("여기서는 걸어줄 수 없어", "카드 알림은 서버 채널에서만 걸 수 있어.")}
 
     resolved = _resolve_card(card)
     if isinstance(resolved, list):
         if not resolved:
-            return {"view": common.error_view("모르는 카드예요", f"'{card}'... 제가 아는 카드 목록에는 없어요.")}
+            return {"view": common.error_view("모르는 카드야", f"'{card}'... 내가 아는 카드 목록에는 없어.")}
         preview = ", ".join(resolved[:8])
         return {
             "view": common.notice_view(
-                "어느 카드일까요",
-                f"비슷한 이름이 여럿이라 하나만 골라 말씀해 주시겠어요.\n{preview}",
+                "어느 카드일까?",
+                f"비슷한 이름이 여럿이야. 하나만 골라서 말해줄래?\n{preview}",
             )
         }
 
@@ -264,9 +264,10 @@ async def _card_alert_set(message: discord.Message, server: str, card: str) -> d
 
     return {
         "view": common.base_view(
-            "카드 알림을 등록했어요",
-            f"**{server}**에서 **{resolved}**가 뜨면 이 채널에서 멘션해드릴게요.\n"
-            "해제하려면 `/떠상카드해제` 또는 저를 멘션해서 말씀해주세요.",
+            "카드 알림을 걸어뒀어",
+            f"**{server}** · **{resolved}**\n"
+            "이게 뜨면 이 채널에서 불러줄게. 그만두려면 `/떠상카드해제` 를 쓰거나 "
+            "나를 불러서 말해줘.",
         )
     }
 
@@ -278,8 +279,8 @@ async def _card_alert_remove(message: discord.Message, server: str, card: str) -
 
     removed = await wants_svc.remove(str(message.author.id), server, resolved)
     if removed:
-        return {"view": common.notice_view("이제 지켜보지 않을게요", f"**{server}** · {resolved} 알림을 더는 보내지 않아요.")}
-    return {"view": common.notice_view("걸어두신 적이 없어요", f"**{server}** · {resolved}는 등록한 적이 없어요.")}
+        return {"view": common.notice_view("이제 지켜보지 않을게", f"**{server}** · {resolved} 알림은 더 보내지 않을게.")}
+    return {"view": common.notice_view("걸어둔 적이 없어", f"**{server}** · {resolved}... 걸어둔 적이 없어.")}
 
 
 async def _help(topic: str | None = None) -> dict:
@@ -296,7 +297,7 @@ async def _help(topic: str | None = None) -> dict:
 async def _card_alert_list(message: discord.Message) -> dict:
     items = await wants_svc.for_user(str(message.author.id))
     if not items:
-        return {"view": common.notice_view("아직 걸어두신 알림이 없어요", "저를 불러 기다리는 카드를 말씀해 주시면 지켜볼게요.")}
+        return {"view": common.notice_view("아직 걸어둔 알림이 없어", "나를 불러서 기다리는 카드를 말해줘. 내가 지켜볼게.")}
     lines = "\n".join(f"- **{w.server}** · {w.card_name}" for w in items)
     return {"view": common.base_view("등록해둔 카드 알림", lines)}
 
@@ -349,6 +350,15 @@ def _unquote(text: str) -> str:
     return text
 
 
+# 대본처럼 화자 이름을 앞에 붙여 오는 일이 있다. 규칙으로도 막지만 화면에 찍히는
+# 것만은 확실해야 한다.
+_SPEAKER = re.compile(r"^\s*니나브\s*[:：]\s*")
+
+
+def _strip_speaker(text: str) -> str:
+    return _SPEAKER.sub("", text, count=1)
+
+
 def _text_of(reply: anthropic.types.Message) -> str:
     return "".join(b.text for b in reply.content if b.type == "text").strip()
 
@@ -371,20 +381,20 @@ async def _run_tool(name: str, args: dict, message: discord.Message) -> dict:
     handler = _HANDLERS.get(name)
     if handler is None:
         log.warning("알 수 없는 도구: %s", name)
-        return {"view": common.error_view("그건 제가 할 수 없어요", "제가 아직 다루지 못하는 일이에요.")}
+        return {"view": common.error_view("그건 내가 못 해", "아직 내가 다루지 못하는 일이야.")}
 
     try:
         if name in _NEEDS_CONTEXT:
             return await handler(message, **args)
         return await handler(**args)
     except errors.Maintenance:
-        return {"view": common.notice_view("지금은 점검 중이에요", "조금 뒤에 다시 물어봐 주시면 살펴볼게요.")}
+        return {"view": common.notice_view("지금은 점검 중이야", "조금 뒤에 다시 물어봐 줘. 그때 살펴볼게.")}
     except errors.LoaApiError as exc:
-        return {"view": common.error_view("조회하지 못했어요", str(exc))}
+        return {"view": common.error_view("가져오지 못했어", str(exc))}
     except (TypeError, ValueError) as exc:
         # 모델이 인자를 잘못 채운 경우. 스택트레이스 대신 사람이 읽을 메시지를 준다.
         log.info("도구 인자 오류 %s(%s): %s", name, args, exc)
-        return {"view": common.error_view("계산할 수 없어요", str(exc))}
+        return {"view": common.error_view("계산할 수 없어", str(exc))}
 
 
 class AskCog(commands.Cog):
@@ -416,7 +426,7 @@ class AskCog(commands.Cog):
         if not llm_router.available():
             await message.reply(
                 embed=common.notice_embed(
-                    "아직 준비 중이에요", "말로 묻는 기능은 아직 준비가 안 됐어요. 슬래시 커맨드로 불러주세요."
+                    "아직 준비 중이야", "말로 묻는 건 아직 준비가 안 됐어. 슬래시 커맨드로 불러줘."
                 ),
                 mention_author=False,
             )
@@ -456,33 +466,33 @@ class AskCog(commands.Cog):
                 leaked = _leaked_tool_call(reply, text)
             except anthropic.RateLimitError:
                 await message.reply(
-                    embed=common.notice_embed("잠시만요", "요청이 몰렸어요. 숨을 고르고 조금 뒤에 다시 불러주세요."),
+                    embed=common.notice_embed("잠깐만", "요청이 몰렸어... 숨을 고르고 조금 뒤에 다시 불러줘."),
                     mention_author=False,
                 )
                 return
             except anthropic.APIStatusError as exc:
                 log.warning("라우팅 실패 (%s): %s", exc.status_code, exc.message)
                 await message.reply(
-                    embed=common.error_embed("처리하지 못했어요", "조금 뒤에 다시 물어봐 주시면 살펴볼게요."),
+                    embed=common.error_embed("처리하지 못했어", "조금 뒤에 다시 물어봐 줘. 그때 살펴볼게."),
                     mention_author=False,
                 )
                 return
             except anthropic.APIConnectionError:
                 log.warning("라우팅 연결 실패")
                 await message.reply(
-                    embed=common.error_embed("처리하지 못했어요", "조금 뒤에 다시 물어봐 주시면 살펴볼게요."),
+                    embed=common.error_embed("처리하지 못했어", "조금 뒤에 다시 물어봐 줘. 그때 살펴볼게."),
                     mention_author=False,
                 )
                 return
 
-            answer = _unquote(_TOOL_XML.sub("", text).strip())[:_MAX_TEXT]
+            answer = _strip_speaker(_unquote(_TOOL_XML.sub("", text).strip()))[:_MAX_TEXT]
 
             if not calls:
                 # 도구를 못 고른 경우 - 되묻거나 범위를 안내하는 문장이 온다
                 if leaked or not answer:
                     # 재시도까지 샌 응답. 잔해를 기억에 남기면 다음 턴까지 오염된다.
                     await message.reply(
-                        "말씀을 잘 못 알아들었어요... 조금만 다르게 여쭤봐 주시겠어요?", mention_author=False
+                        "잘 못 알아들었어... 조금만 다르게 물어봐 줄래?", mention_author=False
                     )
                     return
                 log.info("문장 답변: %s", answer)

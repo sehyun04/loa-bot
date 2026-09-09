@@ -82,7 +82,7 @@ class HomeworkToggle(discord.ui.DynamicItem[discord.ui.Button], template=r"hw:(?
         # 이 검사가 없으면 아무나 남의 체크리스트를 눌러버릴 수 있다
         if row is None or row["user_id"] != user_id:
             await interaction.response.send_message(
-                "본인 숙제만 체크할 수 있어요.", ephemeral=True
+                "본인 숙제만 체크할 수 있어.", ephemeral=True
             )
             return
 
@@ -120,7 +120,7 @@ class HomeworkPick(
         # 이 검사가 없으면 아무나 남의 체크리스트를 눌러버릴 수 있다
         if owner is None or owner[0] != user_id:
             await interaction.response.send_message(
-                "본인 숙제만 체크할 수 있어요.", ephemeral=True
+                "본인 숙제만 체크할 수 있어.", ephemeral=True
             )
             return
 
@@ -167,7 +167,7 @@ class HomeworkCharacterSelect(
         # 공개 메시지라 남도 누를 수 있다. 주인만 화면을 바꿀 수 있어야 한다.
         if str(interaction.user.id) != self.user_id:
             await interaction.response.send_message(
-                "본인 숙제만 넘겨볼 수 있어요.", ephemeral=True
+                "본인 숙제만 넘겨볼 수 있어.", ephemeral=True
             )
             return
 
@@ -279,8 +279,8 @@ def homework_layout(
 ) -> discord.ui.LayoutView:
     if not tasks:
         return common.notice_view(
-            f"{character} 의 숙제가 비어 있어요",
-            "`/숙제설정` 으로 캐릭터를 다시 알려주세요.",
+            f"{character} 의 숙제가 비어 있어",
+            "`/숙제설정` 으로 캐릭터를 다시 알려줘.",
         )
 
     item_level = _item_level_of(roster, character)
@@ -329,7 +329,7 @@ async def _rerender(interaction: discord.Interaction, user_id: str, character: s
     except discord.HTTPException:
         # V2 전환 전에 보낸 임베드 메시지는 V2로 갈아끼울 수 없다(메시지 플래그가
         # 고정이다). 옛 메시지의 버튼을 누른 경우이므로 새로 열라고 안내한다.
-        notice = common.notice_view("오래된 메시지예요", "`/숙제` 를 다시 열어주시면 새로 보여드릴게요.")
+        notice = common.notice_view("오래된 메시지야", "`/숙제` 를 다시 열어줘. 새로 보여줄게.")
         # edit이 실패하면 인터랙션이 응답되지 않은 채로 남는다. followup부터 부르면
         # 404가 나므로 어느 쪽인지 확인하고 보낸다.
         if interaction.response.is_done():

@@ -75,8 +75,8 @@ def _footer(items: tuple[specup.SpecUpItem, ...]) -> str:
     # 기준 설명은 맨 아래에 한 줄로만 둔다. 머리말에 길게 두면 정작 목록보다 면책
     # 문구가 먼저, 그리고 더 크게 보인다.
     lines.append(
-        "-# 같은 종류끼리 비교한 균형 기준이에요 · 재련 골드는 거래소 최저가 기준 평균값이고 "
-        "보석은 경매장이라 아직 못 붙여요"
+        "-# 같은 종류끼리 비교한 균형 기준이야 · 재련 골드는 거래소 최저가 기준 평균값이고 "
+        "보석은 경매장이라 아직 못 붙여"
     )
     return "\n".join(lines)
 
@@ -87,8 +87,8 @@ def build_report_view(report: specup.SpecUpReport) -> discord.ui.LayoutView:
 
     if not report.items:
         view.add_item(discord.ui.Container(discord.ui.TextDisplay(
-            "**딱히 뒤처진 곳이 없어요.**\n"
-            "-# 재련·보석·각인이 모두 고르게 맞아 있어요."
+            "**딱히 뒤처진 곳이 없어.**\n"
+            "-# 재련·보석·각인이 모두 고르게 맞아 있어."
         )))
         return view
 

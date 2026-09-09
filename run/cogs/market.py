@@ -57,11 +57,11 @@ class MarketCog(commands.Cog):
             items = await market.search(query)
         except errors.Maintenance:
             await interaction.followup.send(
-                view=common.notice_view("지금은 점검 중이에요", "조금 뒤에 다시 물어봐 주시면 살펴볼게요.")
+                view=common.notice_view("지금은 점검 중이야", "조금 뒤에 다시 물어봐 줘. 그때 살펴볼게.")
             )
             return
         except errors.LoaApiError as exc:
-            await interaction.followup.send(view=common.error_view("조회하지 못했어요", str(exc)))
+            await interaction.followup.send(view=common.error_view("가져오지 못했어", str(exc)))
             return
 
         _remember(str(interaction.user.id), query)
@@ -107,7 +107,7 @@ class MarketCog(commands.Cog):
         party_size = 인원.value if 인원 else 8
         if 낙찰가 <= 0:
             await interaction.response.send_message(
-                view=common.error_view("숫자를 다시 봐주시겠어요", "낙찰가는 1골드 이상이어야 해요."),
+                view=common.error_view("숫자를 다시 봐줄래?", "낙찰가는 1골드 이상이어야 해."),
                 ephemeral=True,
             )
             return

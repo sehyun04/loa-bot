@@ -71,7 +71,7 @@ class RefineCog(commands.Cog):
             report = await refine.report(request)
         except ValueError as exc:
             await interaction.followup.send(
-                view=common.error_view("계산할 수 없어요", str(exc)), ephemeral=True
+                view=common.error_view("계산할 수 없어", str(exc)), ephemeral=True
             )
             return
 

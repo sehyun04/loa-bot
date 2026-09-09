@@ -29,7 +29,7 @@ class HellRewardCog(commands.Cog):
         categories = hellreward.categories_for(티어.value, 층)
         if len(categories) < 2:
             await interaction.response.send_message(
-                view=common.error_view("견줄 상자가 하나뿐이에요", "이 층에서는 상자가 한 종류만 나와서 비교할 것이 없어요."),
+                view=common.error_view("견줄 상자가 하나뿐이야", "이 층에서는 상자가 한 종류만 나와서 견줄 게 없어."),
                 ephemeral=True,
             )
             return

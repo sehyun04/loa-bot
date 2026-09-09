@@ -59,7 +59,7 @@ def grouped() -> list[tuple[str, list[dict]]]:
 
 # tool 이 비어 있으면 라우터가 부를 수단이 없다. 대신 해주겠다고 답하면 아무 일도
 # 안 일어나므로, 자료에서부터 '커맨드로만 된다'고 못박아 둔다.
-SLASH_ONLY = "말로는 대신 못 해드려요. 이 커맨드를 직접 쳐주셔야 해요."
+SLASH_ONLY = "말로는 대신 못 해줘. 이 커맨드를 직접 쳐줘."
 
 
 def slash_only() -> tuple[dict, ...]:
