@@ -161,7 +161,7 @@ def _gem_items(gems: list[dict]) -> list[SpecUpItem]:
         target=f"{lowest + 1}레벨",
         gap=top - lowest,
         reason=f"가장 높은 보석 {top}레벨 · 낮은 것부터 맞춰",
-        gold_note="보석은 경매장이라 시세를 아직 못 붙여",
+        gold_note="보석은 경매장이라 시세를 아직 못 붙였어",
     )]
 
 

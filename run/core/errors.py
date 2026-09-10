@@ -23,5 +23,5 @@ class Maintenance(LoaApiError):
 
 class CharacterNotFound(LoaApiError):
     def __init__(self, name: str) -> None:
-        super().__init__(f"캐릭터를 찾을 수 없어요: {name}")
+        super().__init__(f"캐릭터를 찾을 수 없어: {name}")
         self.name = name

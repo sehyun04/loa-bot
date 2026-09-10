@@ -141,7 +141,7 @@ def price_view(query: str, items: list[MarketItem]) -> discord.ui.LayoutView:
 
     shown = rest[:MAX_ROWS]
     body: list[discord.ui.Item] = [
-        discord.ui.TextDisplay("### 같이 걸린 것" if hero else "### 검색 결과"),
+        discord.ui.TextDisplay("### 이런 것도 있어" if hero else "### 검색 결과"),
         discord.ui.Separator(),
     ]
     for item in shown:
